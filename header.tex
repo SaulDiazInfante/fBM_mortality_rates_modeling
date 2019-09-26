@@ -1,0 +1,129 @@
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+%\usepackage{textcomp}
+\usepackage{amsthm}
+%\usepackage{showkeys}
+\usepackage{pdfsync}
+\usepackage{wasysym}
+\usepackage[catalan,spanish,english]{babel} 
+\usepackage{amssymb} 
+\usepackage{cmmib57} 
+\usepackage{exscale} 
+\usepackage{amscd} 
+\usepackage{latexsym} 
+\usepackage{textcomp} 
+\usepackage{graphicx}
+\usepackage{bm}  
+\usepackage{colortbl}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{cancel}
+\usepackage{scalerel,stackengine}
+\usepackage{cite}
+
+
+\stackMath
+
+\allowdisplaybreaks
+%%%%%
+\numberwithin{equation}{section}
+
+
+%*****************************************************************************
+%*****************************************************************************
+% \swapnumbers
+% \newtheoremstyle{satz}
+% {6pt}% hSpace abovei
+% {6pt}% hSpace belowi
+% {\itshape}% hBody fonti
+% {}% hIndent amounti1
+% {\normalfont\sffamily\bfseries}% hTheorem head fonti
+% {.}% hPunctuation after theorem headi
+% {0.5em}% hSpace after theorem headi2
+% { }% hTheorem head spec (can be left empty, meaning `normal')i
+% 
+% \newtheoremstyle{bem}
+% {6pt}% hSpace abovei
+% {6pt}% hSpace belowi
+% {}% hBody fonti
+% {}% hIndent amounti1
+% {\normalfont\sffamily\bfseries}% hTheorem head fonti
+% {.}% hPunctuation after theorem headi
+% {0.5em}% hSpace after theorem headi2
+% { }% hTheorem head spec (can be left empty, meaning `normal')i
+% 
+
+
+%%%%%%
+\newtheorem{stat}{Statement}[section]
+\newtheorem{theorem}[stat]{Theorem}
+\newtheorem{corollary}[stat]{Corollary}
+\newtheorem{proposition}[stat]{Proposition}
+\newtheorem{lemma}[stat]{Lemma}
+\newtheorem{definition}[stat]{Definition}
+\newtheorem{remark}[stat]{Remark}
+\newtheorem{assumption}[stat]{Assumption}
+
+%%%%%%%%%%%%
+\newcommand{\cqd}{\hfill$\Box$}
+\newcommand{\f}{{\mathcal F}}
+\newcommand{\IR}{{\mathbb R}}
+\newcommand{\R}{{\mathbb R}}
+\newcommand{\IN}{{\mathbb N}}
+\newcommand{\ind}{\mbox{\Large$\chi$}}
+\newcommand{\tor}{{\mathbb T}}
+\newcommand{\G}{{\mathbb G}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\bal}{\begin{align}}
+\newcommand{\eal}{\end{align}}
+\newcommand{\beqn}{\begin{equation*}}
+\newcommand{\eeqn}{\end{equation*}}
+\newcommand{\baln}{\begin{align*}}
+\newcommand{\ealn}{\end{align*}}
+\newcommand{\tbar}{\bar t}
+\newcommand{\xbar}{\bar x}
+\newcommand{\ep}{\epsilon}
+\newcommand{\Pb}{\mathbb P}
+\newcommand{\Rl}{\mathbb R}
+\newcommand{\E}{\mathbb{E}}
+
+\newcommand{\tf}{\mathcal{F}}
+\newcommand{\hac}{\mathcal{H}}
+\newcommand{\hact}{\mathcal{H}_T}
+
+% 
+% 
+\topmargin-4mm\textheight230mm\oddsidemargin4mm\evensidemargin5mm \textwidth150mm \parindent0mm\marginparsep3mm\marginparwidth30mm
+ \allowdisplaybreaks
+
+
+\renewcommand{\familydefault}{\sfdefault}
+
+
+\newcommand{\helv}{
+\fontfamily{phv}\fontseries{b}\fontsize{9}{11}\selectfont}
+ 
+\newcommand\reallywidehat[1]{%
+\savestack{\tmpbox}{\stretchto{%
+  \scaleto{%
+    \scalerel*[\widthof{\ensuremath{#1}}]{\kern-.6pt\bigwedge\kern-.6pt}%
+    {\rule[-\textheight/2]{1ex}{\textheight}}%WIDTH-LIMITED BIG WEDGE
+  }{\textheight}% 
+}{0.5ex}}%
+\stackon[1pt]{#1}{\tmpbox}%
+}
+
+\pagestyle{fancy}
+
+%\fancyhead[RE,RO]{\bfseries}
+
+\fancyhead{} % clear all footer fields
+\fancyhead[RE]{\helv\rightmark}
+\fancyhead[LO]{\bfseries\leftmark}
+\fancyfoot{} % clear all footer fields
+\fancyfoot[C]{\helv\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+%\renewcommand{\footrulewidth}{0.4pt}
+ 
