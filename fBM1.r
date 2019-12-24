@@ -1,65 +1,49 @@
-##### * * * * * Defining the directory  * * *  *  * * 
-### at home
-setwd('/home/fco-vences/Dropbox/research/PAPERS/Research Arelly/data')
-
-#### en el IMATE
-#setwd('/Users/fdelgadovences/Dropbox/research/PAPERS/Research Arelly/data')
-
-
-##### * * * * * Reading the libraries  * * *  *  * * 
-
+setwd('/home/sauldiazinfantevelasco/sauld@cimat.mx/UNISON/Articles/fBM-MortalityRates/gitfBM-MortalityRates')
 library("fractal")
 library("fractal")
 library("pracma")
 library("yuima")
 library("somebm")
-
+library(ggplot2)
 
 ##### * * * * * Reading the data  * * *  *  * * 
-##### * * * * * * * *  *  *  *  *  *   *  *   *   * 
-
-
 drates<-read.table("Deaths_Rates_Italy.txt", dec = ".", header = TRUE, na.strings = ".")
-head(drates)
+df <- read.table("Deaths_Rates_Italy.txt", dec = ".", header = TRUE, na.strings = ".")
+ead(drates)
+
 table(drates$Year)
 table(drates$Age)
 dim(drates)
-
-
-
 drates<-drates[drates$Age!="110+" ,]
+
 #### Rates matrix       x=age y=years
-mrates<-wrates<-arates<-mat.or.vec(110,138)
-                          
-rownames(mrates)<-rownames(wrates)<-rownames(arates)<-0:109
-colnames(mrates)<-colnames(wrates)<-colnames(arates)<-1872:2009
+mrates <- wrates <- arates <- mat.or.vec(110,138)
+rownames(mrates) <- rownames(wrates) <- rownames(arates) <- 0:109
+colnames(mrates) <- colnames(wrates) <- colnames(arates) <- 1872:2009
 
 
 for(y in 1:138){
    for(x in 1:110){
-      wrates[x,y]<- drates[(y-1)*110+x,3]
-      mrates[x,y]<- drates[(y-1)*110+x,4]
-      arates[x,y]<- drates[(y-1)*110+x,5]      
+      wrates[x, y] <- drates[(y-1) * 110 + x, 3]
+      mrates[x, y] <- drates[(y-1) * 110 + x, 4]
+      arates[x, y] <- drates[(y-1) * 110 + x, 5]      
      }
    }
 
-lwrates<-log(wrates)
-lmrates<-log(mrates)
-larates<-log(arates)
-
-
-ages<-as.numeric(rownames(wrates))
-years<-as.numeric(colnames(wrates))
-fa<-ages[1]; ca<-length(ages); la<-ages[ca]
-fy<-years[1]; cy<-length(years); ly<-years[cy]
-
-
+lwrates <- log(wrates)
+lmrates <- log(mrates)
+larates <- log(arates)
+ages <- as.numeric(rownames(wrates))
+years <- as.numeric(colnames(wrates))
+fa <- ages[1]; ca <- length(ages); la <- ages[ca]
+fy <- years[1]; cy <- length(years); ly <- years[cy]
 
 ##### * * * * * Graph of the raw data  * * *  *  * * 
 ##### * * * * * * * *  *  *  *  *  *   *  *   *   *
-color<-rainbow(cy)
+color <- rainbow(cy)
 # 
-# x11(); par(las=1)
+# x11(); par(las=1)geom_line()
+p <- ggplot(df, aes(x=Year, y=Total))+ geom_point() + xlim(1990, 2014)
 # plot(ages, lwrates[,1], type='l', col=color[1],  ylim=c(-10,2), xlab='Ages', ylab='Log')
 #   for(i in 2:cy){
 #        lines(ages, lwrates[,i], col=color[i])
