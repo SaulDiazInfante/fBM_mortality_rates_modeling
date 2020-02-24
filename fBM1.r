@@ -7,9 +7,9 @@ library("somebm")
 library(ggplot2)
 
 ##### * * * * * Reading the data  * * *  *  * * 
-drates<-read.table("Deaths_Rates_Italy.txt", dec = ".", header = TRUE, na.strings = ".")
+drates <- read.table("Deaths_Rates_Italy.txt", dec = ".", header = TRUE, na.strings = ".")
 df <- read.table("Deaths_Rates_Italy.txt", dec = ".", header = TRUE, na.strings = ".")
-ead(drates)
+head(drates)
 
 table(drates$Year)
 table(drates$Age)
@@ -17,7 +17,7 @@ dim(drates)
 drates<-drates[drates$Age!="110+" ,]
 
 #### Rates matrix       x=age y=years
-mrates <- wrates <- arates <- mat.or.vec(110,138)
+mrates <- wrates <- arates <- mat.or.vec(110, 138)
 rownames(mrates) <- rownames(wrates) <- rownames(arates) <- 0:109
 colnames(mrates) <- colnames(wrates) <- colnames(arates) <- 1872:2009
 
@@ -42,8 +42,12 @@ fy <- years[1]; cy <- length(years); ly <- years[cy]
 ##### * * * * * * * *  *  *  *  *  *   *  *   *   *
 color <- rainbow(cy)
 # 
-# x11(); par(las=1)geom_line()
-p <- ggplot(df, aes(x=Year, y=Total))+ geom_point() + xlim(1990, 2014)
+# x11(); par(las=1)
+p <- ggplot(df, aes(x=Year, y=Male), group=Age) + 
+geom_point(aes(group=Age), ) + 
+geom_line(aes(group = Age), colour = "#3366FF", alpha = 0.5) +
+xlim(2000, 2014)
+p
 # plot(ages, lwrates[,1], type='l', col=color[1],  ylim=c(-10,2), xlab='Ages', ylab='Log')
 #   for(i in 2:cy){
 #        lines(ages, lwrates[,i], col=color[i])
@@ -208,9 +212,6 @@ for(i in ages) {
 HM1
 HH1
 
-
-
-
 ##### * * * * * Section 3.2,second part of estimating Hurst parameter H with the help of
 #####  * * *  * several R libraries    *  * * 
 ##### * * * * * Here we estimated H's by using equation (5.1) * * *  *  *  *   *   *   * 
@@ -247,8 +248,6 @@ for (h in ages) {
 } ## end for h
 
 ##### estimarion of H using some R packages applied to BH2Fem and BH2Mal
-
-
 ######## we use the libreries; hurstexp(x), FDDwhite, Rovers
 HM1B<-data.frame(0,0,0,0,0,0,0)
 HH1B<-data.frame(0,0,0,0,0,0,0)
@@ -755,15 +754,9 @@ Var_Point<-colMeans(Res1)
 ht_hat_meanM<-colMeans(ht_hatM)
 Res1M<-(ht_hatM-ht_hat_meanM)^2
 Var_PointM<-colMeans(Res1M)
-
 L<-2004-1950
-
 Desv_stan<-sqrt(Var_Point/L)
-
 Desv_stanM<-sqrt(Var_PointM/L)
-
-
-
 
 #x11(); par(las=1)
 
@@ -806,9 +799,7 @@ qqnorm(log(Desv_stan[1:54]),  main=bquote("QQ-Plot for Women at age"~ .(age) ),l
 qqline(log(Desv_stan[1:54]), col = 2)
 qqnorm(log(Desv_stanM[1:54]),main=bquote("QQ-Plot for Men at age"~ .(age) ))
 qqline(log(Desv_stanM[1:54]), col = 2 )
-
 ## anyadir labels a las graficas
-
 }
 
 
