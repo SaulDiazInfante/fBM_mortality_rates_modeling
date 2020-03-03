@@ -11,7 +11,38 @@
 \usepackage[utf8]{inputenc}
 \usepackage{mathrsfs}
 \usepackage{subfigure}
+\usepackage{xargs}
+\usepackage[pdftex, dvipsnames]{xcolor}
+\usepackage[colorinlistoftodos, prependcaption, textsize=tiny]{todonotes}
+\newcounter{chapter} % to fix the bug in svjour3
+\usepackage{cleveref}
 %==============================================================================
+\newcommandx{\unsure}[2][1=]{
+        \todo[linecolor=red,
+                backgroundcolor=red!25,
+                bordercolor=red, #1]{#2}
+        }
+\newcommandx{\change}[2][1=]{
+        \todo[linecolor=blue,
+                backgroundcolor=blue!25,
+                bordercolor=blue, #1
+        ]{#2}
+        }
+\newcommandx{\info}[2][1=]{
+        \todo[
+            linecolor=OliveGreen,
+            backgroundcolor=OliveGreen!25,
+            bordercolor=OliveGreen, #1]{#2}
+     }
+\newcommandx{\improvement}[2][1=]{
+        \todo[linecolor=Plum,
+                backgroundcolor=Plum!25,
+                bordercolor=Plum,#1]{#2}
+    }
+\newcommandx{\thiswillnotshow}[2][1=]{
+                \todo[disable,#1]{#2}
+            }
+%
 \newcommand{\cqd}{\hfill$\Box$}
 \newcommand{\f}{{\mathcal F}}
 \newcommand{\IR}{{\mathbb R}}
@@ -59,15 +90,19 @@
         Instituto de Matem\'aticas, Oaxaca, M\'exico
         \\
         \email{delgado@im.unam.mx}
+        \\
+        ORCID:
         \and
         %
-        Areli Ornelas
+        Arelly Ornelas
         \at
         Conacyt-Instituto Politecnico Nacional-CICIMAR,
         \\
         La Paz, M\'exico
         \\
         \email{arelly.ornelas@conacyt.mx}
+        \\
+        ORCID:
         \and
         %\\
         Saul Diaz-Infante
@@ -78,6 +113,8 @@
         \\
         Hermosillo, Sonoran M\'exico
         \email{sdinfante@conacyt.mx}
+        \\
+        ORCID: 0000-0001-9559-1293
     }
     \date{Received: \today / Accepted: date}
     \maketitle
@@ -100,7 +137,7 @@
     that includes long term memory effects in the formulation of a model to
     describe mortality rates. Our results suggest that the hypothesis of an
     imperfect correlation intensity across generations would be more realistic
-    and that sex is an important variable to consider in the next formulations.
+    and that sex is an important variable to consider in next formulations.
 \end{abstract}
 %
 %
@@ -111,227 +148,136 @@
     crucial. For instance, proper planning in social programs, government
     budgets, cost of insurance, and others depends on the forecast. However,
     constant changes in technology, lifestyle, migration, to name a few, make
-    predicting a demanding task. These changes promote research in the field of
-    risk management. Mortality impacts directly in cash costs and therefore
-    need a reliable future projection.
+    predicting a demanding task.  Mortality impacts directly in cash and
+    therefore need a reliable future projection.
 
 
-Several models have been proposed to describe mortality. Pitacco et al. (2009)
-provides an interesting review of the
-historical background to early mortality tables. Some authors in their attempts
-to calibrate models to mortality rates
-make the assumption of perfect correlation across generations. However, one
-could think that correlation among close generations is
-high but not perfect. This hypothesis is
-our start point for this paper, we model the mortality hazard rates for the
-human population considering a
-model that include the high correlation among generations.
-In \cite{je-lu-vi}, they study a cohort-based model which uses the imperfect
-correlation of mortality intensity
-across generations. They implemented  it on UK data for the period 1900-2008.\\
+        Previous work has only focused on deterministic or stochastic models
+    without memory effects.  Pitacco et al. provide a review with a history
+    of the first mortality tables.  Milevesky and Promislow report in
+    \cite{mi-pr} a linear SDE driven by Brownian motion that describes
+    the mortality hazard rate. In \cite{gi-or-be}, the authors extend the
+    Mikevesky model to an SDE with time-dependent diffusion and study a type of
+    autoregressive model for the logarithm of the hazard rate.   Jevtić et al.
+    \cite{je-lu-vi} formulate a cohort-based model with imperfect correlation
+    across generations and use data from 1900-2008 of the UK to estimate
+    parameters.
+
+        The present paper aims to show statistical evidence that mortality rates
+    could follow a stochastic process with long-range dependence (LRD), that is,
+    a stochastic process with memory. According to \cite{ra}, a stochastic
+    process or time series is LRD if it has persistence behavior\textemdash
+    below we give a formal definition.
+
+        We base our stochastic formulation in the canonical example of a
+    continuous-time LRD process--the fractional Brownian Motion (fBM). We refer
+    to the seminal work of Mandelbrot and van Ness \cite{ma-va} to more
+    details. Since fBM is a generalization of the standard Brownian Motion (BM)
+    and still satisfies self-similarity and is LRD, fBM results to be a natural
+    noise model to describe and to explore LRD behavior.
+
+        Our main idea is to extend the stochastic model reported by Milevesky
+     and Promislow to a model with LRD and verify its performance to fitting
+    and forecasting with real data.  With this technique, we obtain statistical
+    evidence via parameter estimation and forecasting that our LRD model
+    captures an unexpectedly long time persistence pattern of Italy mortality
+    rate.
+
+        Our contribution suggest...
+        \info{Add relevant use and implications of our results}
+
+        According to data of Italy, our LRD model captures essential events in
+    mortality rates as the abrupt changes. For example, our formulation
+    explains the abrupt growing mortality rate in men between its
+    18-50-year-old due to the second war world.
+    \improvement{To improve \newline and review information}
+
+        After this brief introduction, \Cref{fgn} reviews the fBM and presents
+    the fractional Ornstein-Uhlenbeck (fOU) process. Section 3 outlines the
+    applied method for parameter estimation. In  Section 4, we implement our
+    formulation to fitting data of mortality from Italy. Further, in
+    this section, we also run forecasting to a subset of the data and evaluate
+    its efficiency. Finally, we conclude in Section 5 with relevant
+    implications and perspectives.
 
 
-In this section we present a brief review of the Milevesky-Promislow model and
-discuss about long-range dependence.
-Milevesky-Promislow model the mortality hazard rate using the
-exponential of an Stochastic Differential Equation (see \cite{mi-pr}).  \\
+\section{Fractional Brownian motion} \label{fgn}
 
-Stochastic Differential Equations (SDEs) provide a powerful and flexible
-probabilistic structure for modeling phenomena in a
-multitude of disciplines: finance, biology, molecular dynamics, chemistry,
-survival analysis, epidemiology, just to name a few
-examples, the reader could see \cite{ok} or \cite{kl-pl} for further
-information. The fractional Ornstein-Uhlenbeck process
-(FOU) process we are interested is an example of an SDE.\\
+        We consider the Gaussian process$\{B_t^H,t\ge 0\}$, with $H\in (0,1)$,
+    and with zero-mean and covariance function given by
+    \begin{align}
+        R_H(t,s):=
+            \E(
+                B_s^H B_t^H
+            )
+            =
+            \tfrac{1}{2}
+            \big(
+                t ^ {2 H} + s ^ {2 H}
+                - |t - s| ^ {2 H}
+            \big).\label{s1.1}
+    \end{align}
 
-
-In \cite{gi-or-be}, the authors present a generalization of the
-Milevesky-Promislow model that covers the case with diffusion
-coefficient as a function of $t$ instead of  a constant like in \cite{mi-pr}.
-Also, they consider a type of Autoregressive model
-for the logarithm of the hazard rate\footnote{see equations (13) or (16) in
-\cite{gi-or-be}}. It is known that all stationary invertible
-ARMA(p,q) processes are short memory processes\footnote{see for instance page
-739 in \cite{be-ye-fe-gh} or section 5.2
-    in \cite{sh-st}}.
-In particular the authors in  \cite{gi-or-be} used a modified AR(1) process,
-that is still a
-short memory process. In our model we consider the case  with a long memory
-process. For another generalization of the Milevesky-Promislow model see also
-\cite{ro-le}. \\
-
-In the other hand we are interested in the long range dependence.
-Hurst \cite{hu} observed a phenomenon which is invariant to changes in scale,
-when
-he was studying the river water levels along the Nile. Another scale-invariant
-phenomenon was observed in studies of problems connected with traffic patterns
-of packet
-flows in high-speed data networks such as the Internet (see preface of
-\cite{ra}).\\
+        This stochastic process is called a \emph{fractional Brownian motion}
+    (fBm) and was introduced by Kolmogorov \cite{ko} and studied by Mandelbrot
+    and Van Ness in \cite{ma-va}. The parameter $H$ is called Hurst index
+    because of the statistical analysis developed by the climatologist Hurst
+    \cite{hu}. The fBm is a generalization of Brownian motion without
+    independent increments, also it is a continuous-time Gaussian process.
 
 
+        The fBm has the properties of self-similarity and stationary increments.
+    Moreover, its Sample-paths are almost nowhere differentiable. However,
+    almost-all trajectories are
+    H\"{o}lder continuous of any order strictly less than H, that is, for each
+    trajectory, there exists a finite constant $C$ such that for every
+    $\epsilon > 0$
+    \[
+        \E \big(
+            | B_t ^ H - B_s ^ H|
+        \big)
+        \le
+        C |t - s| ^ {H - \epsilon} .
+    \]
 
-Long Range dependence (LRD) ( also known as long memory, strong dependence or
-persistence)
-denotes the property of a stochastic process or a time series to exhibit
-persistent behavior across long time periods
-(see \cite{ra}). LRD is used in areas such as finance, econometrics,
-Internet, hydrology, climate studies, linguistics, geophysics or DNA sequencing
-among others. \\
+        For $H =\tfrac{1}{2}$ the covariance can be written as
+    $
+        R_{1 / 2} (t,s)
+            = \min(s, t)
+    $ and the process $B_t^{1/2}$, is equivalent to
+    the standard Brownian motion. However, unlike the standard BM,
+    if $H \ne\tfrac{1}{2}$, then  this increments are \emph{not}
+    independent.
 
-
-One example of time-continuous long-range dependence model was introduced by
-Mandelbrot and van Ness (see \cite{ma-va}), they define the term
-fractional Brownian motion (fBm) for a Gaussian process with a specific
-covariance
-structure and studied its properties. This process is a generalization of
-classical
-Brownian motion also known as the Wiener process (\cite{ra}). The
-self-similarity and
-long-range dependence properties make the fractional Brownian motion
-suitable to model driving noises in different applications such as hydrology,
-short-term rainfall prediction, finance, etc.. \\
-
-The fBm is a particular case of the Fractional Gaussian noises (FGN), that are
-a type of stochastic
-processes. The FGN have the property of self-similarity and is
-used to model persistent dependency in time series.
-The autocovariance function of FGN is characterized by the Hurst exponent (H
-parameter).
-fBM and fOU are examples of fractional Gaussian noise. \\
-
-
-We now discuss the model of Milevsky-Promislow Model (see \cite{mi-pr} for the
-original paper
-or \cite{gi-or-be}
-for a recent generalization). \\
-
-Set the survival probability of an individual aged $x$ in the period $[t,T]$ as
-\begin{align}\label{E-surv}
-    S(t,T):=\E\Big[\exp\Big(-\int_t^T h_x(u) du\Big)\Big|\mathcal{F}_t \Big],
-\end{align}
-where $\{\mathcal{F}_t\}_{t\ge 0} $ is a filtration which represent the
-information until time $t$ and $h_x(t)$ is the
-stochastic force of mortality or hazard rate. According with the
-Milevsky-Promislow Model $h_x(t)$ is given by
-\begin{align}
-h(t)&=h_0\exp(\alpha_0t+\alpha_1Y_t),\label{mod-1}
-\end{align}
-where  $h_0,\alpha_1,\alpha_2> 0$. The process $Y_t$ satisfies the SDE:
-\begin{align}
-dY_t&=-\lambda Y_tdt+\sigma dB_t, \label{mod-3}
-\end{align}
-where $B_t$ is a Brownian motion, $Y_0=0$ and $\sigma,\lambda> 0$.\\
-
-
-In this paper we assume, according with the Milevsky-Promislow Model, that
-$h_t$ is given by
-\eqref{mod-1}. However $Y_t$ satisfies an SDE whose solution is the fractional
-Ornstein-Uhlenbeck process. Indeed,
-we will assume that the stochastic process $Y_t$ satisfies the following
-stochastic differential
-equation (SDE):
-\begin{align}
-dY_t^H&=-\lambda Y_t^Hdt+\sigma dB_t^H,  \label{mod-2}
-\end{align}
-where $B_t^H $ is a fBM with Hurst parameter $1/2 \le H< 1$, $Y_0^H=0$, and
-$\sigma,\lambda> 0$.
-$Y_t^H$ is called a fractional Ornstein-Uhlenbeck process (fOU) and has been
-studied exhaustively
-in the last decades. \\
-
-
-A priori, we will assume that $\alpha_1=1$. Once we estimated the parameter
-$H$, we will
-adjust $\alpha_1=T^{-H}$, which is devoted to control the variance of the
-process $Y_t$.
-We will use $Y_t$ to denote $Y_t^H$.\\
-
-Since stochastic mortality rate models take into account long time phenomena, we
-suggest a generalization of Milevesky-Promislow model, given by the equations
-\eqref{mod-1} and \eqref{mod-2}, which cover the case of long range dependence
-of
-the data.\\
-
-The main difference between this model and the original presented
-in \cite{mi-pr} is that they consider the driving noise in the SDE as a standard
-Brownian motion instead of the fractional Brownian motion as in our model.\\
-
-
-
-The paper is organized as follows. In section \ref{fgn} we present a brief
-review of
-the fBM and fOU and we discuss some important properties of the fOU. Section
-\ref{esti}
-is dedicated to describe parameters estimation.
-In first place we discuss the estimation of parameter $\alpha_0$. In second
-place we review several
-methods for estimating  Hurst parameter
-$H$. Finally we present some results devoted to estimate the parameters
-$\sigma,\lambda$ in the SDE. The results of the
-model are discussed in section \ref{re-fou}.\\
-
-
-\section{On the fractional Gaussian noise}
-\label{fgn}
-
-\subsection{Fractional Brownian motion}
-
-We consider the Gaussian process$\{B_t^H,t\ge 0\}$, with $H\in (0,1)$,  and
-with zero-mean and covariance function given by
-\begin{align}
-R_H(t,s):=\E(B_s^HB_t^H)= \tfrac{1}{2}\big(t^{2H}+s^{2H}-|t-s|^{2H}
-\big).\label{s1.1}
-\end{align}
-
-This stochastic process  is called a {\it fractional Brownian motion} (fBm) and
-was introduced by Kolmogorov \cite{ko}
-and studied by Mandelbrot and Van Ness in \cite{ma-va}. The parameter $H$ is
-called Hurst index because of
-the statistical analysis developed by the climatologist Hurst \cite{hu}.
-The fBm is a generalization of Brownian motion without independent increments,
-also it is a continuous-time Gaussian process. \\
-
-
-The fBm has the properties of Self-similarity and stationary increments.
-Moreover, its Sample-paths are almost nowhere differentiable. However,
-almost-all trajectories are
-H\"older continuous of any order strictly less than H: for each such
-trajectory, there exists a finite constant $C$ such that
-\[
-\E\big(|B_t^H-B_s^H|\big) \le C |t-s|^{H-\epsilon},
-\]
-for every $\epsilon > 0$.
-
-
-For $H =\tfrac{1}{2}$ the covariance can be written as $R_{1/2}(t,s) =
-\min(s,t)$ and the process $B_t^{1/2}$ is
-the ordinary Brownian motion (Bm). The increments of this process, in disjoint
-intervals, are independent. However,
-the increments are {\it not} independent for $H \ne\tfrac{1}{2}$.\\
-
-
-
-Set  $X_n = B_n^H-B_{n-1}^H$, $n \ge 1$ a  stochastic process.  $\{X_n, n \ge
-1\}$ is a Gaussian stationary sequence with unit
-variance and covariance function:
-\begin{align*}
-\rho_H (n) &= \frac{1}{2}\Big((n+1)^{2H}+ (n - 1)^{2H}-(2n)^{2H}\Big)\\
-&\approx H (2H - 1)n^{2H-2} \rightarrow 0, \quad \hbox{\rm  when  }
-n\rightarrow\infty.
-\end{align*}
+        Let  $X_n = B_n^H-B_{n-1}^H$, $n \ge 1$.
+    Then $\{X_n, n \ge 1\}$ is a Gaussian stationary sequence with unit
+    variance and covariance function if
+    \begin{align*}
+        \rho_H (n) &=
+            \frac{1}{2}
+            \Big(
+                (n + 1) ^ {2 H} + (n - 1) ^ {2 H}
+                - (2 n) ^{2 H}
+            \Big)
+            \\
+            &\approx
+            H (2H - 1)n^{2H-2} \to 0, \quad \text{when }
+        n \to \infty.
+    \end{align*}
 Therefore,
 \begin{itemize}
-    \item if $H > \tfrac{1}{2}$ then $\rho_H(n) > 0$ for $n$ large enough and
-    $\sum_{n=1}^\infty \rho_H(n)=\infty$.
-    This is persistent process with positive correlation. In this case, we say
-    that $X_n$ has
-    {\it long-Range dependence} property.
-    \item If $H < \tfrac{1}{2}$, then $\rho_H(n) < 0$ for $n$ large enough and
-    $\sum_{n=1}^\infty \rho_H(n)<\infty$. This is an
-    anti-persistent process with  negative correlation.
+    \item
+        if $H > \tfrac{1}{2}$ then $\rho_H(n) > 0$ for $n$ large enough and
+        $\sum_{n=1}^\infty \rho_H(n)=\infty$, then
+        the process $X_n$ is persistent with positive correlation.
+        In this case, we say that $X_n$ has the \emph{ long-range dependence}
+        property
+    \item
+        if $H < \tfrac{1}{2}$, then $\rho_H(n) < 0$ for $n$ large enough and
+        $\sum_{n=1}^\infty \rho_H(n)<\infty$. This is an
+        anti-persistent process with  negative correlation.
 \end{itemize}
-For further information on fBM see  \cite{ra}, \cite{nu} or \cite{mi}.
+    For further information on fBM see  \cite{ra,nu,mi}.
 
 \subsection{Fractional Ornstein-Uhlenbeck process (fOU)}
 
