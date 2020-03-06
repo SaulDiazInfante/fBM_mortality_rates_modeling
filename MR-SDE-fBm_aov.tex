@@ -23,7 +23,7 @@
                 bordercolor=red, #1]{#2}
         }
 \newcommandx{\change}[2][1=]{
-        \todo[linecolor=blue,
+        \todo[linecolor=blue,https://www.dropbox.com/business
                 backgroundcolor=blue!25,
                 bordercolor=blue, #1
         ]{#2}
@@ -239,7 +239,7 @@
         \le
         C |t - s| ^ {H - \epsilon} .
     \]
-
+%
         For $H =\tfrac{1}{2}$ the covariance can be written as
     $
         R_{1 / 2} (t,s)
@@ -248,8 +248,8 @@
     the standard Brownian motion. However, unlike the standard BM,
     if $H \ne\tfrac{1}{2}$, then  this increments are \emph{not}
     independent.
-
-        Let  $X_n = B_n^H-B_{n-1}^H$, $n \ge 1$.
+%
+    Let  $X_n = B_n^H-B_{n-1}^H$, $n \ge 1$.
     Then $\{X_n, n \ge 1\}$ is a Gaussian stationary sequence with unit
     variance and covariance function if
     \begin{align*}
@@ -267,17 +267,17 @@
 Therefore,
 \begin{itemize}
     \item
-        if $H > \tfrac{1}{2}$ then $\rho_H(n) > 0$ for $n$ large enough and
-        $\sum_{n=1}^\infty \rho_H(n)=\infty$, then
-        the process $X_n$ is persistent with positive correlation.
-        In this case, we say that $X_n$ has the \emph{ long-range dependence}
-        property
+        if $H > \tfrac{1}{2}$, then $\rho_H(n) > 0$ for $n$ large enough and
+        $\sum_{n=1}^\infty \rho_H(n)=\infty$. In this case, we say that
+        process $X_n$ is persistent with positive correlation and that
+        $X_n$ has the \emph{ long-range dependence} property
+
     \item
         if $H < \tfrac{1}{2}$, then $\rho_H(n) < 0$ for $n$ large enough and
-        $\sum_{n=1}^\infty \rho_H(n)<\infty$. This is an
-        anti-persistent process with  negative correlation.
+        $\sum_{n=1}^\infty \rho_H(n)<\infty$.
+        This is an anti-persistent process with negative correlation.
 \end{itemize}
-    For further information on fBM see  \cite{ra,nu,mi}.
+    For further information on fBM see \cite{ra,nu,mi}.
 
 \subsection{Fractional Ornstein-Uhlenbeck process (fOU)}
 
@@ -419,38 +419,28 @@ and from this equation we obtain $\widehat{\alpha_0}$:
 t^2}. \label{alpha0}
 \end{align}
 
-
-
-
 Once we have estimated $\alpha_0$ we proceed to estimate the Hurst parameter,
 $\sigma$ and $\lambda$.
 
-
-
-
-
 \subsection{Relation between the Hurst parameter and the H-index in the FOU}
 
-In this subsection we will discuss the procedure we have used to estimate the
-parameter $H$.\\
+        In this subsection we will discuss the procedure we have used to
+    estimate the parameter $H$.
 
-We will use the following empirical fact. Suppose that a fOU process is driving
-with a fBM with a given
-Hurst parameter $H_0$.  Yerlikaya-Okzurt et al (\cite{ye-etal})  have shown a
-relationship between the Hurst parameter $H$ of the fractional
-Brownian motion and the Hurst parameter of the fractional Gaussian noise given
-by an SDE. In fact, they have found statistical evidence
-that the fOU should have the same value $H_0$ that the fBM (see table 1
-Yerlikaya-Okzurt et al). Therefore, at least empirically,
-the value of $H$ is the same. Then, it is possible to choose the same value of
-the
-parameter $H$ for both processes.  A formal proof of this fact, up to our
-knowledge, is missed. \\
+        We will use the following empirical fact. Suppose that a fOU process is
+    driving with a fBM with a given Hurst parameter $H_0$.  Yerlikaya-Okzurt
+    et al (\cite{ye-etal})  have shown a relationship between the Hurst
+    parameter $H$ of the fractional Brownian motion and the Hurst parameter
+    of the fractional Gaussian noise given by an SDE. In fact, they have
+    found statistical evidence that the fOU should have the same value $H_0$
+    that the fBM (see table 1 Yerlikaya-Okzurt et al). Therefore, at least
+    empirically, the value of $H$ is the same. Then, it is possible to
+    choose the same value of the parameter $H$ for both processes.  A formal
+    proof of this fact, up to our knowledge, is missed.
 
 
-
-The subsequent sections are devoted to present several methods to estimate the
-Hurst parameter for the fBM.
+        The subsequent sections are devoted to present several methods to
+    estimate the Hurst parameter for the fBM.
 
 
 \subsection{Estimation of the self-similarity index $H$ for the fBM}
@@ -814,8 +804,8 @@ Finally, figures \ref{graph-Hurst_Est_Wo} and \ref{graph-Hurst_Est_Me} show
 the estimated Hurst parameter for women and men separately.
 
 \begin{figure}[H]
-    \includegraphics[width = 4.5in,  height=4in]{Hurst-Women.png}
-    %\includegraphics[width = 2.6in]{Hurst-Men.png}
+    \includegraphics[width = 4.5in,  height=4in]{Hurst-Women.eps}
+    %\includegraphics[width = 2.6in]{Hurst-Men.eps}
     \caption{\bf Estimated Hurst parameter using R-routines.}
     \label{graph-Hurst_Est_Wo}
 \end{figure}\vspace*{0.1cm}
@@ -846,7 +836,7 @@ coefficients obtained with the
 method of $R/S$ to perform the mortality rates simulations. \\
 
 \begin{figure}[H]
-    \includegraphics[width = 4.5in, height=4in]{Hurst-Men.png}
+    \includegraphics[width = 4.5in, height=4in]{Hurst-Men.eps}
     \caption{\bf Estimated Hurst parameter using R-routines.}
     \label{graph-Hurst_Est_Me}
 \end{figure}\vspace*{0.1cm}
@@ -873,10 +863,10 @@ women age 25 during the period of 50s to 80s.
 
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotWomen0.png}
-    \includegraphics[width = 2.85in]{PlotWomen5.png}
-    \includegraphics[width = 2.85in]{PlotWomen25.png}
-    \includegraphics[width = 2.85in]{PlotWomen50.png}
+    \includegraphics[width = 2.85in]{PlotWomen0.eps}
+    \includegraphics[width = 2.85in]{PlotWomen5.eps}
+    \includegraphics[width = 2.85in]{PlotWomen25.eps}
+    \includegraphics[width = 2.85in]{PlotWomen50.eps}
     \caption{Simulations for the rate mortality with the fOU model: ages
     $0,5,25,50$ and $N=10000$.}
     \label{graph-simu_FOU1}
@@ -905,10 +895,10 @@ memory process, so that the model could help us to control the short-term
 variations in a better way.
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotWomen60.png}
-    \includegraphics[width = 2.85in]{PlotWomen70.png}
-    \includegraphics[width = 2.85in]{PlotWomen80.png}
-    \includegraphics[width = 2.85in]{PlotWomen90.png}
+    \includegraphics[width = 2.85in]{PlotWomen60.eps}
+    \includegraphics[width = 2.85in]{PlotWomen70.eps}
+    \includegraphics[width = 2.85in]{PlotWomen80.eps}
+    \includegraphics[width = 2.85in]{PlotWomen90.eps}
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $60,70,80,90$ and $N=10000$.}
     \label{graph-simu_FOU2}
@@ -926,10 +916,10 @@ We graph the historical rate mortality, the mean of all simulations and the
 
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotMen0.png}
-    \includegraphics[width = 2.85in]{PlotMen5.png}
-    \includegraphics[width = 2.85in]{PlotMen25.png}
-    \includegraphics[width = 2.85in]{PlotMen50.png}
+    \includegraphics[width = 2.85in]{PlotMen0.eps}
+    \includegraphics[width = 2.85in]{PlotMen5.eps}
+    \includegraphics[width = 2.85in]{PlotMen25.eps}
+    \includegraphics[width = 2.85in]{PlotMen50.eps}
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $0,5$ and $N=10000$.}
     \label{graph-simu_FOU3}
@@ -946,10 +936,10 @@ short-term process,  we believe the model could be better fitted. The main
 example  of a short-term process to try is a AR$(p)$ with $p\le 2$ or $3$.
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotMen60.png}
-    \includegraphics[width = 2.85in]{PlotMen70.png}
-    \includegraphics[width = 2.85in]{PlotMen80.png}
-    \includegraphics[width = 2.85in]{PlotMen90.png}
+    \includegraphics[width = 2.85in]{PlotMen60.eps}
+    \includegraphics[width = 2.85in]{PlotMen70.eps}
+    \includegraphics[width = 2.85in]{PlotMen80.eps}
+    \includegraphics[width = 2.85in]{PlotMen90.eps}
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $60,70,80,90$ and $N=10000$.}
     \label{graph-simu_FOU4}
@@ -978,10 +968,10 @@ results are bad as the ages increases. see figures
 $0,25,50,90$.
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotWomenForecast0.png}
-    \includegraphics[width = 2.85in]{PlotWomenForecast25.png}
-    \includegraphics[width = 2.85in]{PlotWomenForecast50.png}
-    \includegraphics[width = 2.85in]{PlotWomenForecast90.png}
+    \includegraphics[width = 2.85in]{PlotWomenForecast0.eps}
+    \includegraphics[width = 2.85in]{PlotWomenForecast25.eps}
+    \includegraphics[width = 2.85in]{PlotWomenForecast50.eps}
+    \includegraphics[width = 2.85in]{PlotWomenForecast90.eps}
     \caption{Forecast for the rate mortality with the fOU model. Women at ages
     $0,25,50,90$.}
     \label{graph-graph-forecast_women_FOU1}
@@ -991,10 +981,10 @@ $0,25,50,90$.
 
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotMenForecast0.png}
-    \includegraphics[width = 2.85in]{PlotMenForecast10.png}
-    \includegraphics[width = 2.85in]{PlotMenForecast25.png}
-    \includegraphics[width = 2.85in]{PlotMenForecast40.png}
+    \includegraphics[width = 2.85in]{PlotMenForecast0.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast10.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast25.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast40.eps}
     \caption{Forecast for the rate mortality with the fOU model. Men at ages
     $0,10,25,40$.}
     \label{graph-forecast_men_FOU1}
@@ -1003,10 +993,10 @@ $0,25,50,90$.
 
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotMenForecast50.png}
-    \includegraphics[width = 2.85in]{PlotMenForecast60.png}
-    \includegraphics[width = 2.85in]{PlotMenForecast70.png}
-    \includegraphics[width = 2.85in]{PlotMenForecast90.png}
+    \includegraphics[width = 2.85in]{PlotMenForecast50.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast60.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast70.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast90.eps}
     \caption{Forecast for the rate mortality with the fOU model. Men at ages
     $50,60,70,90$.}
     \label{graph-forecast_men_FOU2}
