@@ -782,7 +782,7 @@ the estimated Hurst parameter for women and men separately.
 
 \begin{figure}[H]
     %\includegraphics[width = 4.5in,  height=4in]{Hurst-Women.png}
-    \includegraphics{Hurst-Men.png}
+    \includegraphics[scale=0.7, keepaspectratio]{Hurst-Men.eps}
     \caption{Estimated Hurst parameter using R-routines.}
     \label{graph-Hurst_Est_Wo}
 \end{figure}
@@ -815,7 +815,7 @@ coefficients obtained with the
 method of $R/S$ to perform the mortality rates simulations. \\
 
 \begin{figure}[H]
-    \includegraphics{Hurst-Men.png}
+    \includegraphics[scale=0.7, keepaspectratio]{Hurst-Men.eps}
     \caption{\bf Estimated Hurst parameter using R-routines.}
     \label{graph-Hurst_Est_Me}
 \end{figure}\vspace*{0.1cm}
@@ -826,7 +826,7 @@ method of $R/S$ to perform the mortality rates simulations. \\
 
 \subsection{Results for women}\label{re-wom}
 
-We present the results for 10000 simulations of the mortality rates for ages:
+We present the results for 10000 path simulations of the mortality rates for ages:
 $0,5,25,50,60,70,80,90$.
 We graph the historical mortality rate, the mean of all simulations and the
 95\% confidence interval. See figures \ref{graph-simu_FOU1} and
@@ -841,11 +841,11 @@ rate for women age 0 during the period of 50s to 80s and for women age 50, 60,
 women age 25 during the period of 50s to 80s.
 
 
-\begin{figure}[H]
-    \includegraphics{PlotWomen0.eps}
-    \includegraphics{PlotWomen5.eps}
-    \includegraphics{PlotWomen25.eps}
-    \includegraphics{PlotWomen50.eps}
+\begin{figure}[t]
+    \includegraphics[scale= 0.5, keepaspectratio]{PlotWomen0.eps}
+    \includegraphics[width = 2.85in]{PlotWomen5.eps}
+    \includegraphics[width = 2.85in]{PlotWomen25.eps}
+    \includegraphics[width = 2.85in]{PlotWomen50.eps}
     \caption{Simulations for the rate mortality with the fOU model: ages
     $0,5,25,50$ and $N=10000$.}
     \label{graph-simu_FOU1}
@@ -873,11 +873,11 @@ All these suggest that a better model could include a short and a long-term
 memory process, so that the model could help us to control the short-term
 variations in a better way.
 
-\begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotWomen60.png}
-    \includegraphics{PlotWomen70.png}
-    \includegraphics{PlotWomen80.png}
-    \includegraphics{PlotWomen90.png}
+\begin{figure}[htb]
+    \includegraphics[width = 2.85in]{PlotWomen60.eps}
+    \includegraphics[width = 2.85in]{PlotWomen70.eps}
+    \includegraphics[width = 2.85in]{PlotWomen80.eps}
+    \includegraphics[width = 2.85in]{PlotWomen90.eps}
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $60,70,80,90$ and $N=10000$.}
     \label{graph-simu_FOU2}
@@ -895,10 +895,10 @@ We graph the historical rate mortality, the mean of all simulations and the
 
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotMen0.png}
-    \includegraphics{PlotMen5.png}
-    \includegraphics{PlotMen25.png}
-    \includegraphics{PlotMen50.png}
+    \includegraphics[width = 2.85in]{PlotMen0.eps}
+    \includegraphics[width = 2.85in]{PlotMen5.eps}
+    \includegraphics[width = 2.85in]{PlotMen25.eps}
+    \includegraphics[width = 2.85in]{PlotMen50.eps}
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $0,5$ and $N=10000$.}
     \label{graph-simu_FOU3}
@@ -915,10 +915,10 @@ short-term process,  we believe the model could be better fitted. The main
 example  of a short-term process to try is a AR$(p)$ with $p\le 2$ or $3$.
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotMen60.png}
-    \includegraphics{PlotMen70.png}
-    \includegraphics{PlotMen80.png}
-    \includegraphics{PlotMen90.png}
+    \includegraphics[width = 2.85in]{PlotMen60.eps}
+    \includegraphics[width = 2.85in]{PlotMen70.eps}
+    \includegraphics[width = 2.85in]{PlotMen80.eps}
+    \includegraphics[width = 2.85in]{PlotMen90.eps}
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $60,70,80,90$ and $N=10000$.}
     \label{graph-simu_FOU4}
@@ -947,10 +947,10 @@ results are bad as the ages increases. see figures
 $0,25,50,90$.
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotWomenForecast0.png}
-    \includegraphics{PlotWomenForecast25.png}
-    \includegraphics{PlotWomenForecast50.png}
-    \includegraphics{PlotWomenForecast90.png}
+    \includegraphics[width = 2.85in]{PlotWomenForecast0.eps}
+    \includegraphics[width = 2.85in]{PlotWomenForecast25.eps}
+    \includegraphics[width = 2.85in]{PlotWomenForecast50.eps}
+    \includegraphics[width = 2.85in]{PlotWomenForecast90.eps}
     \caption{Forecast for the rate mortality with the fOU model. Women at ages
     $0,25,50,90$.}
     \label{graph-graph-forecast_women_FOU1}
@@ -960,10 +960,10 @@ $0,25,50,90$.
 
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotMenForecast0.png}
-    \includegraphics{PlotMenForecast10.png}
-    \includegraphics{PlotMenForecast25.png}
-    \includegraphics{PlotMenForecast40.png}
+    \includegraphics[width = 2.85in]{PlotMenForecast0.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast10.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast25.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast40.eps}
     \caption{Forecast for the rate mortality with the fOU model. Men at ages
     $0,10,25,40$.}
     \label{graph-forecast_men_FOU1}
@@ -972,10 +972,10 @@ $0,25,50,90$.
 
 
 \begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotMenForecast50.png}
-    \includegraphics{PlotMenForecast60.png}
-    \includegraphics{PlotMenForecast70.png}
-    \includegraphics{PlotMenForecast90.png}
+    \includegraphics[width = 2.85in]{PlotMenForecast50.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast60.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast70.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast90.eps}
     \caption{Forecast for the rate mortality with the fOU model. Men at ages
     $50,60,70,90$.}
     \label{graph-forecast_men_FOU2}
