@@ -68,6 +68,24 @@
 \newcommand{\tf}{\mathcal{F}}
 \newcommand{\hac}{\mathcal{H}}
 \newcommand{\hact}{\mathcal{H}_T}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{smithchart}
+\usetikzlibrary{
+    arrows,
+    positioning,
+    calc,
+    circuits.ee.IEC,
+    external,
+    plotmarks}
+
+\usetikzlibrary{pgfplots.units}
+\def\showpgfcircle{
+        \tikz[baseline=-0.9ex]
+        \node[blue, mark size=1.2ex]{\pgfuseplotmark{-}};
+}
 
 
 \begin{document}
@@ -766,12 +784,11 @@ and somebm (some Brownian motions simulation function Version 0.1, 2016).
 
 \subsection{Hurst estimation}\label{hu-est}
 
-For the Hurst parameter estimate we have used three R routines: FDWhittle,
-RoverS and hurstexp.
-The two first routines are from the fractal library, while the latter is from
-the pracma library.\\
+	For the Hurst parameter estimate we have used three R routines: FDWhittle,
+RoverS and hurstexp. The two first routines are from the fractal library, 
+while the latter is fromthe pracma library.
 
-The former routine estimate the Hurst parameter by Whittle's method as was
+	The former routine estimate the Hurst parameter by Whittle's method as was
 described in the subsection \ref{Desc-Est-H}. RoverS routine
 estimate $\hat H $ by rescaled range (R/S) method. The hurstexp routine
 estimate $\hat H $  using
@@ -782,7 +799,7 @@ the estimated Hurst parameter for women and men separately.
 
 \begin{figure}[H]
     %\includegraphics[width = 4.5in,  height=4in]{Hurst-Women.png}
-    \includegraphics[scale=0.7, keepaspectratio]{Hurst-Men.eps}
+    \includegraphics{Hurst-Women.eps}
     \caption{Estimated Hurst parameter using R-routines.}
     \label{graph-Hurst_Est_Wo}
 \end{figure}
@@ -815,7 +832,7 @@ coefficients obtained with the
 method of $R/S$ to perform the mortality rates simulations. \\
 
 \begin{figure}[H]
-    \includegraphics[scale=0.7, keepaspectratio]{Hurst-Men.eps}
+    \includegraphics{Hurst-Men.eps}
     \caption{\bf Estimated Hurst parameter using R-routines.}
     \label{graph-Hurst_Est_Me}
 \end{figure}\vspace*{0.1cm}
@@ -842,10 +859,10 @@ women age 25 during the period of 50s to 80s.
 
 
 \begin{figure}[t]
-    \includegraphics[scale= 0.5, keepaspectratio]{PlotWomen0.eps}
-    \includegraphics[width = 2.85in]{PlotWomen5.eps}
-    \includegraphics[width = 2.85in]{PlotWomen25.eps}
-    \includegraphics[width = 2.85in]{PlotWomen50.eps}
+    \includegraphics{PlotWomen0.eps}
+    \includegraphics{PlotWomen5.eps}
+    \includegraphics{PlotWomen25.eps}
+    \includegraphics{PlotWomen50.eps}
     \caption{Simulations for the rate mortality with the fOU model: ages
     $0,5,25,50$ and $N=10000$.}
     \label{graph-simu_FOU1}
@@ -899,10 +916,36 @@ We graph the historical rate mortality, the mean of all simulations and the
     \includegraphics[width = 2.85in]{PlotMen5.eps}
     \includegraphics[width = 2.85in]{PlotMen25.eps}
     \includegraphics[width = 2.85in]{PlotMen50.eps}
-    \caption{\bf Simulations for the rate mortality with the fOU model: ages
-    $0,5$ and $N=10000$.}
+    \caption{
+        Simulations for the rate mortality with the fOU model: 
+        ages $0,5,25,50$ and ${N=10000}$.
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dotted, color=green, style={line width=1pt}] 
+            plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+        }
+        IC at 95\% 
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dashed, color=red, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2cm)};
+        }
+        simulation mean
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[solid, color=blue, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2)};
+        }
+        Data mortality rates
+}
     \label{graph-simu_FOU3}
-\end{figure}\vspace*{0.1cm}
+\end{figure}
 
 As in the case for women, the proposed model for men is well fitted.
 %The AIDS pandemic is also noticed for ages between 25 to 35 and
@@ -914,15 +957,43 @@ of the mortality rates. As was mentioned before, if we include in the model a
 short-term process,  we believe the model could be better fitted. The main
 example  of a short-term process to try is a AR$(p)$ with $p\le 2$ or $3$.
 
+\pgfplotsset{every axis/.append style={line width=5pt}}
+
 \begin{figure}[H]
     \includegraphics[width = 2.85in]{PlotMen60.eps}
     \includegraphics[width = 2.85in]{PlotMen70.eps}
     \includegraphics[width = 2.85in]{PlotMen80.eps}
     \includegraphics[width = 2.85in]{PlotMen90.eps}
-    \caption{\bf Simulations for the rate mortality with the fOU model: ages
-    $60,70,80,90$ and $N=10000$.}
+    \caption{Simulations for the rate mortality with the fOU 
+        model, ages
+        $60,70,80,90$ and ${N=10000}$. 
+        \qquad
+            {\protect
+                \tikz
+                \protect
+                \draw[dotted, color=green, style={line width=1pt}] 
+                plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+            }
+            IC at 95\% 
+            \qquad
+            {\protect
+                \tikz
+                \protect
+                \draw[dashed, color=red, style={line width=1pt}] 
+                plot coordinates{(0,0) (.2cm, 0.2cm)};
+            }
+            simulation mean
+            \qquad
+            {\protect
+                \tikz
+                \protect
+                \draw[solid, color=blue, style={line width=1pt}] 
+                plot coordinates{(0,0) (.2cm, 0.2)};
+            }
+            Data mortality rates
+    } 
     \label{graph-simu_FOU4}
-\end{figure}\vspace*{0.1cm}
+\end{figure}
 
 For older ages, we observed that the data is irregular, so it is necessary to
 use a more complex model to
@@ -951,8 +1022,34 @@ $0,25,50,90$.
     \includegraphics[width = 2.85in]{PlotWomenForecast25.eps}
     \includegraphics[width = 2.85in]{PlotWomenForecast50.eps}
     \includegraphics[width = 2.85in]{PlotWomenForecast90.eps}
-    \caption{Forecast for the rate mortality with the fOU model. Women at ages
-    $0,25,50,90$.}
+    \caption{
+        Forecast for the rate mortality with the fOU model. 
+        Women at ages $0,25,50,90$.
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dotted, color=green, style={line width=1pt}] 
+            plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+        }
+        IC at 95\% 
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dashed, color=red, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2cm)};
+        }
+        simulation mean
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[solid, color=blue, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2)};
+        }
+        Data mortality rates.
+    }
     \label{graph-graph-forecast_women_FOU1}
 \end{figure}\vspace*{0.1cm}
 
@@ -964,20 +1061,71 @@ $0,25,50,90$.
     \includegraphics[width = 2.85in]{PlotMenForecast10.eps}
     \includegraphics[width = 2.85in]{PlotMenForecast25.eps}
     \includegraphics[width = 2.85in]{PlotMenForecast40.eps}
-    \caption{Forecast for the rate mortality with the fOU model. Men at ages
-    $0,10,25,40$.}
     \label{graph-forecast_men_FOU1}
-\end{figure}\vspace*{0.1cm}
-
-
+    \caption{
+        Forecast for the rate mortality with the fOU model. Men 
+        at ages $0,10,25,40$.
+        \newline
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dotted, color=green, style={line width=1pt}] 
+            plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+        }
+        IC at 95\% 
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dashed, color=red, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2cm)};
+        }
+        simulation mean
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[solid, color=blue, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2)};
+        }
+        Data mortality rates.
+    }
+\end{figure}
 
 \begin{figure}[H]
     \includegraphics[width = 2.85in]{PlotMenForecast50.eps}
     \includegraphics[width = 2.85in]{PlotMenForecast60.eps}
     \includegraphics[width = 2.85in]{PlotMenForecast70.eps}
     \includegraphics[width = 2.85in]{PlotMenForecast90.eps}
-    \caption{Forecast for the rate mortality with the fOU model. Men at ages
-    $50,60,70,90$.}
+    \caption{Forecast for the rate mortality with the fOU model. 
+        Men at ages $50,60,70,90$.
+        \newline
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dotted, color=green, style={line width=1pt}] 
+            plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+        }
+        IC at 95\% 
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dashed, color=red, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2cm)};
+        }
+        simulation mean
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[solid, color=blue, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2)};
+        }
+        Data mortality rates.
+}
     \label{graph-forecast_men_FOU2}
 \end{figure}\vspace*{0.1cm}
 
