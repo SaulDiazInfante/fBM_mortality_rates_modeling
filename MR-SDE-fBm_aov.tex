@@ -75,9 +75,9 @@
     \title{A stochastic model of mortality rate with memory}
 
     \subtitle{A stochastic model of mortality rate with memory}
-    \author{Arelly Ornelas
+    \author{Francisco Delgado-Vences 
         \and
-        Francisco Delgado-Vences
+        Arelly Ornelas
         \and
         Saul Diaz-Infante
     }
@@ -185,7 +185,7 @@
     \info{Add relevant use and implications of our results}
 
 
-        After this brief introduction, \Cref{fgn} reviews the fBM and presents
+        After this brief introduction, the model we are interested is introduced in \Cref{model-form}. \Cref{fgn} reviews the fBM and presents
     the fractional Ornstein-Uhlenbeck (fOU) process. \Cref{esti} outlines the
     applied method for parameter estimation. In  \Cref{re-fou}, we implement our
     formulation to fitting data of mortality from Italy. Further, in
@@ -193,8 +193,69 @@
     its efficiency. Finally, we conclude in \Cref{sec:Conclutions} with relevant
     implications and perspectives.
 
+\section{Model formulation}\label{model-form}
 
-\section{Fractional Brownian motion} \label{fgn}
+
+We now discuss the model of Milevsky-Promislow Model (see \cite{mi-pr} for the original paper
+or \cite{gi-or-be}
+for a recent generalization). \\
+
+Set the survival probability of an individual aged $x$ in the period $[t,T]$ as
+\begin{align}\label{E-surv}
+ S(t,T):=\E\Big[\exp\Big(-\int_t^T h_x(u) du\Big)\Big|\mathcal{F}_t \Big],
+\end{align}
+where $\{\mathcal{F}_t\}_{t\ge 0} $ is a filtration which represent the information until time $t$ and $h_x(t)$ is the
+stochastic force of mortality or hazard rate. According with the Milevsky-Promislow Model $h_x(t)$ is given by
+\begin{align}
+ h(t)&=h_0\exp(\alpha_0t+\alpha_1Y_t),\label{mod-1}
+\end{align}
+where  $h_0,\alpha_1,\alpha_2> 0$. The process $Y_t$ satisfies the SDE:
+\begin{align}
+ dY_t&=-\lambda Y_tdt+\sigma dB_t, \label{mod-3}
+\end{align}
+where $B_t$ is a Brownian motion, $Y_0=0$ and $\sigma,\lambda> 0$.\\
+
+
+Since stochastic mortality rate models take into account long time phenomena, we
+suggest a generalization of Milevesky-Promislow model, given by the equations
+\eqref{mod-1} and \eqref{mod-3}, which cover the case of long range dependence of
+the data.\\
+
+
+The model we propose is a generalization in the following sense.
+As before, the survival probability $S(t,T)$ of an individual aged
+$x$ in the period $[t,T]$, is given in the Equation \eqref{E-surv}
+and $h_x(t)$ is the stochastic force of mortality or hazard rate given by the
+Equation \eqref{mod-1}.
+
+In this paper, we will assume that $Y_t$ is an stochastic process that satisfies the SDE:
+\begin{align}
+	dY_t^H&=-\lambda Y_t^Hdt+\sigma dB_t^H, \label{mod2}
+\end{align}
+where $B_t^H $ is a \emph{fractional Brownian motion} (see subsection \ref{fBm})
+     with Hurst parameter $1/2 \le H< 1$,  $Y_0=0$, and
+$\sigma,\lambda> 0$.
+This SDE is the fractional Ornstein-Uhlenbeck process (see subsection \ref{sect-OU} for a formal definition of this process). 
+
+
+
+The main difference between this model and the original presented
+in \cite{mi-pr} is that they consider the driving noise in the SDE as a standard
+Brownian motion instead of the fractional Brownian motion as in our model. It is well-known that the fractional Ornstein-Uhlenbeck process (fOU process) $ Y_t^H$ is a long memory process when $1/2 \le H< 1$ (see subsection \ref{sect-OU}). Therefore, our proposed model is able to capture a long-range dependence of the data.\\
+
+
+
+We interpret the SDE \eqref{mod2} as
+\begin{align}
+	Y_t^H&=-\lambda\int_0^t Y_s^Hds+\sigma B_t^H.\label{mod3}
+\end{align}
+The equation above lacks of a stochastic integral because we
+consider the case with additive noise.  We refer the reader to \cite{mi} for further reading on fractional stochastic calculus.
+
+
+\section{Fractional Gaussian processes} \label{fgn}
+
+\subsection{Fractional Brownian motion} \label{fBm}
 
         We consider the Gaussian process$\{B_t^H,t\ge 0\}$, with $H\in (0,1)$,
     and with zero-mean and covariance function given by
@@ -270,41 +331,10 @@ Therefore,
 \end{itemize}
     For further information on fBM see \cite{ra,nu,mi}.
 
-\subsection{Fractional Ornstein-Uhlenbeck process (fOU)}
+\subsection{Fractional Ornstein-Uhlenbeck process (fOU)}\label{sect-OU}
 
 
-The fOU is an SDE driven by a fractional Brownian motion. The same model was
-used in \cite{mi-pr} or \cite{gi-or-be}.
-
-As we mentioned before, the survival probability $S(t,T)$ of an individual aged
-$x$ in the period $[t,T]$, is given in the Equation \eqref{E-surv}
-and $h_x(t)$ is the stochastic force of mortality or hazard rate given by the
-Equation \eqref{mod-1}.
-
-We will assume that $Y_t$ is an stochastic process that satisfies the SDE:
-\begin{align}
-	dY_t^H&=-\lambda Y_t^Hdt+\sigma dB_t^H, \label{mod2}
-\end{align}
-where $B_t^H $ is a fBM with Hurst parameter $1/2 \le H< 1$,  $Y_0=0$, and
-$\sigma,\lambda> 0$.
-This SDE is the fractional Ornstein-Uhlenbeck process.
-
-
-There are substantial differences in trying to solve Equation \eqref{mod2} with
-respect to the method use
-in \cite{mi-pr} or \cite{gi-or-be}. We now discuss some of these differences.
-First we interpret the SDE \eqref{mod2} as
-\begin{align}
-	Y_t^H&=-\lambda\int_0^t Y_s^Hds+\sigma B_t^H.\label{mod3}
-\end{align}
-The equation above lacks of a stochastic integral because we
-consider the case with additive noise.
-Nevertheless, we can to consider the general case with multiplicative
-noise, in that case we define a stochastic integral with respect to fractional
-Brownian motion as a pathwise Riemann–Stieltjes
-integral, see, e.g. \cite{yo} for the original definition and \cite{du-no} for
-advanced results.
-
+The fOU is an SDE driven by a fractional Brownian motion. 
 Coming back to Equation \eqref{mod3}, \cite{ch-ka-ma}
 introduced the fractional Ornstein-Uhlenbeck process (fOU) and they 
 showed that the process
@@ -993,7 +1023,7 @@ stochastic differential equation with a fractional Brownian motion as a driven
 noise with $H\in (0.5,1)$ in order to satisfy the long-range dependence
 property. With the data we have fixed the Hurst coefficient and we have
 confirmed our hypothesis since
-we have found that the estimated Hurst is in $(0.58,0.8)$.  \\
+we have found that the estimated Hurst, for all ages, is in $(0.58,0.8)$.  \\
 
 
 
@@ -1016,14 +1046,21 @@ when $H=1/2$ we recover the  Giacometti, Ortobelli and Bertocchi model.\\
 % of the ARMA process is the FARIMA process, which is a long memory process
 % (see, for instance, section 5.2 in \cite{sh-st}).
 
+
+
 The model is, specially for women, well behaved. For men at some ages we found
-some shortcomings that suggest the use of more terms in order to improve
-the model. The long-range dependence model proposed in this paper is good
+some shortcomings that suggest the use of more terms in order to improve the model. 
+From this results, and in opposition of the European normative on insurance that does not discriminate by gender, we conclude from our model, applied to the Italian case, that modelling the mortality by gender could improve the risk management of the insurance companies.\\
+
+
+The long-range dependence model proposed in this paper is good
 enough to reproduce the mortality rates. If we add some extra terms to make it
 more flexible to reproduce the cases where the mortality rates have more
 variations then it will generate a more accurate model. We are starting to work
 on this extension of the model. Moreover, a multiplicative noise model will be
 the subject of a future research.\\
+
+
 
 \bibliography{references.bib}{}
 \bibliographystyle{rss}
