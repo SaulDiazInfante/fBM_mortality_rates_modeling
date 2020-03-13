@@ -82,12 +82,6 @@
     plotmarks}
 
 \usetikzlibrary{pgfplots.units}
-\def\showpgfcircle{
-        \tikz[baseline=-0.9ex]
-        \node[blue, mark size=1.2ex]{\pgfuseplotmark{-}};
-}
-
-
 \begin{document}
 
     \title{A stochastic model of mortality rate with memory}
@@ -901,7 +895,6 @@ women age 25 during the period of 50s to 80s.
     \caption{Simulations for the rate mortality with the fOU model: ages
     $0,5,25,50$ and $N=10000$.}
     \label{graph-simu_FOU1}
-     \newline
     \qquad
     {\protect
         \tikz
@@ -946,7 +939,7 @@ variations in a better way.
     \includegraphics[width = 2.85in]{PlotWomen80.eps}
     \includegraphics[width = 2.85in]{PlotWomen90.eps}
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
-    $60,70,80,90$ and $N=10000$.} \newline
+    $60,70,80,90$ and $N=10000$.}
     \label{graph-simu_FOU2}
     \qquad
     {\protect
@@ -1017,7 +1010,7 @@ We graph the historical rate mortality, the mean of all simulations and the
 }
     \label{graph-simu_FOU3}
 \end{figure}
-
+\pagebreak
 As in the case for women, the proposed model for men is well fitted.
 %The AIDS pandemic is also noticed for ages between 25 to 35 and
 %it generates an increase in the rates mortality for these ages; As a matter of
