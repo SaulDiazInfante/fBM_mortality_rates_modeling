@@ -38,7 +38,11 @@ load_data <- function(data_file="Deaths_Rates_Italy.txt") {
   la <- ages[ca]
   fy <- years[1];
   cy <- length(years); 
+<<<<<<< HEAD
   ly < -years[cy]
+=======
+  ly <- years[cy]
+>>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
 ## * * * * * Graph of the raw data  * * *  *  * * 
   color <- rainbow(cy)
 # * * * *  Giacometti data: ages (x = 0,...,91) and N years (t = 1930,...,2004)
@@ -58,6 +62,11 @@ load_data <- function(data_file="Deaths_Rates_Italy.txt") {
 
   ly <- years[cy]
 
+<<<<<<< HEAD
   data_mortality_rate <- drates[drates$Age %in % c(0:90) & drates$Year % in % c(1950:2004), ]
+=======
+  data_mortality_rates <- drates[drates$Age %in% c(0:90) & 
+                                  drates$Year %in% c(1950:2004), ]
+>>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
   return(data_mortality_rates)
 }
