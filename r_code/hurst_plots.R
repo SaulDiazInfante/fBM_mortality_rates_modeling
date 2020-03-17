@@ -16,7 +16,7 @@ plot_hurts_estimation <- function(file_name="Hurst-Women.eps", H, golden_width)
                                                       group=method)) + 
     geom_line(aes(color=method, linetype=method)) +
     theme(legend.title=element_blank()) +
-    theme(legend.position="bottom") +
+    theme(legend.position="top") +
     labs(y = "Hurts parameter estimation")
     ggsave(file_name, width=golden_width, height=golden_height,
          device="ps", units="in")
