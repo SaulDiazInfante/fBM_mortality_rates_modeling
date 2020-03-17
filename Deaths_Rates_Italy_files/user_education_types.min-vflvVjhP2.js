@@ -1,0 +1,2 @@
+define(["require","exports"],function(e,n){"use strict";Object.defineProperty(n,"__esModule",{value:!0});(function(e){e[e.TRIAL_DAYS=1]="TRIAL_DAYS"})(n.IncentiveUnit||(n.IncentiveUnit={}))});
+//# sourceMappingURL=user_education_types.min.js-vfltqvlrT.map
