@@ -68,16 +68,28 @@
 \newcommand{\tf}{\mathcal{F}}
 \newcommand{\hac}{\mathcal{H}}
 \newcommand{\hact}{\mathcal{H}_T}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{smithchart}
+\usetikzlibrary{
+    arrows,
+    positioning,
+    calc,
+    circuits.ee.IEC,
+    external,
+    plotmarks}
 
-
+\usetikzlibrary{pgfplots.units}
 \begin{document}
 
     \title{A stochastic model of mortality rate with memory}
 
     \subtitle{A stochastic model of mortality rate with memory}
-    \author{Areli Ornelas
+    \author{Francisco Delgado-Vences 
         \and
-        Francisco Delgado-Vences
+        Arelly Ornelas
         \and
         Saul Diaz-Infante
     }
@@ -85,7 +97,7 @@
     \institute{
         Francisco Delgado-Vences
         \at
-        Conacyt-Universidad Autonomoa de Mexico.
+        Conacyt-Universidad Nacional Aut\'onoma de \'Mexico.
         \\
         Instituto de Matem\'aticas, Oaxaca, M\'exico
         \\
@@ -104,7 +116,7 @@
         \\
         ORCID:
         \and
-        %\\
+        %
         Saul Diaz-Infante
         \at
         Conacyt-Universidad de Sonora
@@ -134,7 +146,7 @@
     evaluate its forecasting performance, and we observe a good estimation.
 
         To the best of our knowledge, our contribution is the first attempt
-    that includes long term memory effects in the formulation of a model to
+    that includes long term memory in the formulation of a model to
     describe mortality rates. Our results suggest that the hypothesis of an
     imperfect correlation intensity across generations would be more realistic
     and that sex is an important variable to consider in next formulations.
@@ -151,57 +163,112 @@
     predicting a demanding task.  Mortality impacts directly in cash and
     therefore need a reliable future projection.
 
-
         Previous work has only focused on deterministic or stochastic models
-    without memory effects.  Pitacco et al. provide a review with a history
-    of the first mortality tables.  Milevesky and Promislow report in
-    \cite{mi-pr} a linear SDE driven by Brownian motion that describes
+    without memory effects. \cite{pitacco2009modelling} review 
+    the first mortality tables and models.
+    \cite{mi-pr} report a linear SDE driven by Brownian motion that describes
     the mortality hazard rate. In \cite{gi-or-be}, the authors extend the
     Mikevesky model to an SDE with time-dependent diffusion and study a type of
-    autoregressive model for the logarithm of the hazard rate.   Jevtić et al.
+    autoregressive model for the logarithm of the hazard rate.   
     \cite{je-lu-vi} formulate a cohort-based model with imperfect correlation
-    across generations and use data from 1900-2008 of the UK to estimate
-    parameters.
+    across generations and use data from UK to estimate parameters.
 
         The present paper aims to show statistical evidence that mortality rates
-    could follow a stochastic process with long-range dependence (LRD), that is,
+    follow a stochastic process with long-range dependence (LRD), that is,
     a stochastic process with memory. According to \cite{ra}, a stochastic
-    process or time series is LRD if it has persistence behavior\textemdash
+    process or time series is LRD, if it has persistence behavior\textemdash
     below we give a formal definition.
 
-        We base our stochastic formulation in the canonical example of a
-    continuous-time LRD process--the fractional Brownian Motion (fBM). We refer
-    to the seminal work of Mandelbrot and van Ness \cite{ma-va} to more
-    details. Since fBM is a generalization of the standard Brownian Motion (BM)
-    and still satisfies self-similarity and is LRD, fBM results to be a natural
-    noise model to describe and to explore LRD behavior.
+        We base our stochastic formulation in the fractional Brownian Motion (fBM)
+    \cite{ma-va}. Since fBM is a generalization of the standard Brownian Motion (BM)
+    that still satisfies self-similarity and is LRD, fBM results to be a natural
+    noise model to describe LRD behavior.
 
-        Our main idea is to extend the stochastic model reported by Milevesky
-     and Promislow to a model with LRD and verify its performance to fitting
-    and forecasting with real data.  With this technique, we obtain statistical
-    evidence via parameter estimation and forecasting that our LRD model
-    captures an unexpectedly long time persistence pattern of Italy mortality
-    rate.
+        The main idea is to extend the stochastic model reported by 
+    Milevesky and Promislow to a model with LRD and verify its performance 
+    to fitting and forecasting with real data.  
 
-        Our contribution suggest...
-        \info{Add relevant use and implications of our results}
+        We obtain statistical evidence\textemdash via Hurst parameter 
+    estimation\textemdash that Italy mortality rate data is LRD. Our model 
+    captures women's mortality rate dynamics. But, the results suggest 
+    that stratification by gender would be a direction for future formulations.
+   
+    \info{Add relevant use and implications of our results}
 
-        According to data of Italy, our LRD model captures essential events in
-    mortality rates as the abrupt changes. For example, our formulation
-    explains the abrupt growing mortality rate in men between its
-    18-50-year-old due to the second war world.
-    \improvement{To improve \newline and review information}
 
-        After this brief introduction, \Cref{fgn} reviews the fBM and presents
-    the fractional Ornstein-Uhlenbeck (fOU) process. Section 3 outlines the
-    applied method for parameter estimation. In  Section 4, we implement our
+        After this brief introduction, the model we are interested is introduced in \Cref{model-form}. \Cref{fgn} 
+    reviews the fBM and presents
+    the fractional Ornstein-Uhlenbeck (fOU) process. \Cref{esti} outlines the
+    applied method for parameter estimation. In  \Cref{re-fou}, we implement our
     formulation to fitting data of mortality from Italy. Further, in
     this section, we also run forecasting to a subset of the data and evaluate
-    its efficiency. Finally, we conclude in Section 5 with relevant
+    its efficiency. Finally, we conclude in \Cref{sec:Conclutions} with relevant
     implications and perspectives.
 
+\section{Model formulation}\label{model-form}
 
-\section{Fractional Brownian motion} \label{fgn}
+
+We now discuss the model of Milevsky-Promislow Model 
+(see \cite{mi-pr} for the original paper
+or \cite{gi-or-be}
+for a recent generalization). 
+
+Set the survival probability of an individual aged $x$ in the period $[t,T]$ as
+\begin{align}\label{E-surv}
+ S(t,T):=\E\Big[\exp\Big(-\int_t^T h_x(u) du\Big)\Big|\mathcal{F}_t \Big],
+\end{align}
+where $\{\mathcal{F}_t\}_{t\ge 0} $ is a filtration which represent the information until time $t$ and $h_x(t)$ is the
+stochastic force of mortality or hazard rate. According with the Milevsky-Promislow Model $h_x(t)$ is given by
+\begin{align}
+ h(t)&=h_0\exp(\alpha_0t+\alpha_1Y_t),\label{mod-1}
+\end{align}
+where  $h_0,\alpha_1,\alpha_2> 0$. The process $Y_t$ satisfies the SDE:
+\begin{align}
+ dY_t&=-\lambda Y_tdt+\sigma dB_t, \label{mod-3}
+\end{align}
+where $B_t$ is a Brownian motion, $Y_0=0$ and $\sigma,\lambda> 0$.
+
+
+Since stochastic mortality rate models take into account long time phenomena, we
+suggest a generalization of Milevesky-Promislow model, given by the equations
+\eqref{mod-1} and \eqref{mod-3}, which cover the case of long range dependence of
+the data.
+
+
+The model we propose is a generalization in the following sense.
+As before, the survival probability $S(t,T)$ of an individual aged
+$x$ in the period $[t,T]$, is given in the Equation \eqref{E-surv}
+and $h_x(t)$ is the stochastic force of mortality or hazard rate given by the
+Equation \eqref{mod-1}.
+
+In this paper, we will assume that $Y_t$ is an stochastic process that satisfies the SDE:
+\begin{align}
+	dY_t^H&=-\lambda Y_t^Hdt+\sigma dB_t^H, \label{mod2}
+\end{align}
+where $B_t^H $ is a \emph{fractional Brownian motion} (see subsection \ref{fBm})
+     with Hurst parameter $1/2 \le H< 1$,  $Y_0=0$, and
+$\sigma,\lambda> 0$.
+This SDE is the fractional Ornstein-Uhlenbeck process (see subsection \ref{sect-OU} for a formal definition of this process). 
+
+
+
+The main difference between this model and the original presented
+in \cite{mi-pr} is that they consider the driving noise in the SDE as a standard
+Brownian motion instead of the fractional Brownian motion as in our model. It is well-known that the fractional Ornstein-Uhlenbeck process (fOU process) $ Y_t^H$ is a long memory process when $1/2 \le H< 1$ (see subsection \ref{sect-OU}). Therefore, our proposed model is able to capture a long-range dependence of the data.
+
+
+
+We interpret the SDE \eqref{mod2} as
+\begin{align}
+	Y_t^H&=-\lambda\int_0^t Y_s^Hds+\sigma B_t^H.\label{mod3}
+\end{align}
+The equation above lacks of a stochastic integral because we
+consider the case with additive noise.  We refer the reader to \cite{mi} for further reading on fractional stochastic calculus.
+
+
+\section{Fractional Gaussian processes} \label{fgn}
+
+\subsection{Fractional Brownian motion} \label{fBm}
 
         We consider the Gaussian process$\{B_t^H,t\ge 0\}$, with $H\in (0,1)$,
     and with zero-mean and covariance function given by
@@ -219,17 +286,16 @@
     \end{align}
 
         This stochastic process is called a \emph{fractional Brownian motion}
-    (fBm) and was introduced by Kolmogorov \cite{ko} and studied by Mandelbrot
+    (fBm) and was introduced by Kolmogoroff \cite{ko} and studied by Mandelbrot
     and Van Ness in \cite{ma-va}. The parameter $H$ is called Hurst index
     because of the statistical analysis developed by the climatologist Hurst
     \cite{hu}. The fBm is a generalization of Brownian motion without
-    independent increments, also it is a continuous-time Gaussian process.
+    independent increments, in fact it is a continuous-time Gaussian process.
 
 
-        The fBm has the properties of self-similarity and stationary increments.
-    Moreover, its Sample-paths are almost nowhere differentiable. However,
-    almost-all trajectories are
-    H\"{o}lder continuous of any order strictly less than H, that is, for each
+        fBm process has the properties of self-similarity and stationary increments.
+    Its sample-paths are almost nowhere differentiable but almost-all H\"{o}lder continuous 
+    for any order strictly less than H. That is, for each
     trajectory, there exists a finite constant $C$ such that for every
     $\epsilon > 0$
     \[
@@ -240,16 +306,15 @@
         C |t - s| ^ {H - \epsilon} .
     \]
 %
-        For $H =\tfrac{1}{2}$ the covariance can be written as
+        For $H = \tfrac{1}{2} $ the covariance of fBM can be written as
     $
-        R_{1 / 2} (t,s)
+        R_{1 / 2} (t, s)
             = \min(s, t)
-    $ and the process $B_t^{1/2}$, is equivalent to
-    the standard Brownian motion. However, unlike the standard BM,
-    if $H \ne\tfrac{1}{2}$, then  this increments are \emph{not}
-    independent.
+    $, thus process $B_t ^ {1 / 2}$, is equivalent to
+    the standard Brownian motion. However, if $H \ne \tfrac{1}{2}$, 
+    then this increments are \emph{not} independent.
 %
-    Let  $X_n = B_n^H-B_{n-1}^H$, $n \ge 1$.
+    	Let  $X_n = B_n ^ H - B_{n - 1} ^ H$, $n \ge 1$.
     Then $\{X_n, n \ge 1\}$ is a Gaussian stationary sequence with unit
     variance and covariance function if
     \begin{align*}
@@ -279,60 +344,26 @@ Therefore,
 \end{itemize}
     For further information on fBM see \cite{ra,nu,mi}.
 
-\subsection{Fractional Ornstein-Uhlenbeck process (fOU)}
+\subsection{Fractional Ornstein-Uhlenbeck process (fOU)}\label{sect-OU}
 
 
-The fOU is an SDE driven by a fractional Brownian motion. The same model was
-used in \cite{mi-pr}
-or \cite{gi-or-be}.\\
-
-As we mentioned before, the survival probability $S(t,T)$ of an individual aged
-$x$ in the period $[t,T]$,
-is given in the Equation \eqref{E-surv}
-and $h_x(t)$ is the stochastic force of mortality or hazard rate given by the
-Equation \eqref{mod-1}.
-We will assume that $Y_t$ is an stochastic process that satisfies the SDE:
-\begin{align}
-dY_t^H&=-\lambda Y_t^Hdt+\sigma dB_t^H, \label{mod2}
-\end{align}
-where $B_t^H $ is a fBM with Hurst parameter $1/2 \le H< 1$,  $Y_0=0$, and
-$\sigma,\lambda> 0$.
-This SDE is the fractional Ornstein-Uhlenbeck process.\\
-
-
-There are substantial differences in trying to solve Equation \eqref{mod2} with
-respect to the method use
-in \cite{mi-pr} or \cite{gi-or-be}. We now discuss some of these differences.
-First we interpret the SDE \eqref{mod2} as
-\begin{align}
-Y_t^H&=-\lambda\int_0^t Y_s^Hds+\sigma B_t^H.\label{mod3}
-\end{align}
-Notice that the equation above does not have a stochastic integral because we
-are considering the
-case with additive noise.
-Nevertheless, it is possible to consider the general case with multiplicative
-noise in which case
-it is necessary to define a stochastic integral with respect to fractional
-Brownian motion as a pathwise Riemann–Stieltjes
-integral (see, e.g., \cite{yo} for the original definition and \cite{du-no} for
-advanced results). \\
-
-Coming back to Equation \eqref{mod3}, Cheridito et al in \cite{ch-ka-ma} have
-introduced the
-fractional Ornstein-Uhlenbeck process (fOU) and they have shown that the process
+The fOU is an SDE driven by a fractional Brownian motion. 
+Coming back to Equation \eqref{mod3}, \cite{ch-ka-ma}
+introduced the fractional Ornstein-Uhlenbeck process (fOU) and they 
+showed that the process
 \begin{equation}
-Y_t^H=\sigma \int_0^t e^{-\lambda(t-u)} dB_u^H,\label{mod4}
+	Y_t ^ H = \sigma \int_0 ^ t e ^ {-\lambda(t - u)} dB_u^H, \label{mod4}
 \end{equation}
 is the unique almost surely continuous-path process which solves \eqref{mod3}
 (see also Theorem 1.24 in \cite{ra}).
 The integral in Equation \eqref{mod4} is a
 pathwise Riemann–Stieltjes integral.  The fOU process is neither Markovian nor
 a semimartingale for $H \in(1/2,1)$ (see \cite{du-no}) but remains
-Gaussian and ergodic.\\
+Gaussian and ergodic.
 
 Moreover, when $H \in(1/2,1)$, $Y_t$ even presents the long-range dependence
 property (see Cheridito
-\cite{ch-ka-ma} or  \cite{ra}).\\
+\cite{ch-ka-ma} or  \cite{ra}).
 
 The variance of the fOU process $Y_t$ is given by the following expression
 (see\cite{ze-ch-ya}):
@@ -345,7 +376,7 @@ Notice that when $H=1/2$ we get
 Var(Y_t)= \frac{\sigma^2}{2\lambda}  \big(1-e^{-2\lambda t}\big),
 \end{align}
 which is the variance of the standard Ornstein-Uhlenbeck process (see for
-instance \cite{mik} page 143). \\
+instance \cite{mik} page 143). 
 
 If we consider the constant $\alpha_1 = T^{-H}$ and the Equation
 \eqref{var-fou},
@@ -370,7 +401,7 @@ to control the variance of the process $Y_t$.
 \label{esti}
 
 In this section we will describe a methodology to estimate the parameters.
-We will use some R-libraries in order to estimate the parameters. \\
+We will use some R-libraries in order to estimate the parameters. 
 
 We need to estimate $\alpha_0, \alpha_1$ as well as $\sigma,\lambda$ for the
 SDE model that we described in the previous section. Furthermore,
@@ -382,11 +413,6 @@ is preserved, this means that the  value of the  Hurst parameters $H$, in the
 equation \eqref{mod2}, for the fBm $B_t^H$ and the one for the
 fractional Gaussian noise $Y_t^H$ are the same. Observe that $\alpha_1=T^{-H}$
 will be calculated using the estimated Hurst parameter.
-
-
-
-
-
 
 \subsection{Estimation of the parameter $\alpha_0$.}
 
@@ -503,7 +529,7 @@ than $ 0.5$; if it is anti-persistent
 then the slope $H$ is less than  $0.5$. The “significance” level of the
 estimated parameter $H$ is usually chosen to be one over the
 square root of sample length, i.e. the standard deviation of a Gaussian white
-noise.\\
+noise.
 
 
 
@@ -575,7 +601,7 @@ $$
 where $i=\sqrt{-1}$. Usually, it is evaluated at the Fourier Frequencies
 $\omega_{j,N} = \frac{2\pi j}{N}$, $0 \le j \le [N/2]$.  Note that the
 periodogram is the norm of the Discrete Fourier transform of the time series
-(see Section 6.1.2 in \cite{priestley} for instance).\\
+(see Section 6.1.2 in \cite{priestley} for instance).
 
 
 The LWE of the Hurst parameter, $\hat{H}_{LWE}(m)$  is implicitly defined by
@@ -595,7 +621,7 @@ with respect to $c$ and $H$, with $f_{c,H}$ defined in \eqref{fdw1}.
 There are several methods to estimate parameters $\sigma$ and  $\lambda$. For
 instance see \cite{ra} or the references in \cite{ne-ti} or in \cite{ku-mi}. In
 the following section we will do a brief review of
-some of these methods.\\
+some of these methods.
 
 
 \subsubsection{Estimation $\sigma$.}
@@ -608,12 +634,12 @@ Gaussian estimators for the parameters $\sigma,\lambda$ and $H$ of
 the discretely observed fractional Ornstein-Uhlenbeck process solution
 expressed in the stochastic differential equation.
 There is a restriction on  the estimation of the drift $\lambda$: the
-results are valid only in the case when $1/2<H<3/4$. \\
+results are valid only in the case when $1/2<H<3/4$. 
 
 The key point of this method of estimation is that the Hurst exponent $H$ and
 the diffusion coefficient $\sigma $ can be estimated without
 estimating $\lambda$.  We will use this method to estimate the parameters
-$\sigma$ and $\lambda$. Notice that $H$ was already estimated.\\
+$\sigma$ and $\lambda$. Notice that $H$ was already estimated.
 
 
 
@@ -630,11 +656,14 @@ Let it be normalized
 We will also consider a {\it dilated} filter $\bm{a}^{(2)}$ associated to
 $\bm{a}$. For $0\le k\le K$ we define
 \[
-a_k^{(2)} = \begin{cases} a_{k'}, & \mbox{if } k=2k' \\0, & \mbox{otherwise.}
+a_k^{(2)} = 
+    \begin{cases} a_{k'}, & \mbox{if } k=2k' 0,
+    \\
+     & \mbox{otherwise.}
 \end{cases}
 \]
 Since $\sum_{k=0}^{2K} a_k^2 k^j=2^j \sum_{k=0}^K a_k k^j $ then the filter
-$\bm{a}^{(2)}$ has the same order than  $\bm{a}$.\\
+$\bm{a}^{(2)}$ has the same order than  $\bm{a}$.
 
 
 
@@ -653,10 +682,22 @@ the {\it generalized quadratic variation} associated to the filter $\bm{a}$
 (see for instance \cite{is-la}). Then, define the
 following estimators for $H$ and $\sigma$.
 \begin{align}
-\hat{H}_N&:=\tfrac{1}{2}\log_2\left(\frac{V_{N,\bm{a}^2}}{V_{N,\bm{a}}
-}\right),\label{est1}\\
-\hat{\sigma}_N&:=\left(-2\frac{V_{N,\bm{a}} }{\sum_{k,l} a_ka_l |k-l|^{2
-\hat{H}_N } \Delta_N^{2 \hat{H}_N } }\right)^{1/2}.\label{est2}
+    \hat{H}_N &:=
+    \tfrac{1}{2} \log_2 
+    \left(
+        \frac{
+        	V_{N,\bm{a}^2}
+        }{
+        	V_{N,\bm{a}}
+        }
+    \right), \label{est1}
+    \\
+    \hat{\sigma}_N
+    	&:=\left(
+    		-2
+    		\frac{V_{N,\bm{a}}}{\sum_{k,l} a_ka_l |k-l|^{2\hat{H}_N} 
+    	    \Delta_N^{2 \hat{H}_N } }\right)^{1/2}.
+    	\label{est2}
 \end{align}
 
 Brouste and Iacus (see Th. 1 in \cite{br-ia}) have shown the next result.
@@ -673,7 +714,7 @@ Brouste and Iacus (see Th. 1 in \cite{br-ia}) have shown the next result.
     \begin{align*}
     \sqrt{N} (\hat{H}_N  - H ) &\stackrel{\mathcal{L}}{\longrightarrow} N (0,
     \Gamma_1 ( \bm{a},\sigma,H)) \quad  \hbox{\rm as} \quad N
-    \rightarrow +\infty,\\
+    \rightarrow +\infty,
     \frac{\sqrt{N}}{\log N} ( \hat{\sigma}_N  - \sigma )
     &\stackrel{\mathcal{L}}{\longrightarrow} N (0, \Gamma_2 (\bm{a},\sigma,H))
     \quad
@@ -686,9 +727,7 @@ Brouste and Iacus (see Th. 1 in \cite{br-ia}) have shown the next result.
 \end{theorem}
 
 With this result is possible to obtain an estimator for the parameters
-$\sigma$.\\
-
-
+$\sigma$.
 
 We will use the following two filters:
 \begin{itemize}
@@ -707,8 +746,6 @@ We will use the following two filters:
     \end{equation*}
 
 \end{itemize}
-
-
 
 \subsubsection{Estimation of the drift parameter $\lambda$ when both $H$ and
 $\sigma$ are known}
@@ -749,13 +786,7 @@ Set $T_N=N\Delta_N$. We have the next result.
     \]
     \hfill$\Box$
 \end{theorem}
-For the proof see Theorem 2 in \cite{br-ia}.\\
-
-
-
-
-
-
+For the proof see Theorem 2 in \cite{br-ia}.
 
 \section{Results with the fractional Ornstein-Uhlenbeck model}
 \label{re-fou}
@@ -763,18 +794,18 @@ For the proof see Theorem 2 in \cite{br-ia}.\\
 In this section we present the estimated mortality rates with the use of the
 model
 described in section \ref{intro}. We obtain the data from the website of Human
-Mortality Database for the Italian population between 1950 to 2004.\\
+Mortality Database for the Italian population between 1950 to 2004.
 
 In first place, we present the estimation of the $H$ parameter. In second
 place, we present the results on simulated mortality rates using  equations
 \eqref{est2}-\eqref{est3} to estimate the parameters $\sigma,\lambda$. The
-parameter $\alpha_0$ has been fixed with the use of equation \eqref{alpha0}.\\
+parameter $\alpha_0$ has been fixed with the use of equation \eqref{alpha0}.
 
 We run 10000 simulations of the mortality rates from ages $0$ to age $90$. To
 do that, we have simulate a fractional Brownian motion $B_t^{\hat H}$ and using
 equation \eqref{mod-1} we have estimated the mortality rate. To run the fBm
 simulations we have used the function {\bf fbm} which is includes in the R
-library {\bf somebm}.  We also include a  95.5\% confidence interval.\\
+library {\bf somebm}.  We also include a  95.5\% confidence interval.
 
 
 We present the results for women and men in sections \ref{re-wom} and
@@ -789,39 +820,43 @@ and somebm (some Brownian motions simulation function Version 0.1, 2016).
 
 \subsection{Hurst estimation}\label{hu-est}
 
-For the Hurst parameter estimate we have used three R routines: FDWhittle,
-RoverS and hurstexp.
-The two first routines are from the fractal library, while the latter is from
-the pracma library.\\
+	For the Hurst parameter estimate we have used three R routines: FDWhittle,
+RoverS and hurstexp. The two first routines are from the fractal library, 
+while the latter is fromthe pracma library.
 
-The former routine estimate the Hurst parameter by Whittle's method as was
+	The former routine estimate the Hurst parameter by Whittle's method as was
 described in the subsection \ref{Desc-Est-H}. RoverS routine
 estimate $\hat H $ by rescaled range (R/S) method. The hurstexp routine
 estimate $\hat H $  using
-R/S analysis. \\
+R/S analysis. 
 
 Finally, figures \ref{graph-Hurst_Est_Wo} and \ref{graph-Hurst_Est_Me} show
 the estimated Hurst parameter for women and men separately.
 
 \begin{figure}[H]
     %\includegraphics[width = 4.5in,  height=4in]{Hurst-Women.png}
+<<<<<<< HEAD
     \includegraphics{Hurst-Men.png}
+=======
+    \includegraphics{Hurst-Women.eps}
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \caption{Estimated Hurst parameter using R-routines.}
     \label{graph-Hurst_Est_Wo}
 \end{figure}
 \change{change to eps format}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
 
 With the rescaled range R/S and R/S  methods we obtain a consistent estimator
-for the Hurst
-parameter in the sense that they do not present dramatic changes through the
-time. Moreover,
-the $H$ estimated with these two methods take values in the interval
-(0.57,0.80) approximately. This tells us that the data has the long memory
-property as
-was mentioned in section \ref{fgn}. Same results are obtained for the men and
-women.\\
-
+for the Hurst parameter in the sense that they do not present 
+dramatic changes through the time. Moreover, the $H$ estimated with 
+these two methods take values in the interval (0.57,0.80) approximately.
+This tells us that the data has the long memory property as
+was mentioned in section \ref{fgn}. Same results are obtained 
+for the men and women.
+%
 
 Notice that the estimated parameters for $H$ using Whittle method have high
 variation through the time, in opposition to those
@@ -834,26 +869,33 @@ the periodogram to estimate $H$ while the other two methods uses the raw data.
 The two approaches using Whittle likelihood and raw data are very different and
 hence they give very different estimates of $H$. Since rescaled range $R/S$ and
 $R/S$  methods have estimated very similar $H$, we decide to use the Hurst
-coefficients obtained with the
-method of $R/S$ to perform the mortality rates simulations. \\
+coefficients obtained with the method of $R/S$ to perform the mortality 
+rates simulations.
 
 \begin{figure}[H]
+<<<<<<< HEAD
     \includegraphics{Hurst-Men.png}
+=======
+    \includegraphics{Hurst-Men.eps}
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \caption{\bf Estimated Hurst parameter using R-routines.}
     \label{graph-Hurst_Est_Me}
 \end{figure}\vspace*{0.1cm}
 \change{change to eps format}
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
 
 \subsection{Results for women}\label{re-wom}
 
-We present the results for 10000 simulations of the mortality rates for ages:
-$0,5,25,50,60,70,80,90$.
+We present the results for 10000 path simulations of the mortality 
+rates for ages: $0,5,25,50,60,70,80,90$.
 We graph the historical mortality rate, the mean of all simulations and the
 95\% confidence interval. See figures \ref{graph-simu_FOU1} and
-\ref{graph-simu_FOU2}.\\
+\ref{graph-simu_FOU2}.
 
 In general, for all ages, the model is well fitted, in particular, after the
 80's. Nevertheless, there are some time periods where the model is not
@@ -863,6 +905,7 @@ rate for women age 0 during the period of 50s to 80s and for women age 50, 60,
 60s to 80s approximately. Moreover, it also overestimates the mortality rate for
 women age 25 during the period of 50s to 80s.
 
+<<<<<<< HEAD
 
 \begin{figure}[H]
     \includegraphics{PlotWomen0.eps}
@@ -883,6 +926,41 @@ women age 25 during the period of 50s to 80s.
 %variation, the model overestimates mortality rates
 % for the period between late 50's and first 70's. \\
 
+=======
+\begin{figure}[htb]
+    \includegraphics[width = 2.85in]{PlotWomen0.eps}
+    \includegraphics[width = 2.85in]{PlotWomen5.eps}
+    \includegraphics[width = 2.85in]{PlotWomen25.eps}
+    \includegraphics[width = 2.85in]{PlotWomen50.eps}
+    \caption{Simulations for the rate mortality with the fOU model: ages
+    $0,5,25,50$ and $N=10000$.}
+    \label{graph-simu_FOU1}
+    \qquad
+    {\protect
+        \tikz
+        \protect
+        \draw[dotted, color=brown, style={line width=1pt}] 
+        plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+    }
+    IC at 95\% 
+    \qquad
+    {\protect
+        \tikz
+        \protect
+        \draw[dashed, color=red, style={line width=1pt}] 
+        plot coordinates{(0,0) (.2cm, 0.2cm)};
+    }
+    simulation mean
+    \qquad
+    {\protect
+        \tikz
+        \protect
+        \draw[solid, color=blue, style={line width=1pt}] 
+        plot coordinates{(0,0) (.2cm, 0.2)};
+    }
+    Data mortality rates.
+\end{figure}
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
 
 For older ages (see figure \ref{graph-simu_FOU2}) we observe that for ages 60
 and 70 the estimation is well fitted trough the years. We notice that
@@ -890,22 +968,53 @@ predicted rates are not so far away and that the historical rates are inside
 the confidence interval. For the very oldest ages the estimation is not so good
 as for earlier ages. The main difference is in 50's when the absolute number of
 living persons arriving to those ages were small so that the variability of the
-estimates is larger. \\
+estimates is larger. 
 
 All these suggest that a better model could include a short and a long-term
 memory process, so that the model could help us to control the short-term
 variations in a better way.
 
+<<<<<<< HEAD
 \begin{figure}[H]
     \includegraphics[width = 2.85in]{PlotWomen60.png}
     \includegraphics{PlotWomen70.png}
     \includegraphics{PlotWomen80.png}
     \includegraphics{PlotWomen90.png}
+=======
+\begin{figure}[htb]
+    \includegraphics[width = 2.85in]{PlotWomen60.eps}
+    \includegraphics[width = 2.85in]{PlotWomen70.eps}
+    \includegraphics[width = 2.85in]{PlotWomen80.eps}
+    \includegraphics[width = 2.85in]{PlotWomen90.eps}
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $60,70,80,90$ and $N=10000$.}
     \label{graph-simu_FOU2}
+    \qquad
+    {\protect
+        \tikz
+        \protect
+        \draw[dotted, color=brown, style={line width=1pt}] 
+        plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+    }
+    IC at 95\% 
+    \qquad
+    {\protect
+        \tikz
+        \protect
+        \draw[dashed, color=red, style={line width=1pt}] 
+        plot coordinates{(0,0) (.2cm, 0.2cm)};
+    }
+    simulation mean
+    \qquad
+    {\protect
+        \tikz
+        \protect
+        \draw[solid, color=blue, style={line width=1pt}] 
+        plot coordinates{(0,0) (.2cm, 0.2)};
+    }
+    Data mortality rates.
 \end{figure}\vspace*{0.1cm}
-
 
 \subsection{Results for men}\label{re-men}
 
@@ -913,20 +1022,53 @@ As in the case for women, we present results for 10000 simulations of the
 mortality rates for ages: $0,5,25,50,60,70,80,90$.
 We graph the historical rate mortality, the mean of all simulations and the
 95.5\% confidence interval. See figures \ref{graph-simu_FOU3} and
-\ref{graph-simu_FOU4}.\\
-
-
+\ref{graph-simu_FOU4}.
 
 \begin{figure}[H]
+<<<<<<< HEAD
     \includegraphics[width = 2.85in]{PlotMen0.png}
     \includegraphics{PlotMen5.png}
     \includegraphics{PlotMen25.png}
     \includegraphics{PlotMen50.png}
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $0,5$ and $N=10000$.}
+=======
+    \includegraphics[width = 2.85in]{PlotMen0.eps}
+    \includegraphics[width = 2.85in]{PlotMen5.eps}
+    \includegraphics[width = 2.85in]{PlotMen25.eps}
+    \includegraphics[width = 2.85in]{PlotMen50.eps}
+    \caption{
+        Simulations for the rate mortality with the fOU model: 
+        ages $0,5,25,50$ and ${N=10000}$.
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dotted, color=brown, style={line width=1pt}] 
+            plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+        }
+        IC at 95\% 
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dashed, color=red, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2cm)};
+        }
+        simulation mean
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[solid, color=blue, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2)};
+        }
+        Data mortality rates
+}
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \label{graph-simu_FOU3}
-\end{figure}\vspace*{0.1cm}
-
+\end{figure}
+\pagebreak
 As in the case for women, the proposed model for men is well fitted.
 %The AIDS pandemic is also noticed for ages between 25 to 35 and
 %it generates an increase in the rates mortality for these ages; As a matter of
@@ -937,15 +1079,52 @@ of the mortality rates. As was mentioned before, if we include in the model a
 short-term process,  we believe the model could be better fitted. The main
 example  of a short-term process to try is a AR$(p)$ with $p\le 2$ or $3$.
 
+\pgfplotsset{every axis/.append style={line width=5pt}}
+
 \begin{figure}[H]
+<<<<<<< HEAD
     \includegraphics[width = 2.85in]{PlotMen60.png}
     \includegraphics{PlotMen70.png}
     \includegraphics{PlotMen80.png}
     \includegraphics{PlotMen90.png}
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $60,70,80,90$ and $N=10000$.}
+=======
+    \includegraphics[width = 2.85in]{PlotMen60.eps}
+    \includegraphics[width = 2.85in]{PlotMen70.eps}
+    \includegraphics[width = 2.85in]{PlotMen80.eps}
+    \includegraphics[width = 2.85in]{PlotMen90.eps}
+    \caption{Simulations for the rate mortality with the fOU 
+        model, ages
+        $60,70,80,90$ and ${N=10000}$. 
+        \qquad
+            {\protect
+                \tikz
+                \protect
+                \draw[dotted, color=brown, style={line width=1pt}] 
+                plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+            }
+            IC at 95\% 
+            \qquad
+            {\protect
+                \tikz
+                \protect
+                \draw[dashed, color=red, style={line width=1pt}] 
+                plot coordinates{(0,0) (.2cm, 0.2cm)};
+            }
+            simulation mean
+            \qquad
+            {\protect
+                \tikz
+                \protect
+                \draw[solid, color=blue, style={line width=1pt}] 
+                plot coordinates{(0,0) (.2cm, 0.2)};
+            }
+            Data mortality rates
+    } 
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \label{graph-simu_FOU4}
-\end{figure}\vspace*{0.1cm}
+\end{figure}
 
 For older ages, we observed that the data is irregular, so it is necessary to
 use a more complex model to
@@ -970,12 +1149,47 @@ results are bad as the ages increases. see figures
 $0,25,50,90$.
 
 \begin{figure}[H]
+<<<<<<< HEAD
     \includegraphics[width = 2.85in]{PlotWomenForecast0.png}
     \includegraphics{PlotWomenForecast25.png}
     \includegraphics{PlotWomenForecast50.png}
     \includegraphics{PlotWomenForecast90.png}
     \caption{Forecast for the rate mortality with the fOU model. Women at ages
     $0,25,50,90$.}
+=======
+    \includegraphics[width = 2.85in]{PlotWomenForecast0.eps}
+    \includegraphics[width = 2.85in]{PlotWomenForecast25.eps}
+    \includegraphics[width = 2.85in]{PlotWomenForecast50.eps}
+    \includegraphics[width = 2.85in]{PlotWomenForecast90.eps}
+    \caption{
+        Forecast for the rate mortality with the fOU model. 
+        Women at ages $0,25,50,90$.
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dotted, color=brown, style={line width=1pt}] 
+            plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+        }
+        IC at 95\% 
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dashed, color=red, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2cm)};
+        }
+        simulation mean
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[solid, color=blue, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2)};
+        }
+        Data mortality rates.
+    }
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \label{graph-graph-forecast_women_FOU1}
 \end{figure}\vspace*{0.1cm}
 
@@ -983,32 +1197,100 @@ $0,25,50,90$.
 
 
 \begin{figure}[H]
+<<<<<<< HEAD
     \includegraphics[width = 2.85in]{PlotMenForecast0.png}
     \includegraphics{PlotMenForecast10.png}
     \includegraphics{PlotMenForecast25.png}
     \includegraphics{PlotMenForecast40.png}
     \caption{Forecast for the rate mortality with the fOU model. Men at ages
     $0,10,25,40$.}
+=======
+    \includegraphics[width = 2.85in]{PlotMenForecast0.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast10.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast25.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast40.eps}
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \label{graph-forecast_men_FOU1}
-\end{figure}\vspace*{0.1cm}
-
-
+    \caption{
+        Forecast for the rate mortality with the fOU model. Men 
+        at ages $0,10,25,40$.
+        \newline
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dotted, color=brown, style={line width=1pt}] 
+            plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+        }
+        IC at 95\% 
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dashed, color=red, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2cm)};
+        }
+        simulation mean
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[solid, color=blue, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2)};
+        }
+        Data mortality rates.
+    }
+\end{figure}
 
 \begin{figure}[H]
+<<<<<<< HEAD
     \includegraphics[width = 2.85in]{PlotMenForecast50.png}
     \includegraphics{PlotMenForecast60.png}
     \includegraphics{PlotMenForecast70.png}
     \includegraphics{PlotMenForecast90.png}
     \caption{Forecast for the rate mortality with the fOU model. Men at ages
     $50,60,70,90$.}
+=======
+    \includegraphics[width = 2.85in]{PlotMenForecast50.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast60.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast70.eps}
+    \includegraphics[width = 2.85in]{PlotMenForecast90.eps}
+    \caption{Forecast for the rate mortality with the fOU model. 
+        Men at ages $50,60,70,90$.
+        \newline
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dotted, color=brown, style={line width=1pt}] 
+            plot coordinates{(0.0cm, 0.0cm) (.2cm, 0.2cm)};
+        }
+        IC at 95\% 
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[dashed, color=red, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2cm)};
+        }
+        simulation mean
+        \qquad
+        {\protect
+            \tikz
+            \protect
+            \draw[solid, color=blue, style={line width=1pt}] 
+            plot coordinates{(0,0) (.2cm, 0.2)};
+        }
+        Data mortality rates.
+}
+>>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \label{graph-forecast_men_FOU2}
 \end{figure}\vspace*{0.1cm}
 
 
-\section{Conclusions}
+\section{Conclusions}\label{sec:Conclutions}
 
-
-We have applied our proposed model to the Italian mortality rates with a
+	We have applied our proposed model to the Italian mortality rates with a
 geometric-type fractional Ornstein-Uhlenbeck process. Our
 main hypothesis was that, for a fixed age, the mortality rates changes through
 the time slowly, so that a stochastic differential equations
@@ -1017,15 +1299,13 @@ stochastic differential equation with a fractional Brownian motion as a driven
 noise with $H\in (0.5,1)$ in order to satisfy the long-range dependence
 property. With the data we have fixed the Hurst coefficient and we have
 confirmed our hypothesis since
-we have found that the estimated Hurst is in $(0.58,0.8)$.  \\
+we have found that the estimated Hurst, for all ages, is in $(0.58,0.8)$.  
 
-
-
-Notice that we have consider a more general model that the one used in
+	Notice that we have consider a more general model that the one used in
 \cite{gi-or-be}. This is because we have included the possibility that the
 Hurst parameter could be equal to $1/2$, which is the case when the fractional
 Brownian motion becomes a standard Brownian motion. Therefore,
-when $H=1/2$ we recover the  Giacometti, Ortobelli and Bertocchi model.\\
+when $H=1/2$ we recover the  Giacometti, Ortobelli and Bertocchi model.
 
 
 
@@ -1040,136 +1320,146 @@ when $H=1/2$ we recover the  Giacometti, Ortobelli and Bertocchi model.\\
 % of the ARMA process is the FARIMA process, which is a long memory process
 % (see, for instance, section 5.2 in \cite{sh-st}).
 
-The model is, specially for women, well behaved. For men at some ages we found
-some shortcomings that suggest the use of more terms in order to improve
-the model. The long-range dependence model proposed in this paper is good
+
+
+	The model is, specially for women, well behaved. For men at some ages we found
+some shortcomings that suggest the use of more terms in order to improve the model. 
+From this results, and in opposition of the European normative on insurance 
+that does not discriminate by gender, we conclude from our model, applied 
+to the Italian case, that modelling the mortality by gender could improve 
+the risk management of the insurance companies.
+
+
+	The long-range dependence model proposed in this paper is good
 enough to reproduce the mortality rates. If we add some extra terms to make it
 more flexible to reproduce the cases where the mortality rates have more
 variations then it will generate a more accurate model. We are starting to work
 on this extension of the model. Moreover, a multiplicative noise model will be
-the subject of a future research.\\
+the subject of a future research.
 
 
 
-\begin{thebibliography}{99}
+\bibliography{references.bib}{}
+\bibliographystyle{rss}
+% \begin{thebibliography}{99}
 
-    \bibitem{be-ye-fe-gh} J. Beran, Y. Feng, S. Ghosh, R. Kulik: Long-Memory
-    Processes. Probabilistic Properties and Statistical Methods.
-    Springer. (2013)
+%     \bibitem{be-ye-fe-gh} J. Beran, Y. Feng, S. Ghosh, R. Kulik: Long-Memory
+%     Processes. Probabilistic Properties and Statistical Methods.
+%     Springer. (2013)
 
-    \bibitem{br-ia} A. Brouste, S. M. Iacus: {\it  Parameter estimation for the
-    discretely observed fractional Ornstein-Uhlenbeck process
-        and the Yuima R package}. Computational Statistics August 2013, Volume
-        28, Issue 4, pp 1529-1547. (2013).
-    \bibitem{ch-ka-ma} P. Cheridito, H. Kawaguchi, M. Maejima {\it Fractional
-    Ornstein-Uhlenbeck processes}. Electron J Probab
-    8(3):1-14, (2003).
+%     \bibitem{br-ia} A. Brouste, S. M. Iacus: {\it  Parameter estimation for the
+%     discretely observed fractional Ornstein-Uhlenbeck process
+%         and the Yuima R package}. Computational Statistics August 2013, Volume
+%         28, Issue 4, pp 1529-1547. (2013).
+%     \bibitem{ch-ka-ma} P. Cheridito, H. Kawaguchi, M. Maejima {\it Fractional
+%     Ornstein-Uhlenbeck processes}. Electron J Probab
+%     8(3):1-14, (2003).
 
-    \bibitem{de} I. Daubechies: Ten Lectures on Wavelets, SIAM (1992)
+%     \bibitem{de} I. Daubechies: Ten Lectures on Wavelets, SIAM (1992)
 
-    \bibitem{du-no} R.M. Dudley, R. Norvai\v{s}a: Concrete functional calculus,
-    in: Springer Monographs in Mathematics, Springer, New
-    York, 2011.
+%     \bibitem{du-no} R.M. Dudley, R. Norvai\v{s}a: Concrete functional calculus,
+%     in: Springer Monographs in Mathematics, Springer, New
+%     York, 2011.
 
-    \bibitem{gi-or-be} R. Giacometti, S. Ortobelli, M. Bertocchi:{\it A
-    Stochastic Model for Mortality Rate on Italian Data}
-    Journal of Optimization Theory and Applications 149 (1), 216-228. (2011).
-
-
-    \bibitem{hu-nu} Y. Hu, D. Nualart : {\it Parameter estimation for
-    fractional Ornstein–Uhlenbeck processes}. Stat Probab
-    Lett 80(11–12):1030–1038. (2010).
+%     \bibitem{gi-or-be} R. Giacometti, S. Ortobelli, M. Bertocchi:{\it A
+%     Stochastic Model for Mortality Rate on Italian Data}
+%     Journal of Optimization Theory and Applications 149 (1), 216-228. (2011).
 
 
-    \bibitem{hu} H. E. Hurst: {\it Long-term storage capacity in reservoirs}.
-    Trans. Amer. Soc. Civil Eng. 116, 400-410. (1951).
-    \bibitem{is-la} J. Istas, G. Lang : {\it Quadratic variations and
-    estimation of the local Hölder index of a Gaussian process}.
-    Annales de l’Institut Henri Poincaré 23(4):407–436. (1997).
-    \bibitem{je-lu-vi} P. Jevtić, E. Luciano, E. Vigna: {\it Mortality surface
-    by means of continuous time cohort models}.
-    Insurance:Mathematics and Economics. Volume 53, Issue 1, July 2013, Pages
-    122–133. (2013).
+%     \bibitem{hu-nu} Y. Hu, D. Nualart : {\it Parameter estimation for
+%     fractional Ornstein–Uhlenbeck processes}. Stat Probab
+%     Lett 80(11–12):1030–1038. (2010).
 
 
-    \bibitem{kl-pl} P. E. Kloeden, E. Platen: Numerical Solution of Stochastic
-    Differential Equations. Stochastic
-    Modelling and Applied Probability, Vol. 23, Springer (1992)
-    \bibitem{ko}  A. N. Kolmogorov: {\it Wienersche Spiralen und einige andere
-    interessante Kurven  im
-        Hilbertschen Raum}. C. R. (Doklady) Acad. URSS (N.S.) 26, 115-118.
-        (1940).
-    \bibitem{kou} D. Koutsoyiannis: {\it The Hurst phenomenon and fractional
-    Gaussian noise made easy}.
-    Hydrological Sciences Journal des Sciences Hydrologiques, 47(4). August
-    (2002)
-    \bibitem{ku-mi} K. Kubilius, Y. S. Mishura: {\it The rate of convergence of
-    Hurst index estimate for the stochastic differential equation}
-    Stochastic Processes and their Applications. Vol. 122, Issue 11,
-    3718–3739. (2012)
-    \bibitem{lo} A. W. Lo: {\it Long-Term Memory in Stock Market Prices}
-    Econometrica Vol. 59, No. 5 (Sep., 1991), pp. 1279-1313. (1991).
-    \bibitem{ma-va}  B. B. Mandelbrot, J. W. Van Ness: {\it Fractional Brownian
-    motions, fractional noises and
-        applications}. SIAM Review 10, 422-437. (1968).
-    \bibitem{mik} T. Mikosch : Elementary Stochastic Calculus With Finance in
-    View. Advanced Series on Statistical Science and Applied
-    Probability, Vol 6. World Scientific Publishing (1999)
-    \bibitem{mi-pr}  M.A. Milevsky, S.D. Promislow: {\it Mortality derivatives
-    and the option to annuitise}. Insur. Math.
-    Econ. 29, 299–318 (2001)
-    \bibitem{mi}  Y. S. Mishura: Stochastic Calculus for Fractional Brownian
-    Motion and Related Processes.
-    Springer, (2008).
-
-    \bibitem{ne-ti} A. Neuenkirch, S. Tindel: {\it A least square-type
-    procedure for parameter estimation in stochastic differential
-        equations with additive fractional noise}. Stat Inference Stoch
-        Process, vol. 17, 99–120, (2014).
+%     \bibitem{hu} H. E. Hurst: {\it Long-term storage capacity in reservoirs}.
+%     Trans. Amer. Soc. Civil Eng. 116, 400-410. (1951).
+%     \bibitem{is-la} J. Istas, G. Lang : {\it Quadratic variations and
+%     estimation of the local Hölder index of a Gaussian process}.
+%     Annales de l’Institut Henri Poincaré 23(4):407–436. (1997).
+%     \bibitem{je-lu-vi} P. Jevtić, E. Luciano, E. Vigna: {\it Mortality surface
+%     by means of continuous time cohort models}.
+%     Insurance:Mathematics and Economics. Volume 53, Issue 1, July 2013, Pages
+%     122–133. (2013).
 
 
-    \bibitem{nu} D. Nualart: {\it Fractional Brownian motion: stochastic
-    calculus and applications }
-    Proceedings of the International Congress of Mathematicians, Madrid, Spain,
-    (2006)
-    \bibitem{ok} B.K. \"Oksendal: Stochastic Differential Equations: An
-    Introduction with Applications. Berlin: Springer.  (2010).
+%     \bibitem{kl-pl} P. E. Kloeden, E. Platen: Numerical Solution of Stochastic
+%     Differential Equations. Stochastic
+%     Modelling and Applied Probability, Vol. 23, Springer (1992)
+%     \bibitem{ko}  A. N. Kolmogorov: {\it Wienersche Spiralen und einige andere
+%     interessante Kurven  im
+%         Hilbertschen Raum}. C. R. (Doklady) Acad. URSS (N.S.) 26, 115-118.
+%         (1940).
+%     \bibitem{kou} D. Koutsoyiannis: {\it The Hurst phenomenon and fractional
+%     Gaussian noise made easy}.
+%     Hydrological Sciences Journal des Sciences Hydrologiques, 47(4). August
+%     (2002)
+%     \bibitem{ku-mi} K. Kubilius, Y. S. Mishura: {\it The rate of convergence of
+%     Hurst index estimate for the stochastic differential equation}
+%     Stochastic Processes and their Applications. Vol. 122, Issue 11,
+%     3718–3739. (2012)
+%     \bibitem{lo} A. W. Lo: {\it Long-Term Memory in Stock Market Prices}
+%     Econometrica Vol. 59, No. 5 (Sep., 1991), pp. 1279-1313. (1991).
+%     \bibitem{ma-va}  B. B. Mandelbrot, J. W. Van Ness: {\it Fractional Brownian
+%     motions, fractional noises and
+%         applications}. SIAM Review 10, 422-437. (1968).
+%     \bibitem{mik} T. Mikosch : Elementary Stochastic Calculus With Finance in
+%     View. Advanced Series on Statistical Science and Applied
+%     Probability, Vol 6. World Scientific Publishing (1999)
+%     \bibitem{mi-pr}  M.A. Milevsky, S.D. Promislow: {\it Mortality derivatives
+%     and the option to annuitise}. Insur. Math.
+%     Econ. 29, 299–318 (2001)
+%     \bibitem{mi}  Y. S. Mishura: Stochastic Calculus for Fractional Brownian
+%     Motion and Related Processes.
+%     Springer, (2008).
 
-    \bibitem{pa-etal} C. Park, F. Hernandez-Campos, L. Long, J. Marron, J.
-    Park, V. Pipiras, F. Smith, R. Smith, M. Trovero, Z. Zhu:
-    {\it Long range dependence analysis of internet traffic}. J. Appl. Stat.
-    38(7), 1407-1433 (2011)
-    \bibitem{priestley} M. Priestley Spectral Analysis and Time Series.
-    Academic Press (1982)
-    \bibitem{ra} B. L. S. Prakasa Rao: Statistical Inference for Fractional
-    Diffusion Processes. Wiley Series in Probability and Statistics.
-    (2010)
-    \bibitem{ro-le} A. Rossa, L. Socha: {\it Proposition of a Hybrid Stochastic
-    Lee-Carter Mortality Model}. Advances in Methodology \&
-    Statistics/Metodoloski zvezki 10.1 (2013).
-
-
-    \bibitem{sh-st} R. H. Shumway, D. S. Stoffer: {\it Time Series Analysis and
-    Its Applications: With R Examples}.
-    Springer Texts in Statistics. 3rd. ed. (2011).
-    \bibitem{yo}  L.C. Young: {\it An inequality of the H\"older type,
-    connected with Stieltjes integration}, Acta Mathematica 67
-    251–282. (1936).
-    \bibitem{we} R. Weron:{\it Estimating long-range dependence: finite sample
-    properties and confidence intervals}.
-    Physica A 312 (2002) 285 - 299
-
-    \bibitem{ye-etal} F. Yerlikaya-Ozkurt, C. Vardar-Acar, Y. Yolcu-Okur, G.-W.
-    Weber:
-    {\it Estimation of the Hurst parameter for fractional Brownian motion using
-    the CMARS method}.
-    J. Comput. Appl. Math., 259, pp. 843-850.  (2014).
-
-    \bibitem{ze-ch-ya} C: Zeng, Y. Q. Chen, Q. Yang: {\it The fBm-driven
-    Ornstein-Uhlenbeck process: Probability density function and
-        anomalous diffusion}. Fractional Calculus and Applied Analysis
-        September 2012, Volume 15, Issue 3, pp 479-492. (2012).
+%     \bibitem{ne-ti} A. Neuenkirch, S. Tindel: {\it A least square-type
+%     procedure for parameter estimation in stochastic differential
+%         equations with additive fractional noise}. Stat Inference Stoch
+%         Process, vol. 17, 99–120, (2014).
 
 
-\end{thebibliography}
+%     \bibitem{nu} D. Nualart: {\it Fractional Brownian motion: stochastic
+%     calculus and applications }
+%     Proceedings of the International Congress of Mathematicians, Madrid, Spain,
+%     (2006)
+%     \bibitem{ok} B.K. \"Oksendal: Stochastic Differential Equations: An
+%     Introduction with Applications. Berlin: Springer.  (2010).
+
+%     \bibitem{pa-etal} C. Park, F. Hernandez-Campos, L. Long, J. Marron, J.
+%     Park, V. Pipiras, F. Smith, R. Smith, M. Trovero, Z. Zhu:
+%     {\it Long range dependence analysis of internet traffic}. J. Appl. Stat.
+%     38(7), 1407-1433 (2011)
+%     \bibitem{priestley} M. Priestley Spectral Analysis and Time Series.
+%     Academic Press (1982)
+%     \bibitem{ra} B. L. S. Prakasa Rao: Statistical Inference for Fractional
+%     Diffusion Processes. Wiley Series in Probability and Statistics.
+%     (2010)
+%     \bibitem{ro-le} A. Rossa, L. Socha: {\it Proposition of a Hybrid Stochastic
+%     Lee-Carter Mortality Model}. Advances in Methodology \&
+%     Statistics/Metodoloski zvezki 10.1 (2013).
+
+
+%     \bibitem{sh-st} R. H. Shumway, D. S. Stoffer: {\it Time Series Analysis and
+%     Its Applications: With R Examples}.
+%     Springer Texts in Statistics. 3rd. ed. (2011).
+%     \bibitem{yo}  L.C. Young: {\it An inequality of the H\"older type,
+%     connected with Stieltjes integration}, Acta Mathematica 67
+%     251–282. (1936).
+%     \bibitem{we} R. Weron:{\it Estimating long-range dependence: finite sample
+%     properties and confidence intervals}.
+%     Physica A 312 (2002) 285 - 299
+
+%     \bibitem{ye-etal} F. Yerlikaya-Ozkurt, C. Vardar-Acar, Y. Yolcu-Okur, G.-W.
+%     Weber:
+%     {\it Estimation of the Hurst parameter for fractional Brownian motion using
+%     the CMARS method}.
+%     J. Comput. Appl. Math., 259, pp. 843-850.  (2014).
+
+%     \bibitem{ze-ch-ya} C: Zeng, Y. Q. Chen, Q. Yang: {\it The fBm-driven
+%     Ornstein-Uhlenbeck process: Probability density function and
+%         anomalous diffusion}. Fractional Calculus and Applied Analysis
+%         September 2012, Volume 15, Issue 3, pp 479-492. (2012).
+
+
+% \end{thebibliography}
 \end{document}
