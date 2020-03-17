@@ -1,0 +1,2 @@
+define(["require","exports"],function(e,S){"use strict";Object.defineProperty(S,"__esModule",{value:!0}),(function(e){e[e.THREE_DAYS=3]="THREE_DAYS",e[e.SEVEN_DAYS=7]="SEVEN_DAYS",e[e.THIRTY_DAYS=30]="THIRTY_DAYS",e[e.NINETY_DAYS=90]="NINETY_DAYS",e[e.CUSTOM=0]="CUSTOM"})(S.ExpirationOption||(S.ExpirationOption={})),(function(e){e.EXPIRED="expired",e.SHARED="shared"})(S.TransferShareStatus||(S.TransferShareStatus={}))});
+//# sourceMappingURL=types.min.js-vflfENeLB.map

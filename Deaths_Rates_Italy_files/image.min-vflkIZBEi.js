@@ -1,0 +1,2 @@
+define(["require","exports","tslib","react"],function(e,t,r,s){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),s=r.__importDefault(s);var n=(function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return r.__extends(t,e),t.prototype.render=function(){var e=this.props.srcHiRes?this.props.srcHiRes+" 2x":"";return s.default.createElement("img",{src:this.props.src,srcSet:e,alt:this.props.alt,onLoad:this.props.onLoad})},t})(s.default.Component);t.Image=n});
+//# sourceMappingURL=image.min.js-vfl8Fe_C8.map

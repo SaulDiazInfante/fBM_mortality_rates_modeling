@@ -1,0 +1,2 @@
+define(["require","exports","modules/clean/user_education/user_education_types","modules/core/i18n"],function(e,t,n,i){"use strict";function r(e){switch(e.amount_unit){case n.IncentiveUnit.TRIAL_DAYS:var t=e.amount;return i.ungettext("Extend trial by %(days)d day","Extend trial by %(days)d days",t).format({days:t});default:throw new Error("Invalid unit for incentive: "+e.amount_unit)}}Object.defineProperty(t,"__esModule",{value:!0}),t.formatIncentive=r});
+//# sourceMappingURL=incentive_utils.min.js-vflM33yha.map
