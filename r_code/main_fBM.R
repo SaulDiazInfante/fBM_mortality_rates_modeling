@@ -8,8 +8,9 @@ library("ggplot2")
 source("load_data.R")
 source("hurst_estimation.R")
 source("hurst_plots.R")
-
 source("sigma_lambda_estimation.R")
+source("fBM_mortality_rate_sampler.R")
+source("mortality_rate_estimation.R")
 
 data <- load_data()
 golden_ratio <- 1.61803398875
