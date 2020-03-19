@@ -43,9 +43,7 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate,
 
 
     data <- data_mortality_rate[
-      data_mortality_rate$Year %in%
-        c(1950:2014) &
-        data_mortality_rate$Age == age,]
+      data_mortality_rate$Year %in% 1950:2014 & data_mortality_rate$Age == age,]
 
 
     ## initial condition Women and men

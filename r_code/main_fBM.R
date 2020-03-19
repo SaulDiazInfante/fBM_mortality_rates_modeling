@@ -12,9 +12,9 @@ source("hurst_plots.R")
 source("sigma_lambda_estimation.R")
 
 data <- load_data()
-golden_ratio = 1.61803398875
-golden_width = 4.72
-golden_height = golden_width / golden_ratio
+golden_ratio <- 1.61803398875
+golden_width <- 4.72
+golden_height <- golden_width / golden_ratio
 
 H_est <- hurst_estimation()
 H_est_woman <- matrix(unlist(H_est[1]), ncol = 4)

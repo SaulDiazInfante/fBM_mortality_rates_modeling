@@ -1,43 +1,15 @@
-<<<<<<< HEAD
-=======
-##### * * * * * Defining the directory  * * *  *  * * 
-### at home
-#setwd("/home/fco/Dropbox/research/PAPERS/Research Arelly/data")
-#setwd("~/Dropbox/research/papers/Research Arelly/data")
-#### en el IMATE
-#setwd('/Users/fdelgadovences/Dropbox/research/PAPERS/Research Arelly/data')
-#### Ciclo largo empieza en linea 661, for para ages1.
-
-##### * * * * * Reading the libraries  * * *  *  * * 
-
 library("fractal")
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
 library("fractal")
 library("pracma")
 library("yuima")
 library("somebm")
 library("plotrix")
-<<<<<<< HEAD
 library("ggplot2")
-=======
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
-
-
-##### * * * * * Reading the data  * * *  *  * * 
-##### * * * * * * * *  *  *  *  *  *   *  *   *   * 
-
-<<<<<<< HEAD
 drates <- read.table("Deaths_Rates_Italy.txt", dec = ".", header = TRUE, na.strings = ".")
-=======
-
-drates<-read.table("Deaths_Rates_Italy.txt", dec = ".", header = TRUE, na.strings = ".")
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
 head(drates)
 table(drates$Year)
 table(drates$Age)
 dim(drates)
-
-<<<<<<< HEAD
 drates <- drates[drates$Age != "110+", ]
 #### Rates matrix       x=age y=years
 mrates <- wrates <- arates <- mat.or.vec(110, 143)
@@ -98,9 +70,9 @@ for(A in ages) {
   sum1 <- 0
   sum2 <- 0
   sum3 <- 0
-  sum4 <-0
+  sum4 <- 0
 
-  datos <- drates[drates$Year%in%c(1950:2004) & drates$Age == ages[A + 1], ]
+  datos <- drates[drates$Year %in% 1950:2004 & drates$Age == ages[A + 1],]
   for(B in years) {
       sum1 <- sum1 + ((datos$Year[datos$Year==B]) - 1950) * log(datos$Female[datos$Year==B])        
       sum2 <- sum2 + ((datos$Year[datos$Year==B]) - 1950)
@@ -124,13 +96,10 @@ for(A in ages) {
   datos1$MalePost <- log(datos1$Male) - log(datos1$Male[1]) - alphaHom[A + 1] * (datos1$Year)
   datos2 <- rbind(datos2, datos1)
  }
-=======
-
 
 drates<-drates[drates$Age!="110+" ,]
-#### Rates matrix       x=age y=years
+# Rates matrix       x=age y=years
 mrates<-wrates<-arates<-mat.or.vec(110,143)
-                          
 rownames(mrates)<-rownames(wrates)<-rownames(arates)<-0:109
 colnames(mrates)<-colnames(wrates)<-colnames(arates)<-1872:2014
 
@@ -156,27 +125,7 @@ fy<-years[1];cy<-length(years); ly<-years[cy]
 ##### * * * * * Graph of the raw data  * * *  *  * * 
 ##### * * * * * * * *  *  *  *  *  *   *  *   *   *
 color<-rainbow(cy)
-# 
-# x11(); par(las=1)
-# plot(ages, lwrates[,1], type='l', col=color[1],  ylim=c(-10,2), xlab='Ages', ylab='Log')
-#   for(i in 2:cy){
-#        lines(ages, lwrates[,i], col=color[i])
-#       }
-#       
-# x11(); par(las=1)
-# plot(ages, lmrates[,1], type='l', col=color[1],  ylim=c(-10,2), xlab='Ages', ylab='Log')
-#   for(i in 2:cy){
-#        lines(ages, lmrates[,i], col=color[i])
-#       }
-#       
-# x11(); par(las=1)
-# plot(ages, larates[,1], type='l', col=color[1],  ylim=c(-10,2), xlab='Ages', ylab='Log')
-#   for(i in 2:cy){
-#        lines(ages, larates[,i], col=color[i])
-#       }            
-# 
 
-#### Giacometti data: ages (x = 0,...,91) and N years (t = 1930,...,2004)
 drates$Female<-drates$Female*100
 drates$Male<-drates$Male*100
 
@@ -243,43 +192,21 @@ for(A in ages) {
   
   #print(summary(datos2))
  }
-# 
-# 
-# x11(); par(las=1)
-# plot(years,datos2$FemalePost[datos2$Age==ages[1]], type='l', col=color[1],  ylim=c(-2,2), xlab='Tiempo', ylab='Log')
-# 
-# for (i in ages) {
-#   lines(years,datos2$FemalePost[datos2$Age==ages[i+1]], col=color[i])  
-# }
-# 
-# 
-# x11(); par(las=1)
-# plot(years,datos2$MalePost[datos2$Age==ages[1]], type='l', col=color[1],  ylim=c(-2,2), xlab='Tiempo', ylab='Log')
-# 
-# for (i in ages) {
-#   lines(years,datos2$MalePost[datos2$Age==ages[i+1]], col=color[i])  
-# }
-# 
 
-
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
 ##### * * * * * Section 3.2, estimating Hurst parameter H with the help of
 #####  * * *  * several R libraries    *  * * 
 ##### * * * * * Second we estimated H's directly for the first model
 #####* * *  *   i.e.    Y_t = B_t^H    *  *   *   *   * 
-<<<<<<< HEAD
-######## Estimacion de H usando diferentes funciones: hurstexp(x), FDDwhite, Rovers
+
 HM1 <- data.frame(0, 0, 0, 0, 0, 0)
 HH1 <- data.frame(0, 0, 0, 0, 0, 0)
 colnames(HM1) <- colnames(HH1) <- c("Edad", "Hs", "Hrs", "He", "Hal", "Ht")
-
 HM2 <- data.frame(0, 0, 0)
 #HH2<-data.frame(0,0)
 colnames(HM2) <- c("Edad", "HMuj", "HHom")
 #HM3<-data.frame(0,0,0)
 H3<-data.frame(0, 0, 0)
 colnames(H3) <- c("Edad", "Higuchi_Mu", "Higuchi_Ho")
-
 H4 <- data.frame(0, 0, 0)
 colnames(H4) <- c("Edad", "Rovers_Mu", "Rovers_Ho")
 
@@ -308,27 +235,6 @@ for(i in ages) {
   }
   
 }
-=======
-
-
-######## Estimacion de H usando diferentes funciones: hurstexp(x), FDDwhite, Rovers
-HM1<-data.frame(0,0,0,0,0,0)
-HH1<-data.frame(0,0,0,0,0,0)
-colnames(HM1)<-  colnames(HH1)<-c("Edad","Hs", "Hrs", "He",  "Hal", "Ht")
-
-HM2<-data.frame(0,0,0)
-#HH2<-data.frame(0,0)
-colnames(HM2)<-c("Edad","HMuj","HHom")
-
-#HM3<-data.frame(0,0,0)
-H3<-data.frame(0,0,0)
-colnames(H3)<- c("Edad", "Higuchi_Mu","Higuchi_Ho")
-
-
-H4<--data.frame(0,0,0)
-colnames(H4)<- c("Edad", "Rovers_Mu","Rovers_Ho")
-
-
 for(i in ages) {
   HM1[i+1,1]<- HH1[i+1,1]<-ages[i+1]
   XX<-hurstexp(datos2$FemalePost[datos2$Age==ages[i+1]], d = 20, display = F)
@@ -355,18 +261,6 @@ for(i in ages) {
   
 }
 
-HM1
-HH1
-
-
-
-
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
-##### * * * * * Section 3.2,second part of estimating Hurst parameter H with the help of
-#####  * * *  * several R libraries    *  * * 
-##### * * * * * Here we estimated H's by using equation (5.1) * * *  *  *  *   *   *   * 
-
-<<<<<<< HEAD
 M <- 1
 BH2Fem<-data.frame(0, 0, 0)
 BH2Mal<-data.frame(0, 0, 0)
@@ -386,27 +280,19 @@ for (h in ages) {
     BH2Mal[M,2]<- i
     sumInt1 <- 0
     sumInt2 <- 0
-    for (j in years) {
-      if(j > 1950){
-          sumInt1 <- sumInt1 + (YMale$MalePost[YMale$Year == j]
-                                + YMale$MalePost[YMale$Year == j - 1]) / 2 
-          ## aqui se deberia multiplicar por 1 que es = t_n - t_{n-1}
-          sumInt2 <- sumInt2 + (YFemale$FemalePost[YFemale$Year == j]
-                                + YFemale$FemalePost[YFemale$Year == j - 1]) / 2
-      }
-    } ## end for j
-    M <- M + 1
-  } ## end for i
-=======
-M<-1
+    for (j in years) { if (j > 1950) { sumInt1 <- sumInt1 + (YMale$MalePost[YMale$Year == j] + YMale$MalePost[YMale$Year == j - 1]) / 2
+      ## aqui se deberia multiplicar por 1 que es = t_n - t_{n-1}
+      sumInt2 <- sumInt2 + (YFemale$FemalePost[YFemale$Year == j] + YFemale$FemalePost[YFemale$Year == j - 1]) / 2 } }
+    M <- M + 1 }
 
-BH2Fem<-data.frame(0,0,0)
-BH2Mal<-data.frame(0,0,0)
-names(BH2Fem)<-c("Age","Year","FemalePost")
-names(BH2Mal)<-c("Age","Year","MalePost")
-for (h in ages) {
-  YMale<-datos2[datos2$Age==ages[h+1],c(1,7)]
-  YFemale<-datos2[datos2$Age==ages[h+1],c(1,6)]
+  M <- 1
+
+  BH2Fem <- data.frame(0, 0, 0)
+  BH2Mal <- data.frame(0, 0, 0)
+  names(BH2Fem) <- c("Age", "Year", "FemalePost")
+  names(BH2Mal) <- c("Age", "Year", "MalePost")
+  for (h in ages) { YMale <- datos2[datos2$Age == ages[h + 1], c(1, 7)]
+    YFemale <- datos2[datos2$Age == ages[h + 1], c(1, 6)]
   sumInt1<-0
   sumInt2<-0
   for (i in years) {
@@ -416,23 +302,12 @@ for (h in ages) {
     BH2Mal[M,3]<-YFemale$FemalePost[YFemale$Year==i]+sumInt2
     BH2Mal[M,1]<-h
     BH2Mal[M,2]<-i
-    sumInt1<-0
-    sumInt2<-0
-    for (j in years) {
-      if(j>1950)
-         {
-          sumInt1<- sumInt1+(YMale$MalePost[YMale$Year==j]+YMale$MalePost[YMale$Year==j-1])/2 ## aqui se deberia multiplicar por 1 que es = t_n - t_{n-1}
-          sumInt2<-sumInt2+(YFemale$FemalePost[YFemale$Year==j]+YFemale$FemalePost[YFemale$Year==j-1])/2
-          }
-        } ## end for j
-    M<-M+1
-  }## end for i
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
-} ## end for h
+    sumInt1 <- 0
+    sumInt2 <- 0
+    for (j in years) { if (j > 1950) { sumInt1 <- sumInt1 + (YMale$MalePost[YMale$Year == j] + YMale$MalePost[YMale$Year == j - 1]) / 2 ## aqui se deberia multiplicar por 1 que es = t_n - t_{n-1}
+      sumInt2 <- sumInt2 + (YFemale$FemalePost[YFemale$Year == j] + YFemale$FemalePost[YFemale$Year == j - 1]) / 2 } } ## end for j
+    M <- M + 1 } }
 
-##### estimarion of H using some R packages applied to BH2Fem and BH2Mal
-######## we use the libreries; hurstexp(x), FDDwhite, Rovers
-<<<<<<< HEAD
 HM1B<-data.frame(0, 0, 0, 0, 0, 0, 0)
 HH1B<-data.frame(0, 0, 0, 0, 0, 0, 0)
 colnames(HM1B) <- colnames(HH1B) <- c("Edad", "Hs_hurstexp", "Hal_hurstexp", 
@@ -482,9 +357,9 @@ for(i in ages) {
     HH1B[i + 1, 4] <- HM2B[i + 1, 3]
     HH1B[i + 1, 5] <- H3[i + 1, 3] 
     HH1B[i + 1, 6] <- H3[i + 1, 5]  
-    HH1B[i + 1, 7] <- H4[i + 1, 3]  
-=======
-HM1B<-data.frame(0,0,0,0,0,0,0)
+    HH1B[i + 1, 7] <- H4[i + 1, 3]
+
+  HM1B<-data.frame(0,0,0,0,0,0,0)
 HH1B<-data.frame(0,0,0,0,0,0,0)
 colnames(HM1B)<-  colnames(HH1B)<-c("Edad","Hs_hurstexp", "Hal_hurstexp", "FDDwhitte",  "aggVar", "higuchi" ,"RoverS")
 
@@ -537,34 +412,10 @@ for(i in ages) {
     HH1B[i+1,4]<- HM2B[i+1,3]
     HH1B[i+1,5]<-H3[i+1,3] 
     HH1B[i+1,6]<-H3[i+1,5]  
-    HH1B[i+1,7]<-H4[i+1,3]  
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
-     
+    HH1B[i+1,7]<-H4[i+1,3]
+
 }
 
-## here we have the estimated H's with the libraries. 
-<<<<<<< HEAD
-###  ***** HERE WE NEED TO MAKE SOME GRAPHS FOR HM1B AND HH1B ***********
-=======
-HM1B
-HH1B
-
-###  ***** HERE WE NEED TO MAKE SOME GRAPHS FOR HM1B AND HH1B ***********
-
-# plot(HM1B[,1],HM1B[,2],type="l", col="blue",ylim=c(0,1))
-# for(i in 3:7){
-#   lines(HM1B[,1],HM1B[,i],col=rainbow(i))
-# }
-
-
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
-##### * * * * * Section 5.2, estimating Hurst parameter H with the help of
-#####  * * *  * several R libraries    *  * * 
-##### * * * * * Second we estimated H's directly for the first model
-#####* * *  *   i.e.    Y_t = B_t^H    *  *   *   *   * 
-
-<<<<<<< HEAD
-## filtros para estimar sigma
 K <- 6
 ak <- mat.or.vec(1, K + 1)
 for(i in 0:K){
@@ -942,24 +793,14 @@ lines(years[1:55], ht_hat_meanM[1:55] + 1.96 * Desv_stanM[1:55],
       lty=3, col="brown",
       lwd=3)
 dev.off()
-
-=======
-
-## filtros para estimar sigma
-
 K<-6
 ak<-mat.or.vec(1,K+1)
 for(i in 0:K){
     ak[i+1]<- ( ( (-1)^(1-i) )* factorial(K))/ ((2^K)*factorial(i)*factorial(K-i)) 
 }
-
-
 b<-c(0.48296291314453, -0.8365163037378, 0.22414386804201, 0.12940952255126)
-
 bk<-b/sqrt(2)
-
 K1<-2*(K+1)
-
 ak2<-mat.or.vec(1,K1+1)
 
 for(i in 0:K+1){
@@ -975,23 +816,12 @@ for(i in 1:4){
   bk2[2*i]<-bk[i]
   
 }
-
-
-
 c<-c(1,-2,1)
-
-
 ck<-c/4
 ck2<-mat.or.vec(1,5)
-
 for(i in 1:3){
-  #ck2[2*i+1]<-0
   ck2[2*i-1]<-ck[i]
-  
 }
-
-####
-
 
 EneN<-length(years)
 
@@ -1011,7 +841,6 @@ VnaMuj<-ages-ages
 VnaHom<-ages-ages
 VnaMuj_a2<-VnaMuj
 VnaHom_a2<-VnaHom
-
 for(h in ages) {
 
   datos<-datos2[datos2$Year%in%c(1950:2004) & datos2$Age==ages[h+1], ]
@@ -1073,19 +902,6 @@ VnaHom_a2[h+1]<-sumHom_a2/N
 HMuj<-0.5*log(VnaMuj_a2[1:91]/VnaMuj[1:91],2)
 
 HHom<-0.5*log(VnaHom_a2[1:91]/VnaHom[1:91],2)
-
-
-HMuj
-
-HHom
-
-
-
-HM1
-
-
-HH1
-
 
 ## Aqui guardamos los coeficientes de hurst estimados con 3 librerias diferentes para el fBM. 
 ### Debe ir en la seccion 4  
@@ -1422,16 +1238,12 @@ legend("topright",c("Historical rates","simulations mean","IC  95%"),
 mtext(expression(widehat("h(t)")),side=2,las=1,line=2.3)
 
 dev.off()
-
-
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
 qqnorm(log(Desv_stan[1:55]),  main=bquote("QQ-Plot for Women at age"~.(age) ),las=1)
 qqline(log(Desv_stan[1:55]), col = 2)
 qqnorm(log(Desv_stanM[1:55]),main=bquote("QQ-Plot for Men at age"~.(age) ))
 qqline(log(Desv_stanM[1:55]), col = 2 )
-<<<<<<< HEAD
-#
-datos2F <- data.frame()
+
+  datos2F <- data.frame()
 datos2F <- drates[drates$Age==age & drates$Year%in%c(1950:2014) , ]
 datos2F$FemalePost <- datos2F$Female
 datos2F$MalePost <- datos2F$Male
@@ -1511,23 +1323,10 @@ ablineclip(v=2004,
 legend("topright","Forecast\n period", bty = "n",cex = 0.75)
 dev.off()
 }
-=======
-
-## anyadir labels a las graficas
-
-
-##### FORECASTING
-
 datos2F<-data.frame()
-
 datos2F<-drates[drates$Age==age & drates$Year%in%c(1950:2014) , ]
 datos2F$FemalePost<-datos2F$Female
 datos2F$MalePost<-datos2F$Male
-
-
-# }
-
-#tiff(paste("PlotWomen",age,".tif",sep=""), width = 4, height = 4, units = 'in', res = 300)
 
 setEPS()
 postscript(paste("PlotWomenForecast",age,".eps",sep=""))
@@ -1541,7 +1340,6 @@ lines( years1[79:141],ht_hat_mean[1:63], type="l", lty=2,col="red")
 lines( years1[79:141],ht_hat_mean[1:63]-1.96*Desv_stan[1:63], type="l",lty=3, col="green")
 lines( years1[79:141],ht_hat_mean[1:63]+1.96*Desv_stan[1:63], type="l",lty=3, col="green")
 
-
 ablineclip(v=2004,y1=min(datos2F$Female[1:63]),y2=0.5*(min(datos2F$Female[1:63])+max(datos2F$Female[1:63])), lty=3, col="brown")
 #abline(v= 2004, lty=3, col="brown")
 
@@ -1552,9 +1350,6 @@ legend("right","Forecast\n period", bty = "n",cex = 0.55)
 
 mtext(expression(widehat("h(t)")),side=2,las=1,line=2.3)
 dev.off()
-
-#### men
-#tiff(paste("PlotMen",age,".tif",sep=""), width = 4, height = 4, units = 'in', res = 300)
 
 setEPS()
 postscript(paste("PlotMenForecast",age,".eps",sep=""))
