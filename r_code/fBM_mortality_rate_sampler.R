@@ -5,19 +5,14 @@ library("yuima")
 library("somebm")
 library("plotrix")
 
-fBM_mortality_rate_sampler <- function(data_mortality_rate,
-                                       H_est_woman, H_est_man, n_paths = 10000,
-                                       lambda_woman, lambda_man,
-                                       alpha_woman, alpha_man) {
-  n_paths <- 10000
+fBM_mortality_rate_sampler <- function(data_mortality_rate, data_mortality_rate2, H_est_woman, H_est_man, n_paths = 100000, alpha_woman, alpha_man) { n_paths <- 10000
   SDW <- mat.or.vec(n_paths, 65)
   SDM <- mat.or.vec(n_paths, 65)
 
   ages <- 0:91
   ages1 <- c(0, seq(5, 90, by = 5))
 
-  for (A in ages1) {
-    age <- ages[[A + 1]]
+  for (A in ages1) { age <- ages[[A + 1]]
     HW_est <- H_est_woman[age + 1, 2]
     HM_est <- H_est_man[age + 1, 2]
     for (i in 1:n_paths) {
@@ -48,14 +43,14 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate,
 
     ## initial condition Women and men
     hw0 <- data$Female[data$Age == age][1]
-    hm0 <- data2$Male[data$Age == age][1]
+    hm0 <- data_mortality_rate2$Male[data$Age == age][1]
 
     htWomen <- mat.or.vec(L + 1, 2)
     htMen <- mat.or.vec(L + 1, 2)
     htWomen[1, 2] <- hw0
     htMen[1, 2] <- hm0
     H1 <- HW_est[[1]]
-    H2 <- HM_est[[1]]
+    H2 <- HM_est[[2]]
 
     for (i in 1931:2014) {
       htWomen[i - 1949, 2] <- hw0 * exp(alpha_woman[age + 1] * i + SDW[3, i - 1949])

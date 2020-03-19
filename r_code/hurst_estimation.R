@@ -22,8 +22,7 @@ hurst_estimation <- function(data){
     sum2 <- 0
     sum3 <- 0
     sum4 <- 0
-    mortality_rate_data <- drates[drates$Year %in% c(1950:2004)
-                                  & drates$Age == ages[A + 1], ]
+    mortality_rate_data <- drates[drates$Year %in% 1950:2004 & drates$Age == ages[A + 1],]
     for (B in years) {
       sum1 <- sum1 + ((mortality_rate_data$Year[mortality_rate_data$Year == B])
                       - 1950) *
@@ -308,17 +307,14 @@ hurst_estimation <- function(data){
   H_man <- cbind(HH1$Age, HH1$Hal, HM2$HMan, H4$Rovers_Ho)
   colnames(H_woman) <- colnames(H_man) <- c("Age",
                                               "hurstexp_lib",
-                                              "FDWhittle_lib",
-                                              "Rovers_Lib")
+                                              "FDWhittle_lib", "Rovers_Lib")
   mortality_rate_data2$Fem1 <- mortality_rate_data2$FemalePost
   mortality_rate_data2$Mal1 <- mortality_rate_data2$MalePost
 
-  for (h in ages) {
-    mortality_rate_data2$FemalePost[mortality_rate_data2$Age == ages[h + 1]] <-
-      mortality_rate_data2$FemalePost[mortality_rate_data2$Age == ages[h + 1]]
-    mortality_rate_data2$MalePost[mortality_rate_data2$Age == ages[h + 1]] <-
-      mortality_rate_data2$FemalePost[mortality_rate_data2$Age == ages[h + 1]]
-  }
-  H_estimation <- list(H_woman, H_man, alpha_woman, alpha_man)
-  return(H_estimation)
+  for (h in ages) { mortality_rate_data2$FemalePost[mortality_rate_data2$Age ==ages[h + 1]] <-
+mortality_rate_data2$FemalePost[mortality_rate_data2$Age == ages[h + 1]]
+mortality_rate_data2$MalePost[mortality_rate_data2$Age == ages[h + 1]] <-
+mortality_rate_data2$FemalePost[mortality_rate_data2$Age == ages[h + 1]] }
+H_estimation <- list(H_woman, H_man, alpha_woman, alpha_man, mortality_rate_data2)
+return(H_estimation)
 }

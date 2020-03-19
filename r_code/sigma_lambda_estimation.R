@@ -269,17 +269,16 @@ sigma_lambda_estimation <- function(Hurst_est){
     mu2N[h + 1] <- sum7
     H1 <- H_est_woman[[j + 1, 2]]
     H2 <- H_est_man[[j + 1, 2]]
-    lambdaNMuj[h + 1] <- ((2 * mu2N[h + 1]) / 
-                             (((sigmaMuj[h + 1]) ^ 2) *
-                                gamma(2 * H1 + 1) ) ) ^ (-0.5 / H1)
-    lambdaNHom[h + 1] <- 
-      ((2 * mu2N[h + 1]) / (((sigmaHom[h + 1]) ^ 2) *
-                              gamma(2 * H2 + 1))) ^ (-0.5 / H2) 
-  } # fin de for h
-  
-  ### * * * * * * *  estimation of lambda_N * * * * * #####
-  lambdaNMuj
-  lambdaNHom
-  sigma_lambda <- list(sigmaMuj, sigmaMuj, lambdaNMuj, lambdaNHom)
-  return(sigma_lambda)
-}
+    lambdaNMuj[h + 1] <- ((2 * mu2N[h + 1]) /
+(((sigmaMuj[h + 1]) ^ 2) *
+gamma(2 * H1 + 1))) ^ (-0.5 / H1)
+lambdaNHom[h + 1] <-
+((2 * mu2N[h + 1]) / (((sigmaHom[h + 1]) ^ 2) *
+gamma(2 * H2 + 1)))^(-0.5 / H2)
+} # fin de for h
+
+### * * * * * * *  estimation of lambda_N * * * * * #####
+lambdaNMuj
+lambdaNHom
+sigma_lambda<- list(sigmaMuj, sigmaHom, lambdaNMuj, lambdaNHom)
+return(sigma_lambda) }

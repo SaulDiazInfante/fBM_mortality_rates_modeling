@@ -1066,88 +1066,47 @@ SDM<-mat.or.vec(NS,65)
 #D<-as.data.frame(D)
 
 ages1<-c(0,seq(5,90,by=5))
+for (A in ages1) { age <- ages[[A + 1]]
+  HW_est <- HMujeres[age + 1, 2]
+  HM_est <- HHombres[age + 1, 2]
 
+  for (i in 1:NS) {
+    #d<-ts(fbm(hurst=0.7, n=75),start=c(1930, 1),end=c(2004,1),frequency=1)
+    SDW[i,] <- ts(fbm(hurst = HW_est, n = 65), start = c(1950, 1), end = c(2014, 1), frequency = 1)
+    SDM[i,] <- ts(fbm(hurst = HM_est, n = 65), start = c(1950, 1), end = c(2014, 1), frequency = 1) }
+  DW <- SDW[, 1:55]
+  DM <- SDM[, 1:55]
+  Dmed <- colMeans(SDW)
+  Res1 <- (SDW - Dmed)^2
+  Var_Point <- colMeans(Res1)
+  L <- 2014 - 1950
+  Desv_stan <- sqrt(Var_Point / L)
+  datos <- drates[drates$Year %in% c(1950:2014) & drates$Age == age,]
+  ## initial condition Women and men
+  hw0 <- datos$Female[datos$Age == age][1]
+  hm0 <- datos2$Male[datos$Age == age][1]
+  htWomen <- mat.or.vec(L + 1, 2)
+  htMen <- mat.or.vec(L + 1, 2)
+  htWomen[1, 2] <- hw0
+  htMen[1, 2] <- hm0
+  H1 <- HW_est[[1]]
+  H2 <- HM_est[[2]]
 
+  for (i in 1931:2014) { htWomen[i - 1949, 2] <- hw0 * exp(alphaMuj[age + 1] * i + SDW[3, i - 1949])
+    htMen[i - 1949, 2] <- hm0 * exp(alphaHom[age + 1] * i + SDM[1, i - 1949])
+    htWomen[i - 1949, 1] <- i
+    htMen[i - 1949, 1] <- i }
 
-for( A in ages1) 
-{
-  age<-ages[[A+1]] 
+  ht_hat <- mat.or.vec(NS, cy1)
+  ht_hatM <- mat.or.vec(NS, cy1)
 
-HW_est<-HMujeres[age+1,2]
-HM_est<-HHombres[age+1,2]
+  for (H in 1:NS) { Yt_hat <- mat.or.vec(cy1, 1)
+    Yt_hatM <- mat.or.vec(cy1, 1)
 
-for(i in 1:NS){
-  
-  #d<-ts(fbm(hurst=0.7, n=75),start=c(1930, 1),end=c(2004,1),frequency=1)
-  SDW[i,]<-ts(fbm(hurst=HW_est, n=65),start=c(1950, 1),end=c(2014,1),frequency=1) 
-  SDM[i,]<-ts(fbm(hurst=HM_est, n=65),start=c(1950, 1),end=c(2014,1),frequency=1) 
-  
-}
+    Yt_hat[1] <- 0
+    Yt_hatM[1] <- 0
 
-DW<-SDW[,1:55]
-DM<-SDM[,1:55]
-
-
-Dmed<-colMeans(SDW)
-Res1<-(SDW-Dmed)^2
-Var_Point<-colMeans(Res1)
-L<-2014-1950
-
-Desv_stan<-sqrt(Var_Point/L)
-
-
-datos<-drates[drates$Year%in%c(1950:2014) & drates$Age==age, ]
-
-
-## initial condition Women and men
-hw0<-datos$Female[datos$Age==age][1]
-hm0<-datos2$Male[datos$Age==age][1]
-
-htWomen<-mat.or.vec(L+1,2)
-htMen<-mat.or.vec(L+1,2)
-htWomen[1,2]<-hw0
-htMen[1,2]<-hm0
-H1<-HW_est[[1]]
-H2<-HM_est[[1]]
-
-for(i in 1931:2014)
- {  
-   htWomen[i-1949,2]<-hw0*exp(alphaMuj[age+1]*i + SDW[3,i-1949])
-   htMen[i-1949,2]<-hm0*exp(alphaHom[age+1]*i + SDM[1,i-1949])
-   htWomen[i-1949,1]<-i
-   htMen[i-1949,1]<-i
-  }
-
-
-# 
-# 
-# x11(); par(las=1)
-# plot(years,datos$Female,type="l", col="blue")
-# lines(years,htWomen[,2], type="o", col=color[2])  
-# 
-# x11(); par(las=1)
-# plot(years,datos2$Female[datos2$Age==age], type="o", col=color[2])  
-
-
-
-#####  Estimation of the rates mortalities.
-
-
-##  First we approximate the integral 
-
-ht_hat<-mat.or.vec(NS,cy1)
-
-ht_hatM<-mat.or.vec(NS,cy1)
-
-for(H in 1:NS)
-{
- Yt_hat<-mat.or.vec(cy1,1)
- Yt_hatM<-mat.or.vec(cy1,1)
- 
- Yt_hat[1]<-0
- Yt_hatM[1]<-0
- 
-  #sigmaMuj[age+1]
+    #sigmaMuj[age+1]
  sum1<-0
  sum2<-0
  
@@ -1195,16 +1154,7 @@ Desv_stan<-sqrt(Var_Point/L)
 
 Desv_stanM<-sqrt(Var_PointM/L)
 
-
-
-
-#x11(); par(las=1)
-
-### Women
-#hacer el cat para hacer el nombre
-
-#tiff(paste("PlotWomen",age,".tif",sep=""), width = 4, height = 4, units = 'in', res = 300)
-#png(paste("PlotWomen",age,".png",sep=""), width = 4.5, height = 4, units = 'in', res = 300)
+  # Plotting
 setEPS()
 postscript(paste("PlotWomen",age,".eps",sep=""))
 
@@ -1374,8 +1324,3 @@ mtext(expression(widehat("h(t)")),side=2,las=1,line=2.3)
 dev.off()
 
 }
-
-
-
-  
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
