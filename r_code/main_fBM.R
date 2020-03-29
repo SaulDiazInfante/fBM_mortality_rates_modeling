@@ -35,4 +35,10 @@ sigma_man <- matrix(unlist(sigma_lambda[2]), ncol = 1)
 lambda_woman <- matrix(unlist(sigma_lambda[3]), ncol = 1)
 lambda_man <- matrix(unlist(sigma_lambda[2]), ncol = 1)
 
-fBM_mortality_rate_sampler(data, data2, H_est_woman, H_est_man, 100000, alpha_woman, alpha_man)
+fBM_mortality_samples <- fBM_mortality_rate_sampler(data,
+                                                    data2,
+                                                    H_est_woman,
+                                                    H_est_man,
+                                                    100000,
+                                                    alpha_woman, alpha_man)
+

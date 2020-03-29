@@ -5,7 +5,10 @@ library("yuima")
 library("somebm")
 library("plotrix")
 
-fBM_mortality_rate_sampler <- function(data_mortality_rate, data_mortality_rate2, H_est_woman, H_est_man, n_paths = 100000, alpha_woman, alpha_man) { n_paths <- 10000
+fBM_mortality_rate_sampler <- function(data_mortality_rate, data_mortality_rate2,
+                                       H_est_woman,
+                                       H_est_man, n_paths = 100000,
+                                       alpha_woman, alpha_man) { 
   SDW <- mat.or.vec(n_paths, 65)
   SDM <- mat.or.vec(n_paths, 65)
 
@@ -35,8 +38,6 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate, data_mortality_rate2
     L <- 2014 - 1950
 
     Desv_stan <- sqrt(Var_Point / L)
-
-
     data <- data_mortality_rate[
       data_mortality_rate$Year %in% 1950:2014 & data_mortality_rate$Age == age,]
 
@@ -53,10 +54,11 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate, data_mortality_rate2
     H2 <- HM_est[[2]]
 
     for (i in 1931:2014) {
+      htWomen[i - 1949, 1] <- i # time variable
+      htMen[i - 1949, 1] <- i
       htWomen[i - 1949, 2] <- hw0 * exp(alpha_woman[age + 1] * i + SDW[3, i - 1949])
       htMen[i - 1949, 2] <- hm0 * exp(alpha_man[age + 1] * i + SDM[1, i - 1949])
-      htWomen[i - 1949, 1] <- i
-      htMen[i - 1949, 1] <- i
     }
   }
+  samples <- list(htWomen, htMen)
 }
