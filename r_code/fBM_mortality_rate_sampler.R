@@ -45,6 +45,7 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate, data_mortality_rate2
 
     ## initial condition Women and men
     hw0 <- data$Female[data$Age == age][1]
+    # TODO: data_mortality_rate2 undefined
     hm0 <- data_mortality_rate2$Male[data$Age == age][1]
 
     htWomen <- mat.or.vec(L + 1, 2)
