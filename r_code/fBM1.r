@@ -1055,10 +1055,7 @@ lambdaNMuj
 lambdaNHom
 
 
-
-##### * * * * * * * Simulation of mortalities rates for a given age with the fBM * * * *  
-
-
+#**************fBM Simulation of mortalities rates given age with****  
 ### Number of simulations
 NS<-10000
 SDW<-mat.or.vec(NS,65)

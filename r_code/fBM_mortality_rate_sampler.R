@@ -15,7 +15,8 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate, data_mortality_rate2
   ages <- 0:91
   ages1 <- c(0, seq(5, 90, by = 5))
 
-  for (A in ages1) { age <- ages[[A + 1]]
+  for (A in ages1) { 
+    age <- ages[[A + 1]]
     HW_est <- H_est_woman[age + 1, 2]
     HM_est <- H_est_man[age + 1, 2]
     for (i in 1:n_paths) {
@@ -38,8 +39,8 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate, data_mortality_rate2
     L <- 2014 - 1950
 
     Desv_stan <- sqrt(Var_Point / L)
-    data <- data_mortality_rate[
-      data_mortality_rate$Year %in% 1950:2014 & data_mortality_rate$Age == age,]
+    
+    data <- data_mortality_rate[data_mortality_rate$Year %in% 1950:2014 & data_mortality_rate$Age == age,]
 
 
     ## initial condition Women and men
@@ -60,5 +61,6 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate, data_mortality_rate2
       htMen[i - 1949, 2] <- hm0 * exp(alpha_man[age + 1] * i + SDM[1, i - 1949])
     }
   }
-  samples <- list(htWomen, htMen)
+  sampler_time <- htWomen[, 1]
+  samples <- cbind(sampler_time, htWomen[, 2], htMen[, 2])
 }
