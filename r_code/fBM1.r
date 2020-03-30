@@ -16,8 +16,8 @@ mrates <- wrates <- arates <- mat.or.vec(110, 143)
 rownames(mrates) <- rownames(wrates) <- rownames(arates) <- 0:109
 colnames(mrates) <- colnames(wrates) <- colnames(arates) <- 1872:2014
 
-for(y in 1:138){
-   for(x in 1:110){
+for (y in 1:138) {
+   for (x in 1:110) {
       wrates[x,y] <- drates[(y - 1) * 110 + x, 3]
       mrates[x,y] <- drates[(y - 1) * 110 + x, 4]
       arates[x,y] <- drates[(y - 1) * 110 + x, 5]      
@@ -36,7 +36,7 @@ ca <- length(ages);
 la <- ages[ca]
 fy <- years[1];
 cy <- length(years); 
-ly<-years[cy]
+ly <- years[cy]
 
 ##### * * * * * Graph of the raw data  * * *  *  * * 
 ##### * * * * * * * *  *  *  *  *  *   *  *   *   *
@@ -97,37 +97,36 @@ for(A in ages) {
   datos2 <- rbind(datos2, datos1)
  }
 
-drates<-drates[drates$Age!="110+" ,]
+drates <- drates[drates$Age != "110+" ,]
 # Rates matrix       x=age y=years
-mrates<-wrates<-arates<-mat.or.vec(110,143)
-rownames(mrates)<-rownames(wrates)<-rownames(arates)<-0:109
-colnames(mrates)<-colnames(wrates)<-colnames(arates)<-1872:2014
+mrates <- wrates <- arates <- mat.or.vec(110,143)
+rownames(mrates) <- rownames(wrates) <- rownames(arates) <- 0:109
+colnames(mrates) <- colnames(wrates) <- colnames(arates) <- 1872:2014
 
-for(y in 1:138){
-   for(x in 1:110){
-      wrates[x,y]<- drates[(y-1)*110+x,3]
-      mrates[x,y]<- drates[(y-1)*110+x,4]
-      arates[x,y]<- drates[(y-1)*110+x,5]      
+for (y in 1:138) {
+   for (x in 1:110) {
+      wrates[x, y] <- drates[(y - 1) * 110 + x, 3]
+      mrates[x, y] <- drates[(y - 1) * 110 + x, 4]
+      arates[x, y] <- drates[(y - 1) * 110 + x, 5]      
      }
    }
 
-lwrates<-log(wrates)
-lmrates<-log(mrates)
-larates<-log(arates)
+lwrates <- log(wrates)
+lmrates <- log(mrates)
+larates <- log(arates)
 
-
-ages<-as.numeric(rownames(wrates))
-years1<-as.numeric(colnames(wrates))
-years<-years1[1:133]
-fa<-ages[1]; ca<-length(ages); la<-ages[ca]
-fy<-years[1];cy<-length(years); ly<-years[cy]
+ages <- as.numeric(rownames(wrates))
+years1 <- as.numeric(colnames(wrates))
+years <- years1[1:133]
+fa <- ages[1]; ca <- length(ages); la <- ages[ca]
+fy <- years[1];cy <- length(years); ly <- years[cy]
 
 ##### * * * * * Graph of the raw data  * * *  *  * * 
 ##### * * * * * * * *  *  *  *  *  *   *  *   *   *
-color<-rainbow(cy)
+color <- rainbow(cy)
 
-drates$Female<-drates$Female*100
-drates$Male<-drates$Male*100
+drates$Female <- drates$Female*100
+drates$Male <- drates$Male*100
 
 
 ages<-0:91
@@ -1055,269 +1054,395 @@ lambdaNMuj
 lambdaNHom
 
 
-#**************fBM Simulation of mortalities rates given age with****  
-### Number of simulations
-NS<-10000
-SDW<-mat.or.vec(NS,65)
-SDM<-mat.or.vec(NS,65)
+#### Sampler of NS fBM paths of mortalities rates given age#### 
+NS <- 10000
+SDW <- mat.or.vec(NS,65)
+SDM <- mat.or.vec(NS,65)
 #D<-as.data.frame(D)
 
-ages1<-c(0,seq(5,90,by=5))
+ages1 <- c(0, seq(5, 90, by = 5))
 for (A in ages1) { age <- ages[[A + 1]]
   HW_est <- HMujeres[age + 1, 2]
   HM_est <- HHombres[age + 1, 2]
 
   for (i in 1:NS) {
-    #d<-ts(fbm(hurst=0.7, n=75),start=c(1930, 1),end=c(2004,1),frequency=1)
-    SDW[i,] <- ts(fbm(hurst = HW_est, n = 65), start = c(1950, 1), end = c(2014, 1), frequency = 1)
-    SDM[i,] <- ts(fbm(hurst = HM_est, n = 65), start = c(1950, 1), end = c(2014, 1), frequency = 1) }
-  DW <- SDW[, 1:55]
-  DM <- SDM[, 1:55]
-  Dmed <- colMeans(SDW)
-  Res1 <- (SDW - Dmed)^2
-  Var_Point <- colMeans(Res1)
-  L <- 2014 - 1950
-  Desv_stan <- sqrt(Var_Point / L)
-  datos <- drates[drates$Year %in% c(1950:2014) & drates$Age == age,]
+    SDW[i,] <- ts(fbm(hurst = HW_est, n = 65), 
+                  start = c(1950, 1), 
+                  end = c(2014, 1), 
+                  frequency = 1)
+    SDM[i,] <- ts(fbm(hurst = HM_est, n = 65), 
+                  start = c(1950, 1),
+                  end = c(2014, 1), 
+                  frequency = 1) }
+    DW <- SDW[, 1:55]
+    DM <- SDM[, 1:55]
+    Dmed <- colMeans(SDW)
+    Res1 <- (SDW - Dmed)^2
+    Var_Point <- colMeans(Res1)
+    L <- 2014 - 1950
+    Desv_stan <- sqrt(Var_Point / L)
+    datos <- drates[drates$Year %in% c(1950:2014) & drates$Age == age,]
   ## initial condition Women and men
-  hw0 <- datos$Female[datos$Age == age][1]
-  hm0 <- datos2$Male[datos$Age == age][1]
-  htWomen <- mat.or.vec(L + 1, 2)
-  htMen <- mat.or.vec(L + 1, 2)
-  htWomen[1, 2] <- hw0
-  htMen[1, 2] <- hm0
-  H1 <- HW_est[[1]]
-  H2 <- HM_est[[2]]
+    hw0 <- datos$Female[datos$Age == age][1]
+    hm0 <- datos2$Male[datos$Age == age][1]
+    htWomen <- mat.or.vec(L + 1, 2)
+    htMen <- mat.or.vec(L + 1, 2)
+    htWomen[1, 2] <- hw0
+    htMen[1, 2] <- hm0
+    H1 <- HW_est[[1]]
+    H2 <- HM_est[[1]]
 
-  for (i in 1931:2014) { htWomen[i - 1949, 2] <- hw0 * exp(alphaMuj[age + 1] * i + SDW[3, i - 1949])
-    htMen[i - 1949, 2] <- hm0 * exp(alphaHom[age + 1] * i + SDM[1, i - 1949])
-    htWomen[i - 1949, 1] <- i
-    htMen[i - 1949, 1] <- i }
-
-  ht_hat <- mat.or.vec(NS, cy1)
-  ht_hatM <- mat.or.vec(NS, cy1)
-
-  for (H in 1:NS) { Yt_hat <- mat.or.vec(cy1, 1)
-    Yt_hatM <- mat.or.vec(cy1, 1)
-
-    Yt_hat[1] <- 0
-    Yt_hatM[1] <- 0
-
-    #sigmaMuj[age+1]
- sum1<-0
- sum2<-0
- 
- for(i in 1:(cy1-1)) ## i makes the function of t
-   {
-   for(k in 1:i)  ##?? k makes the function of u
-      {
-       sum1<-sum1+ exp(-lambdaNMuj[age+1]*(i-k))*(SDW[H,k+1]-SDW[H,k])#*.5
-       sum2<-sum2+ exp(-lambdaNHom[age+1]*(i-k))*(SDM[H,k+1]-SDM[H,k])#*.5
-       }
-   Yt_hat[i+1]<-sum1*sigmaMuj[age+1]/(cy1^H1)
-   Yt_hatM[i+1]<-sum1*sigmaHom[age+1]/(cy1^H2)
-   
+    for (i in 1931:2014) { 
+      htWomen[i - 1949, 2] <- hw0 * exp(alphaMuj[age + 1] * i 
+                                      + SDW[3, i - 1949])
+      htMen[i - 1949, 2] <- hm0 * exp(alphaHom[age + 1] * i 
+                                    + SDM[1, i - 1949])
+      htWomen[i - 1949, 1] <- i
+      htMen[i - 1949, 1] <- i 
     }
- ht_hat[H,1]<-datos$Female[1]
- ht_hatM[H,1]<-datos$Male[1]
- 
- for(j in 2:cy1-1)
-  {
-   if(j>1)
-     {
-     ht_hat[H,j]<- datos$Female[1]*exp(alphaMuj[age+1]*(j) + Yt_hat[j])
-     ht_hatM[H,j]<- datos$Male[1]*exp(alphaHom[age+1]*(j) + Yt_hatM[j])
-     }
-  }
-} ## end for H   (1/sigmaMuj[age+1])*  (cy/H1)*
-
-
-
-##   hacer la media muestral y varianza muestral para ht_hat, primero modificar el codigo de 
-#### arriba para guardas las 10000 simulaciones de las tasas ht_hat
-### Women
-ht_hat_mean<-colMeans(ht_hat)
-Res1<-(ht_hat-ht_hat_mean)^2
-Var_Point<-colMeans(Res1)
+    ht_hat <- mat.or.vec(NS, cy1)
+    ht_hatM <- mat.or.vec(NS, cy1)
+    for (H in 1:NS) { 
+      Yt_hat <- mat.or.vec(cy1, 1)
+      Yt_hatM <- mat.or.vec(cy1, 1)
+      Yt_hat[1] <- 0
+      Yt_hatM[1] <- 0
+      sum1 <- 0
+      sum2 <- 0
+      for (i in 1:(cy1 - 1)) ## i makes the function of t
+      {
+        for (k in 1:i)  ##?? k makes the function of u
+        {
+          sum1 <- sum1 + 
+          exp(-lambdaNMuj[age + 1] * (i - k)) * 
+          (SDW[H, k + 1] - SDW[H, k])
+          sum2 <- sum2 + 
+          exp(-lambdaNHom[age + 1] * (i - k)) * 
+          (SDM[H, k + 1] - SDM[H, k])
+        }
+        Yt_hat[i + 1] <- sum1 * sigmaMuj[age + 1] / (cy1 ^ H1)
+        Yt_hatM[i + 1] <- sum1 * sigmaHom[age + 1] / (cy1 ^ H2)
+      }
+      ht_hat[H, 1] <- datos$Female[1]
+      ht_hatM[H, 1] <- datos$Male[1]
+  
+      for (j in 2:cy1 - 1) {
+        if (j > 1) {
+          ht_hat[H, j] <- datos$Female[1] * 
+          exp(alphaMuj[age + 1] * j + Yt_hat[j])
+          ht_hatM[H, j] <- datos$Male[1] * 
+          exp(alphaHom[age + 1] * j + Yt_hatM[j])
+        }
+      }
+    } 
+    ## end for H   (1/sigmaMuj[age+1])*  (cy/H1)*
+    # hacer la media muestral y varianza muestral para ht_hat, primero        #·modificar el codigo de 
+    # arriba para guardas las 10000 simulaciones de las tasas ht_hat
+    # Women
+#### ht_heat mean and variance computing ####
+ht_hat_mean <- colMeans(ht_hat)
+Res1 <- (ht_hat - ht_hat_mean) ^ 2
+Var_Point <- colMeans(Res1)
 
 ### Men
-ht_hat_meanM<-colMeans(ht_hatM)
-Res1M<-(ht_hatM-ht_hat_meanM)^2
-Var_PointM<-colMeans(Res1M)
+ht_hat_meanM <- colMeans(ht_hatM)
+Res1M <- (ht_hatM - ht_hat_meanM) ^ 2
+Var_PointM <- colMeans(Res1M)
 
-L<-2014-1950
+L <- 2014 - 1950
 
-Desv_stan<-sqrt(Var_Point/L)
+Desv_stan <- sqrt(Var_Point / L)
+Desv_stanM <- sqrt(Var_PointM / L)
 
-Desv_stanM<-sqrt(Var_PointM/L)
-
-  # Plotting
+#### Plotting mean, variance and confidence intervals####
 setEPS()
-postscript(paste("PlotWomen",age,".eps",sep=""))
+postscript(paste("PlotWomen",age,".eps",sep = ""))
 
-plot(years[1:55],datos$Female[1:55],type="l", col="blue",xlab="Years",ylab ="", las=1,
-     lty=1, main=bquote(widehat("h(t)")*" for women at age"~.(age) ),cex.axis=0.7,cex.lab=0.7)
-lines(years[1:55],ht_hat_mean[1:55], type="l", lty=2,col="red")
-#lines(years[1:55],ht_hat_mean[1:55]-Desv_stan[1:55], type="l", col="brown")
-#lines(years[1:55],ht_hat_mean[1:55]+Desv_stan[1:55], type="l", col="brown")
-lines(years[1:55],ht_hat_mean[1:55]-1.96*Desv_stan[1:55], type="l",lty=3, col="green")
-lines(years[1:55],ht_hat_mean[1:55]+1.96*Desv_stan[1:55], type="l",lty=3, col="green")
-legend("topright",c("Historical rates","simulations mean","IC  95%"),lty=1:3,
-       col=c("blue","red","green"),bty = "n",cex = 1.15)
-mtext(expression(widehat("h(t)")),side=2,las=1,line=2.3)
+plot(years[1:55], datos$Female[1:55],
+     type = "l", 
+     col = "blue",
+     xlab = "Years",
+     ylab = "", 
+     las = 1,
+     lty = 1, 
+     main = bquote(widehat("h(t)")*" for women at age"~.(age) ),
+     cex.axis = 0.7,
+     cex.lab = 0.7)
+lines(years[1:55], ht_hat_mean[1:55], 
+      type = "l", 
+      lty = 2,
+      col = "red")
+#lines(years[1:55],ht_hat_mean[1:55]-Desv_stan[1:55], type="l", col 
+#="brown")
+#lines(years[1:55],ht_hat_mean[1:55]+Desv_stan[1:55], type="l", 
+#col="brown")
+lines(years[1:55], ht_hat_mean[1:55] - 1.96 * Desv_stan[1:55], 
+      type = "l",
+      lty = 3,
+      col = "green")
+lines(years[1:55], ht_hat_mean[1:55] + 1.96*Desv_stan[1:55],
+      type = "l",
+      lty = 3,
+      col = "green")
+legend("topright",c("Historical rates",
+                    "simulations mean","IC  95%"),
+       lty = 1:3,
+       col = c("blue","red","green"),
+       bty = "n",
+       cex = 1.15)
+mtext(expression(widehat("h(t)")),
+      side = 2,
+      las = 1,
+      line = 2.3)
 dev.off()
 
 #### men
 #tiff(paste("PlotMen",age,".tif",sep=""), width = 4, height = 4, units = 'in', res = 300)
 #png(paste("PlotMen",age,".png",sep=""), width = 4.5, height = 4, units = 'in', res = 300)
 setEPS()
-postscript(paste("PlotMen",age,".eps",sep=""))
-plot(years[1:55],datos$Male[1:55],type="l", col="blue",xlab="Years",ylab ="",las=1,
-     lty=1, main=bquote(widehat("h(t)")*" for men at age"~.(age) ),cex.axis=0.7,cex.lab=0.7)
-lines(years[1:55],ht_hat_meanM[1:55], type="l", lty=2,col="red")
+postscript(paste("PlotMen", age, ".eps", sep = ""))
+plot(years[1:55], datos$Male[1:55],
+     type = "l", 
+     col = "blue",
+     xlab = "Years",
+     ylab = "",
+     las = 1,
+     lty = 1,
+     main = bquote(widehat("h(t)")*" for men at age"~.(age) ),
+     cex.axis = 0.7,
+     cex.lab = 0.7
+     )
+lines(years[1:55], ht_hat_meanM[1:55], 
+      type = "l",
+      lty = 2,
+      col = "red")
 #lines(years[1:55],ht_hat_meanM[1:55]-Desv_stanM[1:55], type="l", col="brown")
 #lines(years[1:55],ht_hat_meanM[1:55]+Desv_stanM[1:55], type="l", col="brown")
-lines(years[1:55],ht_hat_meanM[1:55]-1.96*Desv_stanM[1:55], type="l",lty=3, col="green")
-lines(years[1:55],ht_hat_meanM[1:55]+1.96*Desv_stanM[1:55], type="l",lty=3, col="green")
-
+lines(years[1:55], ht_hat_meanM[1:55] - 1.96 * Desv_stanM[1:55], 
+      type = "l",
+      lty = 3,
+      col = "green")
+lines(years[1:55],ht_hat_meanM[1:55] + 1.96 * Desv_stanM[1:55],
+      type = "l",
+      lty = 3,
+      col = "green")
+#
 legend("topright",c("Historical rates","simulations mean","IC  95%"),
-       lty=1:3,col=c("blue","red","green"),bty = "n",cex = 1.15)
-mtext(expression(widehat("h(t)")),side=2,las=1,line=2.3)
+       lty = 1:3,
+       col = c("blue","red","green"),
+       bty = "n",
+       cex = 1.15)
+mtext(expression(widehat("h(t)")),
+      side = 2,
+      las = 1,
+      line = 2.3)
 
 dev.off()
-qqnorm(log(Desv_stan[1:55]),  main=bquote("QQ-Plot for Women at age"~.(age) ),las=1)
+qqnorm(log(Desv_stan[1:55]),
+       main = bquote("QQ-Plot for Women at age"~.(age) ),
+       las = 1)
 qqline(log(Desv_stan[1:55]), col = 2)
-qqnorm(log(Desv_stanM[1:55]),main=bquote("QQ-Plot for Men at age"~.(age) ))
+qqnorm(log(Desv_stanM[1:55]),
+       main = bquote("QQ-Plot for Men at age"~.(age) ))
 qqline(log(Desv_stanM[1:55]), col = 2 )
 
-  datos2F <- data.frame()
-datos2F <- drates[drates$Age==age & drates$Year%in%c(1950:2014) , ]
+datos2F <- data.frame()
+datos2F <- drates[drates$Age == age 
+                  & drates$Year %in% c(1950:2014) , ]
+#
 datos2F$FemalePost <- datos2F$Female
 datos2F$MalePost <- datos2F$Male
 
 setEPS()
-postscript(paste("PlotWomenForecast",age,".eps",sep=""), 
-           width=golden_width, height=golden_height)
+postscript(paste("PlotWomenForecast", age, ".eps", sep = ""), 
+           width = golden_width, 
+           height = golden_height)
+
 plot(years1[79:141], (datos2F$Female[1:63]),
-     type="l",
-     col="blue",
-     xlab="Years",
-     ylab ="", las=1,
-     lty=1, 
-     main=bquote("age:"~.(age) ),
-     cex.axis=0.7,
-     cex.lab=0.7
+     type = "l",
+     col = "blue",
+     xlab = "Years",
+     ylab = "",
+     las = 1,
+     lty = 1, 
+     main = bquote("age:"~.(age) ),
+     cex.axis = 0.7,
+     cex.lab = 0.7
 )
 lines(years1[79:141], ht_hat_mean[1:63], 
-      type="l", 
-      lty=2,
-      col="red")
+      type = "l", 
+      lty = 2,
+      col = "red")
 
 lines(years1[79:141], ht_hat_mean[1:63] - 1.96 * Desv_stan[1:63],
-       type="l", 
-       lty=3, 
-       col="brown",
-       lwd=3)
+       type = "l", 
+       lty = 3, 
+       col = "brown",
+       lwd = 3)
 lines(years1[79:141], ht_hat_mean[1:63] + 1.96 * Desv_stan[1:63],
-      type="l",
-      lty=3,
-      col="brown",
-      lwd=3)
+      type = "l",
+      lty = 3,
+      col = "brown",
+      lwd = 3)
 
-ablineclip(v=2004,
-           y1=min(datos2F$Female[1:63]),
-           y2=0.5 * (min(datos2F$Female[1:63]) + max(datos2F$Female[1:63])), 
-           lty=3, 
-           col="brown",
-           lwd=3)
-legend("topright", "Forecast\n period", bty="n", cex=0.75)
+ablineclip(v = 2004,
+           y1 = min(datos2F$Female[1:63]),
+           y2 = 0.5 * (min(datos2F$Female[1:63]) 
+                       + max(datos2F$Female[1:63])), 
+           lty = 3, 
+           col = "brown",
+           lwd = 3)
+legend("topright", "Forecast\n period", bty = "n", cex = 0.75)
 dev.off()
 
 setEPS()
-postscript(paste("PlotMenForecast",age,".eps",sep=""), 
-           width=golden_width, 
-           height=golden_height)
+postscript(paste("PlotMenForecast", age, ".eps", sep = ""), 
+           width = golden_width, 
+           height = golden_height)
 plot(years1[79:141], (datos2F$Male[1:63]),
-     type="l", 
-     col="blue",
-     xlab="Years",
-     ylab ="",las=1,
-     lty=1,
-     main=bquote("Age: "~.(age) ),
-     cex.axis=0.7,
-     cex.lab=0.7)
-lines(years1[79:141], ht_hat_meanM[1:63], 
-      type="l", 
-      lty=2,
-      col="red")
-lines(years1[79:141], ht_hat_meanM[1:63] - 1.96 * Desv_stanM[1:63], 
-      type="l",
-      lty=3,
-      col="brown", 
-      lwd=3)
-lines(years1[79:141], ht_hat_meanM[1:63] + 1.96 * Desv_stanM[1:63], 
-      type="l",
-      lty=3, 
-      col="brown",
-      lwd=3)
+     type = "l", 
+     col = "blue",
+     xlab = "Years",
+     ylab = "",
+     las = 1,
+     lty = 1,
+     main = bquote("Age: "~.(age) ),
+     cex.axis = 0.7,
+     cex.lab = 0.7)
 
-ablineclip(v=2004,
-           y1=min(datos2F$Male[1:63]),
-           y2=0.5 * (min(datos2F$Male[1:63]) + max(datos2F$Male[1:63])),
-           lty=3,
-           col="brown",
-           lwd=3)
+lines(years1[79:141], ht_hat_meanM[1:63], 
+      type = "l", 
+      lty = 2,
+      col = "red")
+
+lines(years1[79:141], ht_hat_meanM[1:63] - 1.96 * Desv_stanM[1:63], 
+      type = "l",
+      lty = 3,
+      col = "brown", 
+      lwd = 3)
+
+lines(years1[79:141], ht_hat_meanM[1:63] + 1.96 * Desv_stanM[1:63], 
+      type = "l",
+      lty = 3, 
+      col = "brown",
+      lwd = 3)
+
+ablineclip(v = 2004,
+           y1 = min(datos2F$Male[1:63]),
+           y2 = 0.5 * (min(datos2F$Male[1:63]) + max(datos2F$Male[1:63])),
+           lty = 3,
+           col = "brown",
+           lwd = 3)
 legend("topright","Forecast\n period", bty = "n",cex = 0.75)
 dev.off()
 }
-datos2F<-data.frame()
-datos2F<-drates[drates$Age==age & drates$Year%in%c(1950:2014) , ]
-datos2F$FemalePost<-datos2F$Female
-datos2F$MalePost<-datos2F$Male
+#### Forecasting Plots ####
+datos2F <- data.frame()
+datos2F <- drates[drates$Age == age & drates$Year %in% c(1950:2014) , ]
+datos2F$FemalePost <- datos2F$Female
+datos2F$MalePost <- datos2F$Male
 
 setEPS()
-postscript(paste("PlotWomenForecast",age,".eps",sep=""))
-#png(paste("PlotWomenForecast",age,".png",sep=""), width = 4.5, height = 4, units = 'in', res = 300)
+postscript(paste("PlotWomenForecast", age, ".eps", sep = ""))
+plot(years1[79:141], (datos2F$Female[1:63]),
+     type = "l",
+     col = "blue",
+     xlab = "Years",
+     ylab = "",
+     las = 1,
+     lty = 1,
+     main = bquote(widehat("h(t)")*" forecast for women at age"~.(age) ),
+     cex.axis = 0.7,
+     cex.lab = 0.7)
 
-plot(years1[79:141],(datos2F$Female[1:63]),type="l", col="blue",xlab="Years",ylab ="", las=1,
-     lty=1, main=bquote(widehat("h(t)")*" forecast for women at age"~.(age) ),cex.axis=0.7,cex.lab=0.7)
-lines( years1[79:141],ht_hat_mean[1:63], type="l", lty=2,col="red")
-#lines(years[1:54],ht_hat_mean[1:54]-Desv_stan[1:54], type="l", col="brown")
-#lines(years[1:54],ht_hat_mean[1:54]+Desv_stan[1:54], type="l", col="brown")
-lines( years1[79:141],ht_hat_mean[1:63]-1.96*Desv_stan[1:63], type="l",lty=3, col="green")
-lines( years1[79:141],ht_hat_mean[1:63]+1.96*Desv_stan[1:63], type="l",lty=3, col="green")
+lines(years1[79:141], ht_hat_mean[1:63], 
+      type = "l", 
+      lty = 2,
+      col = "red")
+#lines(
+# years[1:54], ht_hat_mean[1:54] - Desv_stan[1:54],
+#type="l", col="brown")
+#lines(years[1:54],ht_hat_mean[1:54]+Desv_stan[1:54], 
+#type="l", col="brown")
+lines(years1[79:141], ht_hat_mean[1:63] - 1.96 * Desv_stan[1:63],
+      type = "l",
+      lty = 3,
+      col = "green")
+lines(years1[79:141],
+      ht_hat_mean[1:63] + 1.96 * Desv_stan[1:63], 
+      type = "l",
+      lty = 3,
+      col = "green")
 
-ablineclip(v=2004,y1=min(datos2F$Female[1:63]),y2=0.5*(min(datos2F$Female[1:63])+max(datos2F$Female[1:63])), lty=3, col="brown")
+ablineclip(v = 2004,
+           y1 = min(datos2F$Female[1:63]),
+           y2 = 0.5 * (min(datos2F$Female[1:63])
+                        + max(datos2F$Female[1:63])), 
+           lty = 3, col = "brown")
 #abline(v= 2004, lty=3, col="brown")
 
-legend("topright",c("Historical rates","simulations mean","IC  95%"),lty=1:3,
-       col=c("blue","red","green"),bty = "n",cex = 1)
+legend("topright",
+       c("Historical rates","simulations mean","IC  95%"),
+       lty = 1:3,
+       col = c("blue","red","green"),
+       bty = "n",
+       cex = 1)
 
 legend("right","Forecast\n period", bty = "n",cex = 0.55)
 
-mtext(expression(widehat("h(t)")),side=2,las=1,line=2.3)
+mtext(expression(widehat("h(t)")),
+      side = 2,
+      las = 1,
+      line = 2.3)
 dev.off()
 
 setEPS()
-postscript(paste("PlotMenForecast",age,".eps",sep=""))
+postscript(paste("PlotMenForecast", age, ".eps", sep = ""))
 #png(paste("PlotMenForecast",age,".png",sep=""), width = 4.5, height = 4, units = 'in', res = 300)
-plot( years1[79:141],(datos2F$Male[1:63]),type="l", col="blue",xlab="Years",ylab ="",las=1,
-     lty=1, main=bquote(widehat("h(t)")*" forecast for men at age "~.(age) ),cex.axis=0.7,cex.lab=0.7)
-lines( years1[79:141],ht_hat_meanM[1:63], type="l", lty=2,col="red")
+plot(years1[79:141],(datos2F$Male[1:63]),
+     type = "l",
+     col = "blue",
+     xlab = "Years",
+     ylab = "",
+     las = 1,
+     lty = 1,
+     main = bquote(
+       widehat("h(t)")* " forecast for men at age "~.(age)),
+     cex.axis = 0.7,
+     cex.lab = 0.7)
+lines(years1[79:141], ht_hat_meanM[1:63], 
+      type = "l",
+      lty = 2,
+      col = "red")
 #lines(years[1:54],ht_hat_meanM[1:54]-Desv_stanM[1:54], type="l", col="brown")
 #lines(years[1:54],ht_hat_meanM[1:54]+Desv_stanM[1:54], type="l", col="brown")
-lines( years1[79:141],ht_hat_meanM[1:63]-1.96*Desv_stanM[1:63], type="l",lty=3, col="green")
-lines( years1[79:141],ht_hat_meanM[1:63]+1.96*Desv_stanM[1:63], type="l",lty=3, col="green")
+lines(years1[79:141], ht_hat_meanM[1:63] - 1.96 * Desv_stanM[1:63], 
+      type = "l",
+      lty = 3,
+      col = "green")
+lines(years1[79:141], ht_hat_meanM[1:63] + 1.96 * Desv_stanM[1:63],
+      type = "l",
+      lty = 3,
+      col = "green")
 
-ablineclip(v=2004,y1=min(datos2F$Male[1:63]),y2=0.5*(min(datos2F$Male[1:63])+max(datos2F$Male[1:63])), lty=3, col="brown")
-#abline(v= 2004,lty=3, col="brown")
+ablineclip(v = 2004, y1 = min(datos2F$Male[1:63]),
+           y2 = 0.5*(min(datos2F$Male[1:63])
+                     + max(datos2F$Male[1:63])),
+           lty = 3, 
+           col = "brown")
 
-legend("topright",c("Historical rates","simulations mean","IC  95%"),
-       lty=1:3,col=c("blue","red","green"),bty = "n",cex = 1)
+legend("topright",
+       c("Historical rates", "simulations mean", "IC  95%"),
+       lty = 1:3,
+       col = c("blue","red","green"),
+       bty = "n",
+       cex = 1)
 
-legend("right","Forecast\n period", bty = "n",cex = 0.55)
-mtext(expression(widehat("h(t)")),side=2,las=1,line=2.3)
+legend("right", "Forecast\n period", bty = "n",cex = 0.55)
+mtext(expression(widehat("h(t)")),
+      side = 2,
+      las = 1,
+      line = 2.3)
 
 dev.off()
-
 }
