@@ -1,8 +1,3 @@
-library("fractal")
-library("fractal")
-library("pracma")
-library("somebm")
-
 fBM_mortality_rate_sampler <- function(data_mortality_rate, 
                                        data_mortality_rate2,
                                        H_est_woman,
@@ -23,7 +18,6 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate,
     HW_est <- H_est_woman[age + 1, 2]
     HM_est <- H_est_man[age + 1, 2]
     for (i in 1:n_paths) {
-
       #d<-ts(fbm(hurst=0.7, n=75),start=c(1930, 1),end=c(2004,1),frequency=1)
       SDW[i,] <- ts(fbm(hurst = HW_est, n = 65),
                     start = c(1950, 1),
@@ -89,19 +83,16 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate,
     ht_hat_man[H, 1] <- data_mortality_rate$Male[1]
     
     for (j in 2:cy1 - 1) {
-      if (j > 1) {
-        ht_hat_woman[H, j] <- data_mortality_rate$Female[1] * 
-          exp(alpha_woman[age + 1] * j + Yt_hat[j])
-        ht_hat_man[H, j] <- data_mortality_rate$Male[1] * 
-          exp(alpha_man[age + 1] * j + Yt_hatM[j])
+      ht_hat_woman[H, j] <- data_mortality_rate$Female[1] * 
+        exp(alpha_woman[age + 1] * j + Yt_hat[j])
+      ht_hat_man[H, j] <- data_mortality_rate$Male[1] * 
+        exp(alpha_man[age + 1] * j + Yt_hatM[j])
       }
-    }
   } 
   
   sampler_time <- htWomen[, 1]
   # samples <- cbind(sampler_time, htWomen[, 2], htMen[, 2])
-  ht_hat_samples <- data.frame("time" = sampler_time, 
-                               "ht_hat_woman" = ht_hat_woman,
+  ht_hat_samples <- data.frame("ht_hat_woman" = ht_hat_woman,
                                "ht_hat_man" = ht_hat_man)
   write.csv(ht_hat_samples, file_name)
 }

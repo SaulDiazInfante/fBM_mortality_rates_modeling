@@ -2,7 +2,6 @@ library("fractal")
 library("pracma")
 library("somebm")
 library("ggplot2")
-
 source("load_data.R")
 source("hurst_estimation.R")
 source("hurst_plots.R")
@@ -36,7 +35,7 @@ fBM_mortality_samples <- fBM_mortality_rate_sampler(data,
                                                     data2,
                                                     H_est_woman,
                                                     H_est_man,
-                                                    100000,
+                                                    100,
                                                     alpha_woman, 
                                                     alpha_man,
                                                     lambda_woman,
