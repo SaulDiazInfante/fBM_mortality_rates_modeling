@@ -1,10 +1,3 @@
-library("fractal")
-library("pracma")
-library("yuima")
-library("somebm")
-library("plotrix")
-library("ggplot2")
-
 hurst_estimation <- function(data){
   drates <- read.table("Deaths_Rates_Italy.txt",
                        dec = ".",

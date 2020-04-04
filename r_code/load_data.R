@@ -1,8 +1,6 @@
 library("fractal")
 library("pracma")
-library("yuima")
 library("somebm")
-library("plotrix")
 library("ggplot2")
 
 load_data <- function(data_file="Deaths_Rates_Italy.txt") {
@@ -39,10 +37,11 @@ load_data <- function(data_file="Deaths_Rates_Italy.txt") {
   fy <- years[1];
   cy <- length(years); 
   ly <- years[cy]
+## * * * * * Graph of the raw data  * * *  *  * * 
   color <- rainbow(cy)
 # * * * *  Giacometti data: ages (x = 0,...,91) and N years (t = 1930,...,2004)
   drates$Female <- drates$Female * 100
-  drates$Male <- drates$Male * 100
+  drates$Male <- drates$Male*100
 
   ages <- 0:91
   years <- 1950:2004

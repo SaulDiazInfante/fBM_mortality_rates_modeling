@@ -196,8 +196,8 @@
     \info{Add relevant use and implications of our results}
 
 
-        After this brief introduction, the model we are interested is introduced
-    in \Cref{model-form}. \Cref{fgn} reviews the fBM and presents
+        After this brief introduction, the model we are interested is introduced in \Cref{model-form}. \Cref{fgn} 
+    reviews the fBM and presents
     the fractional Ornstein-Uhlenbeck (fOU) process. \Cref{esti} outlines the
     applied method for parameter estimation. In  \Cref{re-fou}, we implement our
     formulation to fitting data of mortality from Italy. Further, in
@@ -208,24 +208,17 @@
 \section{Model formulation}\label{model-form}
 
 
-        We now discuss the model of Milevsky-Promislow Model 
-    (see \cite{mi-pr} for the original paper or \cite{gi-or-be}for a recent 
-    generalization). 
+We now discuss the model of Milevsky-Promislow Model 
+(see \cite{mi-pr} for the original paper
+or \cite{gi-or-be}
+for a recent generalization). 
 
-    Set the survival probability of an individual aged $x$ in the period $[t,T]$ as
-    \begin{align}\label{E-surv}
-        S(t,T):=
-            \E \left[
-                \exp
-                \left(
-                    -\int_t^T h_x(u) du
-                \right)
-                \Big|\mathcal{F}_t 
-            \right],
-    \end{align}
-where filtration $\{\mathcal{F}_t\}_{t\ge 0} $ represent the information 
-until time $t$ and $h_x(t)$ denotes stochastic force of mortality or hazard rate.
-According with the Milevsky-Promislow model, $h_x(t)$ is given by
+Set the survival probability of an individual aged $x$ in the period $[t,T]$ as
+\begin{align}\label{E-surv}
+ S(t,T):=\E\Big[\exp\Big(-\int_t^T h_x(u) du\Big)\Big|\mathcal{F}_t \Big],
+\end{align}
+where $\{\mathcal{F}_t\}_{t\ge 0} $ is a filtration which represent the information until time $t$ and $h_x(t)$ is the
+stochastic force of mortality or hazard rate. According with the Milevsky-Promislow Model $h_x(t)$ is given by
 \begin{align}
  h(t)&=h_0\exp(\alpha_0t+\alpha_1Y_t),\label{mod-1}
 \end{align}
@@ -719,29 +712,21 @@ Brouste and Iacus (see Th. 1 in \cite{br-ia}) have shown the next result.
     Moreover, we have asymptotic normality property:  for all $H \in (0, 1)$,
 
     \begin{align*}
-        \sqrt{N}(\hat{H}_N  - H ) 
-            & 
-                \stackrel{\mathcal{L}}{\to} 
-                N (0, \Gamma_1 (\bm{a}, \sigma,H))
-                \quad  \hbox{\rm as} 
-                \quad N
-                \to + \infty,
-            \\
-                \frac{ \sqrt{N} }{ \log N } (\hat{\sigma}_N  - \sigma)
-            & 
-                \stackrel{\mathcal{L}}{\to} N 
-                (0, \Gamma_2 (\bm{a},\sigma,H))
-                \quad
-                \hbox{\rm as} 
-                \quad N 
-                \to +\infty,
+    \sqrt{N} (\hat{H}_N  - H ) &\stackrel{\mathcal{L}}{\longrightarrow} N (0,
+    \Gamma_1 ( \bm{a},\sigma,H)) \quad  \hbox{\rm as} \quad N
+    \rightarrow +\infty,
+    \frac{\sqrt{N}}{\log N} ( \hat{\sigma}_N  - \sigma )
+    &\stackrel{\mathcal{L}}{\longrightarrow} N (0, \Gamma_2 (\bm{a},\sigma,H))
+    \quad
+    \hbox{\rm as} \quad N \rightarrow +\infty,
     \end{align*}
+
     where $\Gamma_1$ and $\Gamma_2$ are symmetric positive definite matrices
     depending on $\sigma, H$ and the filter $\bm{a}$.
     \hfill$\Box$
 \end{theorem}
 
-With this result we obtain an estimator for the parameters
+With this result is possible to obtain an estimator for the parameters
 $\sigma$.
 
 We will use the following two filters:
@@ -751,6 +736,7 @@ We will use the following two filters:
     a_k:= \frac{(-1)^{1-k}}{2^k} {K\choose k} =\frac{(-1)^{1-k}}{2^k}
     \frac{K!}{k!(K-k)!}\qquad \mbox{for }  0\le k\le K.
     \end{equation*}
+
 
     \item Daubechies filters (see \cite{de} for the original definition). We
     set $K=4$ and define the Daubechies filter by
@@ -1258,12 +1244,6 @@ $0,25,50,90$.
 
 \begin{figure}[H]
 <<<<<<< HEAD
-    \includegraphics{PlotMenForecast50.eps}
-    \includegraphics{PlotMenForecast60.eps}
-    \includegraphics{PlotMenForecast70.eps}
-    \includegraphics{PlotMenForecast90.eps}
-=======
-<<<<<<< HEAD
     \includegraphics[width = 2.85in]{PlotMenForecast50.png}
     \includegraphics{PlotMenForecast60.png}
     \includegraphics{PlotMenForecast70.png}
@@ -1275,7 +1255,6 @@ $0,25,50,90$.
     \includegraphics[width = 2.85in]{PlotMenForecast60.eps}
     \includegraphics[width = 2.85in]{PlotMenForecast70.eps}
     \includegraphics[width = 2.85in]{PlotMenForecast90.eps}
->>>>>>> ae487bacaa6d21b6088d6638b760b1425aa33dbb
     \caption{Forecast for the rate mortality with the fOU model. 
         Men at ages $50,60,70,90$.
         \newline
