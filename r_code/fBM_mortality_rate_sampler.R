@@ -1,9 +1,7 @@
 library("fractal")
 library("fractal")
 library("pracma")
-library("yuima")
 library("somebm")
-library("plotrix")
 
 fBM_mortality_rate_sampler <- function(data_mortality_rate, 
                                        data_mortality_rate2,

@@ -1,8 +1,6 @@
 library("fractal")
 library("pracma")
-library("yuima")
 library("somebm")
-library("plotrix")
 library("ggplot2")
 
 source("load_data.R")
