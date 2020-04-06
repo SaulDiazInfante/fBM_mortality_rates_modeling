@@ -1,16 +1,15 @@
-library("fractal")
-library("pracma")
-library("somebm")
-library("ggplot2")
-
-load_data <- function(data_file="Deaths_Rates_Italy.txt") {
-  drates <- read.table(data_file, dec = ".", header = TRUE, na.strings = ".")
+load_data_mortality_rate <- function(data_file="Deaths_Rates_Italy.txt") {
+  drates <- read.table(data_file, 
+                       dec = ".", 
+                       header = TRUE,
+                       na.strings = ".",
+                       stringsAsFactors=F)
   head(drates)
   table(drates$Year)
   table(drates$Age)
   dim(drates)
 
-  drates <- drates[drates$Age != "110+", ]
+  drates <- filter(drates, Age != 110)
 #*Rates matrix       x=age y=years
   mrates <- wrates <- arates <- mat.or.vec(110, 143)
   rownames(mrates) <- rownames(wrates) <- rownames(arates) <- 0:109
@@ -53,10 +52,9 @@ load_data <- function(data_file="Deaths_Rates_Italy.txt") {
   fy <- years[1]
   cy <- length(years)
   cy1 <- length(years1[79:142])
-
   ly <- years[cy]
 
-  data_mortality_rates <- drates[drates$Age %in% c(0:90) & 
-                                  drates$Year %in% c(1950:2004), ]
-  return(data_mortality_rates)
+  data_mortality_rates <- filter(drates, 
+                                  Age <= 90 & Year >= 1950 & Year <= 2004)
+  write.csv(data_mortality_rates, 'data_mortality_rate.csv')
 }

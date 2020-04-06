@@ -2,124 +2,108 @@ hurst_estimation <- function(data){
   drates <- read.table("Deaths_Rates_Italy.txt",
                        dec = ".",
                        header = TRUE,
-                       na.strings = ".")
-#
+                       na.strings = ".", 
+                       stringsAsFactors=F)
+  #
   ages <- 0:91
   years <- 1950:2004
   alpha_woman <- 0:91
   alpha_man <- 0:91
-
+  #
   ### womens
   for (A in ages) {
     sum1 <- 0
     sum2 <- 0
     sum3 <- 0
     sum4 <- 0
-    mortality_rate_data <- drates[drates$Year %in% 1950:2004 & drates$Age == ages[A + 1],]
+    mortality_rate_data <- filter(drates, 
+                                  Year >= 1950 & 
+                                  Year <= 2004 & 
+                                  Age == ages[A+1]) 
     for (B in years) {
-      sum1 <- sum1 + ((mortality_rate_data$Year[mortality_rate_data$Year == B])
-                      - 1950) *
-                  log(mortality_rate_data$Female[mortality_rate_data$Year == B])
-      sum2 <- sum2 + ((mortality_rate_data$Year[mortality_rate_data$Year == B])
-                      - 1950)
-      sum3 <- sum3 + ((mortality_rate_data$Year[mortality_rate_data$Year == B])
-                      - 1950) ^ 2
-      sum4 <- sum4 + ((mortality_rate_data$Year[mortality_rate_data$Year == B])
-                      - 1950) *
-        log(mortality_rate_data$Male[mortality_rate_data$Year == B])
+      query <- filter(mortality_rate_data, Year == B)
+      query_year <- (query$Year - 1950)
+      # querry_year_female <- filter(mortality_rate_data, Year==B, )
+      sum1 <- sum1 +  query_year * log(query$Female)
+      sum2 <- sum2 + query_year
+      sum3 <- sum3 + query_year ^ 2
+      sum4 <- sum4 + query_year * log(query$Male)
     }
-    alpha_woman[A + 1] <- (sum1 -
-                             log(
-                               mortality_rate_data$Female[
-                                 mortality_rate_data$Year == 1950]) *
-                             sum2) / sum3
-    alpha_man[A + 1] <- (sum4 -
-                           log(mortality_rate_data$Male[
-                             mortality_rate_data$Year == 1950]) * sum2 ) / sum3
+    query_1950 <- filter(mortality_rate_data, Year == 1950)
+    alpha_woman[A + 1] <- (sum1 - log(query_1950$Female) * sum2) / sum3
+    alpha_man[A + 1] <- (sum4 - log(query_1950$Male) * sum2 ) / sum3
   }
-  mortality_rate_data <- drates[drates$Age %in% c(0:91) &
-                                  drates$Year %in% c(1950:2004) , ]
+  mortality_rate_data <- filter(drates, Age <= 90 & 
+                                Year >= 1950 &
+                                Year <= 2004)
   mortality_rate_data$FemalePost <- mortality_rate_data$Female
   mortality_rate_data$MalePost <- mortality_rate_data$Male
   mortality_rate_data2 <- data.frame()
-
+  #
   for (A in ages) {
-    mortality_rate_data1 <- mortality_rate_data[mortality_rate_data$Year %in%
-                                                  c(1950:2004) &
-                                                  mortality_rate_data$Age ==
-                                                  ages[A + 1], ]
+    mortality_rate_data1 <- filter(drates,
+                                   Year >= 1950 &
+                                   Year <= 2004 &
+                                   Age == ages[A+1]
+                                  ) 
     mortality_rate_data1$FemalePost <- log(mortality_rate_data1$Female) -
-      log(mortality_rate_data1$Female[1]) - alpha_woman[A + 1] *
-      (mortality_rate_data1$Year)
+      log(mortality_rate_data1$Female[1]) - 
+      alpha_woman[A + 1] * (mortality_rate_data1$Year)
     mortality_rate_data1$MalePost <- log(mortality_rate_data1$Male) -
       log(mortality_rate_data1$Male[1]) -
       alpha_man[A + 1] * (mortality_rate_data1$Year)
     mortality_rate_data2 <- rbind(mortality_rate_data2, mortality_rate_data1)
   }
-##### * * * * * Section 3.2, estimating Hurst parameter H with the help of
-#####  * * *  * several R libraries    *  * *
-##### * * * * * Second we estimated H's directly for the first model
-#####* * *  *   i.e.    Y_t = B_t^H    *  *   *   *   *
-######## Estimacion de H usando diferentes funciones: hurstexp(x), FDDwhite, Rovers
+  ####****Section 3.2, estimating Hurst parameter H using R libraries ****#### 
+  # Second we estimated H's directly for the first model Y_t = B_t^H*
+  #
   HM1 <- data.frame(0, 0, 0, 0, 0, 0)
   HH1 <- data.frame(0, 0, 0, 0, 0, 0)
+  #
   colnames(HM1) <- colnames(HH1) <- c("Age", "Hs", "Hrs", "He", "Hal", "Ht")
-
   HM2 <- data.frame(0, 0, 0)
-  #HH2<-data.frame(0,0)
   colnames(HM2) <- c("Age", "HWoman", "HMan")
-  #HM3<-data.frame(0,0,0)
+  #
   H3 <- data.frame(0, 0, 0)
   colnames(H3) <- c("Age", "Higuchi_Mu", "Higuchi_Ho")
+  #
   H4 <- data.frame(0, 0, 0)
   colnames(H4) <- c("Age", "Rovers_Mu", "Rovers_Ho")
-
+  #
   for (i in ages) {
+    query_year <- filter(mortality_rate_data2, Age == ages[i + 1])
     HM1[i + 1, 1] <- HH1[i + 1, 1] <- ages[i + 1]
-    XX <- hurstexp(mortality_rate_data2$FemalePost[
-      mortality_rate_data2$Age == ages[i + 1]], d = 20, display = F)
-    XY <- hurstexp(mortality_rate_data2$MalePost[
-      mortality_rate_data2$Age == ages[i + 1]],  d = 20, display = F)
+    XX <- hurstexp(query_year$FemalePost, d = 20, display = F)
+    XY <- hurstexp(query_year$MalePost, d = 20, display = F)
     HM2[i + 1, 1] <- ages[i + 1]
-    HM2[i + 1, 2] <- FDWhittle(mortality_rate_data2$FemalePost[
-      mortality_rate_data2$Age == ages[i + 1]],
-                               method = "continuous")
-    HM2[i + 1, 3] <- FDWhittle(mortality_rate_data2$MalePost[
-      mortality_rate_data2$Age == ages[i + 1]],
-                               method = "continuous")
-    xx <- mortality_rate_data2$FemalePost[
-      mortality_rate_data2$Age == ages[i + 1]]
-    xy <- mortality_rate_data2$MalePost[
-      mortality_rate_data2$Age == ages[i + 1]]
-
+    HM2[i + 1, 2] <- FDWhittle(query_year$FemalePost, method = "continuous")
+    HM2[i + 1, 3] <- FDWhittle(query_year$MalePost, method = "continuous")
+    xx <- query_year$FemalePost
+    xy <- query_year$MalePost
+    #
     H3[i + 1, 1] <- ages[i + 1]
     H3[i + 1, 2] <- hurstBlock(xx, method = "higuchi")[1]
     H3[i + 1, 3] <- hurstBlock(xy, method = "higuchi")[1]
-
+    #
     H4[i + 1, 1] <- ages[i + 1]
-    H4[i + 1, 2] <- RoverS(mortality_rate_data2$FemalePost[
-      mortality_rate_data2$Age == ages[i + 1]])
-    H4[i + 1, 3] <- RoverS(mortality_rate_data2$MalePost[
-      mortality_rate_data2$Age == ages[i + 1]])
-
+    H4[i + 1, 2] <- RoverS(query_year$FemalePost)
+    H4[i + 1, 3] <- RoverS(query_year$MalePost)
+    #
     for (j in 1:5) {
       HM1[i + 1, j + 1] <- XX[j]
       HH1[i + 1, j + 1] <- XY[j]
     }
-
   }
-##### * * * * * Section 3.2,second part of estimating Hurst parameter H with the
-#####  * * *  * several R libraries    *  * *
-##### * * * * * Here we estimated H's by using equation (5.1) * * *  *  *  *   *   *
-
+  ####*****Section 3.2, Hurst estimation parameter H with R libraries****####
   M <- 1
   BH2Fem <- data.frame(0, 0, 0)
   BH2Mal <- data.frame(0, 0, 0)
   names(BH2Fem) <- c("Age","Year","FemalePost")
   names(BH2Mal) <- c("Age","Year","MalePost")
   for (h in ages) {
-    YMale <- mortality_rate_data2[mortality_rate_data2$Age == ages[h + 1], c(1, 7)]
-    YFemale <- mortality_rate_data2[mortality_rate_data2$Age == ages[h + 1], c(1, 6)]
+    query_year <- filter(mortality_rate_data2, Age==ages[h+1])
+    YMale <- query_year[, c(1, 7)]
+    YFemale <- query_year[, c(1,6)]
     sumInt1 <- 0
     sumInt2 <- 0
     for (i in years) {
@@ -145,15 +129,16 @@ hurst_estimation <- function(data){
 
   HM1B <- data.frame(0, 0, 0, 0, 0, 0, 0)
   HH1B <- data.frame(0, 0, 0, 0, 0, 0, 0)
-  colnames(HM1B) <- colnames(HH1B) <- c("Age", "Hs_hurstexp", "Hal_hurstexp",
-                                      "FDDwhitte",  "aggVar", "higuchi" ,"RoverS")
+  colnames(HM1B) <- colnames(HH1B) <- c("Age", "Hs_hurstexp", 
+                                        "Hal_hurstexp", "FDDwhitte",
+                                        "aggVar", "higuchi" ,"RoverS")
   HM2B <- data.frame(0, 0, 0)
   colnames(HM2B) <- c("Age", "HWoman", "HMan")
   H3 <- data.frame(0, 0, 0, 0, 0)
   colnames(H3) <- c("Age", "Higuchi_Mu","Higuchi_Ho")
   H4 <- data.frame(0, 0, 0)
   colnames(H4) <- c("Age", "Rovers_Mu","Rovers_Ho")
-
+  #
   for (i in ages) {
     HM1B[i + 1, 1] <- HH1B[i + 1, 1] <- ages[i + 1]
     XX <- hurstexp(BH2Fem$FemalePost[BH2Fem$Age == ages[i + 1]],
@@ -228,12 +213,12 @@ hurst_estimation <- function(data){
   c <- c(1, -2, 1)
   ck <- c / 4
   ck2 <- mat.or.vec(1, 5)
-
+  #
   for (i in 1:3) {
   #ck2[2*i+1]<-0
     ck2[2 * i - 1] <- ck[i]
   }
-#
+  #
   EneN <- length(years)
   #### calculo de V_N,a
   K <- length(bk)   ## descomentar este cuando se use bk
@@ -242,19 +227,19 @@ hurst_estimation <- function(data){
   N <- EneN - K
   ### comentar la siguiente linea si se usa bk
   #N<-EneN-K
-
+  #
   #NNHWoman <- ages
   HMan <- ages
   VnaWoman <- ages - ages
   VnaMan <- ages - ages
   VnaWoman_a2 <- VnaWoman
   VnaMan_a2 <- VnaMan
-
+  #
   for (h in ages) {
-    mortality_rate_data <- mortality_rate_data2[mortality_rate_data2$Year
-                                                %in% c(1950:2004) &
-                                                  mortality_rate_data2$Age ==
-                                                  ages[h + 1], ]
+    mortality_rate_data <- filter(mortality_rate_data2, 
+                                  Year >= 1950 &
+                                  Year <= 2004 &
+                                  Age ==  ages[h + 1])
     sumWoman <- 0
     sumMan <- 0
     for (i in 0:N) { ## N=EneN-K=75-4
@@ -272,7 +257,6 @@ hurst_estimation <- function(data){
     } #fin for i
     VnaWoman[h + 1] <- sumWoman / N
     VnaMan[h + 1] <- sumMan / N
-    #### calculo de V_N,a^2, aqui continua el for de h
     sumWoman_a2 <- 0
     sumMan_a2 <- 0
     for (i in 1:N1) {
@@ -289,11 +273,11 @@ hurst_estimation <- function(data){
       }
       sumWoman_a2 <- sumWoman_a2 + sum2 ^ 2
       sumMan_a2 <- sumMan_a2 + sum3 ^ 2
-    }  ## fin for i
+    }
     VnaWoman_a2[h + 1] <- sumWoman_a2 / N
     VnaMan_a2[h + 1] <- sumMan_a2 / N
-  } ## fin for h
-
+  }
+  #
   HWoman <- 0.5 * log(VnaWoman_a2[1:91] / VnaWoman[1:91], 2)
   HMan <- 0.5 * log(VnaMan_a2[1:91] / VnaMan[1:91], 2)
   H_woman <- cbind(HH1$Age, HM1$Hal, HM2$HWoman, H4$Rovers_Mu)
@@ -303,11 +287,14 @@ hurst_estimation <- function(data){
                                               "FDWhittle_lib", "Rovers_Lib")
   mortality_rate_data2$Fem1 <- mortality_rate_data2$FemalePost
   mortality_rate_data2$Mal1 <- mortality_rate_data2$MalePost
-
-  for (h in ages) { mortality_rate_data2$FemalePost[mortality_rate_data2$Age ==ages[h + 1]] <-
-mortality_rate_data2$FemalePost[mortality_rate_data2$Age == ages[h + 1]]
-mortality_rate_data2$MalePost[mortality_rate_data2$Age == ages[h + 1]] <-
-mortality_rate_data2$FemalePost[mortality_rate_data2$Age == ages[h + 1]] }
-H_estimation <- list(H_woman, H_man, alpha_woman, alpha_man, mortality_rate_data2)
+  #### Here ask to Francisco####
+  #for (h in ages) { 
+  #  query_year <- filter(mortality_rate_data2, Age ==ages[h + 1])
+  #  mortality_rate_data2$FemalePost[mortality_rate_data2$Age ==ages[h + 1]] <-
+  #  query_1950$FemalePost
+  #  mortality_rate_data2$MalePost[mortality_rate_data2$Age == ages[h + 1]] <-
+  #  mortality_rate_data2$FemalePost[mortality_rate_data2$Age == ages[h + 1]] 
+  #}
+  H_estimation <- list(H_woman, H_man, alpha_woman, alpha_man, mortality_rate_data2)
 return(H_estimation)
 }

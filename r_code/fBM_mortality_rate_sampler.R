@@ -1,11 +1,15 @@
-fBM_mortality_rate_sampler <- function(data_mortality_rate, 
-                                       data_mortality_rate2,
-                                       H_est_woman,
+fBM_mortality_rate_sampler <- function( H_est_woman,
                                        H_est_man, n_paths = 100000,
                                        alpha_woman, alpha_man,
                                        lambda_woman, lambda_man,
                                        file_name='ht_hat_samples.cvs') 
 { 
+  #
+  data_mortality_rate <- read.csv('data_mortality_rate.csv', header = TRUE)
+  data_mortality_rate2 <- read.csv('data_mortality_rate2.csv', header = TRUE)
+  
+  print(head(data_mortality_rate))
+  print(head(data_mortality_rate2))
   SDW <- mat.or.vec(n_paths, 65)
   SDM <- mat.or.vec(n_paths, 65)
 
@@ -48,7 +52,7 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate,
     htMen[1, 2] <- hm0
     H1 <- HW_est[[1]]
     H2 <- HM_est[[1]]
-
+    #
     for (i in 1931:2014) {
       htWomen[i - 1949, 1] <- i # time variable
       htMen[i - 1949, 1] <- i
@@ -87,12 +91,13 @@ fBM_mortality_rate_sampler <- function(data_mortality_rate,
         exp(alpha_woman[age + 1] * j + Yt_hat[j])
       ht_hat_man[H, j] <- data_mortality_rate$Male[1] * 
         exp(alpha_man[age + 1] * j + Yt_hatM[j])
-      }
+    }
   } 
   
   sampler_time <- htWomen[, 1]
   # samples <- cbind(sampler_time, htWomen[, 2], htMen[, 2])
   ht_hat_samples <- data.frame("ht_hat_woman" = ht_hat_woman,
                                "ht_hat_man" = ht_hat_man)
-  write.csv(ht_hat_samples, file_name)
+  write.csv(ht_hat_samples, file_name, col.names = FALSE)
+  return(ht_hat_samples)
 }
