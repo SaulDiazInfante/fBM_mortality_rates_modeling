@@ -40,9 +40,8 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
     L <- 2014 - 1950
     Desv_stan <- sqrt(Var_Point / L)
     #
-    data_mortality_rate <- data_mortality_rate[data_mortality_rate$Year 
-                                               %in% 1950:2014 & 
-                                  data_mortality_rate$Age == age,]
+    data_mortality_rate <- data_mortality_rate[data_mortality_rate$Year %in% 1950:2014 &
+                                  data_mortality_rate$Age == age, ]
     # initial condition Women and men
     hw0 <- data_mortality_rate$Female[data_mortality_rate$Age == age][1]
     hm0 <- data_mortality_rate2$Male[data_mortality_rate$Age == age][1]
@@ -56,9 +55,10 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
     for (i in 1931:2014) {
       htWomen[i - 1949, 1] <- i # time variable
       htMen[i - 1949, 1] <- i
-      htWomen[i - 1949, 2] <- hw0 * exp(alpha_woman[age + 1] * i 
-                                        + SDW[3, i - 1949])
-      htMen[i - 1949, 2] <- hm0 * exp(alpha_man[age + 1] * i + SDM[1, i - 1949])
+      htWomen[i - 1949, 2] <- hw0 * exp(alpha_woman[age + 1] * i +
+                                          SDW[3, i - 1949])
+      htMen[i - 1949, 2] <- hm0 * exp(alpha_man[age + 1] * i +
+                                        SDM[1, i - 1949])
     }
   }
   # ht_hat computation

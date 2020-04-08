@@ -1,4 +1,5 @@
 \documentclass[smallextended]{svjour3}
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath,amsfonts,amssymb,color,hyperref}
 \usepackage{lmodern}
 %\usepackage{amsthm}
@@ -8,7 +9,6 @@
 \usepackage{graphicx}
 \usepackage{bm}
 \usepackage{float}
-\usepackage[utf8]{inputenc}
 \usepackage{mathrsfs}
 \usepackage{subfigure}
 \usepackage{xargs}
@@ -16,6 +16,16 @@
 \usepackage[colorinlistoftodos, prependcaption, textsize=tiny]{todonotes}
 \newcounter{chapter} % to fix the bug in svjour3
 \usepackage{cleveref}
+\usepackage[round]{natbib}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{smithchart}
+\usetikzlibrary{pgfplots.units}
+
+\bibliographystyle{abbrvnat}
 %==============================================================================
 \newcommandx{\unsure}[2][1=]{
         \todo[linecolor=red,
@@ -68,24 +78,13 @@
 \newcommand{\tf}{\mathcal{F}}
 \newcommand{\hac}{\mathcal{H}}
 \newcommand{\hact}{\mathcal{H}_T}
-\usepackage{tikz}
-\usepackage{tikz-3dplot}
-\usepackage{pgfplots}
-\pgfplotsset{compat=newest}
-\usepgfplotslibrary{smithchart}
-\usetikzlibrary{
-    arrows,
-    positioning,
-    calc,
-    circuits.ee.IEC,
-    external,
-    plotmarks}
-
-\usetikzlibrary{pgfplots.units}
+\DeclareMathOperator{\Var}{Var}
+%
+%
+%
 \begin{document}
-
+%
     \title{A stochastic model of mortality rate with memory}
-
     \subtitle{A stochastic model of mortality rate with memory}
     \author{Francisco Delgado-Vences 
         \and
@@ -153,8 +152,7 @@
 \end{abstract}
 %
 %
-\section{Introduction}
-\label{intro}
+\section{Introduction} \label{intro}
 
         Future planning in the demographic, economic, and actuarial areas is
     crucial. For instance, proper planning in social programs, government
@@ -190,49 +188,67 @@
 
         We obtain statistical evidence\textemdash via Hurst parameter 
     estimation\textemdash that Italy mortality rate data is LRD. Our model 
-    captures women's mortality rate dynamics. But, the results suggest 
+    captures women's mortality rate dynamics. But we observe that the Italian
+    man has a higher mortality rate and variance. These results suggest 
     that stratification by gender would be a direction for future formulations.
    
-    \info{Add relevant use and implications of our results}
+       
+		 Our work exhorts to explore the long time memory effects of dynamics 
+	 under uncertainty. Also these ideas could improve mathematical models, 
+	 which considers mortality in its formulation, for example, models for 
+	 infectious  disease spread or population growth.
+	    
 
-
-        After this brief introduction, the model we are interested is introduced in \Cref{model-form}. \Cref{fgn} 
-    reviews the fBM and presents
+        After this brief introduction, we aformulate our fractional model in 
+    \Cref{model-form}. \Cref{fgn} reviews the fBM and presents
     the fractional Ornstein-Uhlenbeck (fOU) process. \Cref{esti} outlines the
     applied method for parameter estimation. In  \Cref{re-fou}, we implement our
     formulation to fitting data of mortality from Italy. Further, in
     this section, we also run forecasting to a subset of the data and evaluate
-    its efficiency. Finally, we conclude in \Cref{sec:Conclutions} with relevant
-    implications and perspectives.
+    its efficiency. Finally, we conclude in \Cref{sec:Conclutions}.
 
-\section{Model formulation}\label{model-form}
-
-
-We now discuss the model of Milevsky-Promislow Model 
-(see \cite{mi-pr} for the original paper
-or \cite{gi-or-be}
-for a recent generalization). 
-
-Set the survival probability of an individual aged $x$ in the period $[t,T]$ as
-\begin{align}\label{E-surv}
- S(t,T):=\E\Big[\exp\Big(-\int_t^T h_x(u) du\Big)\Big|\mathcal{F}_t \Big],
-\end{align}
-where $\{\mathcal{F}_t\}_{t\ge 0} $ is a filtration which represent the information until time $t$ and $h_x(t)$ is the
-stochastic force of mortality or hazard rate. According with the Milevsky-Promislow Model $h_x(t)$ is given by
-\begin{align}
- h(t)&=h_0\exp(\alpha_0t+\alpha_1Y_t),\label{mod-1}
-\end{align}
-where  $h_0,\alpha_1,\alpha_2> 0$. The process $Y_t$ satisfies the SDE:
-\begin{align}
- dY_t&=-\lambda Y_tdt+\sigma dB_t, \label{mod-3}
-\end{align}
-where $B_t$ is a Brownian motion, $Y_0=0$ and $\sigma,\lambda> 0$.
+	\section{Model formulation}\label{model-form}
 
 
-Since stochastic mortality rate models take into account long time phenomena, we
-suggest a generalization of Milevesky-Promislow model, given by the equations
-\eqref{mod-1} and \eqref{mod-3}, which cover the case of long range dependence of
-the data.
+	We now discuss the model of Milevsky-Promislow Model 
+	(see \cite{mi-pr} for the original paper or \cite{gi-or-be}
+	for a recent generalization). 
+
+	Set the survival probability of an individual aged $x$ in the period 
+	$[t,T]$ as
+	\begin{equation}\label{E-surv}
+		 S(t,T):=
+			 \E
+			 \Big[
+				 \exp\Big(
+					 -\int_t^T h_x(u) du
+					 \Big)
+				\Big|\mathcal{F}_t 
+			\Big],
+	\end{equation}
+	where $\{\mathcal{F}_t\}_{t\ge 0} $ is a filtration which represent the 
+	information 
+	until time $t$ and $h_x(t)$ is the stochastic force of mortality or hazard 
+	rate.
+	According with the Milevsky-Promislow Model $h_x(t)$ is given by
+	\begin{align}
+		 h(t)&=h_0\exp(\alpha_0t+\alpha_1Y_t),\label{mod-1}
+	\end{align}
+	where  $h_0, \alpha_1, \alpha_2> 0$.
+	Process $Y_t$ satisfies the SDE:
+	\begin{align}
+		 dY_t&=-\lambda Y_tdt+\sigma dB_t, \label{mod-3}
+	\end{align}
+	where $B_t$ is a Brownian motion, $Y_0=0$ and $\sigma,\lambda> 0$.
+
+
+	Since stochastic mortality rate models take into account long time 
+	phenomena, we
+	suggest a generalization of Milevesky-Promislow model, given by the 
+	equations
+	\eqref{mod-1} and \eqref{mod-3}, which cover the case of long range 
+	dependence of
+	the data.
 
 
 The model we propose is a generalization in the following sense.
@@ -293,8 +309,9 @@ consider the case with additive noise.  We refer the reader to \cite{mi} for fur
     independent increments, in fact it is a continuous-time Gaussian process.
 
 
-        fBm process has the properties of self-similarity and stationary increments.
-    Its sample-paths are almost nowhere differentiable but almost-all H\"{o}lder continuous 
+        fBm process has the properties of self-similarity and stationary 
+    increments. Its sample-paths are almost nowhere differentiable but 
+    almost-all H\"{o}lder continuous 
     for any order strictly less than H. That is, for each
     trajectory, there exists a finite constant $C$ such that for every
     $\epsilon > 0$
@@ -329,462 +346,504 @@ consider the case with additive noise.  We refer the reader to \cite{mi} for fur
             H (2H - 1)n^{2H-2} \to 0, \quad \text{when }
         n \to \infty.
     \end{align*}
-Therefore,
-\begin{itemize}
-    \item
+    Therefore,
+    \begin{itemize}
+        \item
         if $H > \tfrac{1}{2}$, then $\rho_H(n) > 0$ for $n$ large enough and
         $\sum_{n=1}^\infty \rho_H(n)=\infty$. In this case, we say that
         process $X_n$ is persistent with positive correlation and that
         $X_n$ has the \emph{ long-range dependence} property
-
-    \item
+        \item
         if $H < \tfrac{1}{2}$, then $\rho_H(n) < 0$ for $n$ large enough and
         $\sum_{n=1}^\infty \rho_H(n)<\infty$.
         This is an anti-persistent process with negative correlation.
-\end{itemize}
+    \end{itemize}
     For further information on fBM see \cite{ra,nu,mi}.
 
-\subsection{Fractional Ornstein-Uhlenbeck process (fOU)}\label{sect-OU}
+    \subsection{Fractional Ornstein-Uhlenbeck process (fOU)}\label{sect-OU}
+
+        The fOU is an SDE driven by a fractional Brownian motion. 
+    Coming back to Equation \eqref{mod3}, \cite{ch-ka-ma}
+    introduced the fractional Ornstein-Uhlenbeck process (fOU) and they 
+    showed that the process
+    \begin{equation}
+        Y_t ^ H = 
+            \sigma \int_0 ^ t e ^ {-\lambda(t - u)} dB_u^H, 
+        \label{mod4}
+    \end{equation}
+    is the unique almost surely continuous-path process which solves 
+    \eqref{mod3} (see also Theorem 1.24 in \cite{ra}).
+    The integral in Equation \eqref{mod4} is a
+    pathwise Riemann–Stieltjes integral.  The fOU process is neither Markovian 
+    nor a semimartingale for $H \in(1/2,1)$  \citep[see][]{du-no} but remains
+    Gaussian and ergodic.
+
+    Moreover, when $H \in(1/2,1)$, $Y_t$ even presents the long-range dependence
+    property \cite{ch-ka-ma,ra}.
+
+    According to \cite{ze-ch-ya}, the variance of the fOU process $Y_t$ is 
+    given by the following expression:
+    \begin{align}
+        \Var(Y_t)= 
+            \sigma^2 2H e^{-2\lambda t} 
+            \int_0^t s^{2H-1} e^{2\lambda s} ds.\label{var-fou}
+    \end{align}
+    Notice that when $H=1/2$ we get
+    \begin{align}
+        \Var(Y_t)= \frac{\sigma^2}{2\lambda}  \big(1-e^{-2\lambda t}\big),
+    \end{align}
+    which is the variance of the standard Ornstein-Uhlenbeck process 
+   \citep[see][p. 143]{mik}. 
+
+    If we consider the constant $\alpha_1 = T^{-H}$ and  Equation
+    \eqref{var-fou}, then the variance of $\alpha_1 Y_t$ is 
+    given by
+    \begin{equation} \label{var-fou1}
+        \begin{aligned}
+            \Var(\alpha_1 Y_t)
+                & = 
+                    \alpha_1 ^2 
+                    \Var(Y_t)= \alpha_1^2 \sigma ^ 2 2H  
+                    \int_0^t
+                        s^{2H - 1} 
+                        e^{-2 \lambda (t - s)} 
+                    ds
+                \\
+                & \le 
+                    \alpha_1 ^ 2 
+                    \sigma^2 2H  
+                    \int_0^t
+                         s^{2H-1} ds
+                     = \alpha_1^2 \sigma^2 2H
+                    \frac{s^{2H}}{2H}
+                    \Big|_{s=0}^t 
+                \\
+                & = 
+                    \alpha_1 ^ 2 
+                    \sigma ^ 2 t ^ {2H} 
+                    = \sigma ^ 2 (t / T) ^ {2H},
+        \end{aligned}
+    \end{equation}
+    then $\Var(\alpha_1 Y_t)\le \sigma^2 $. Thus the variance of $\alpha_1 Y_t$ 
+    is bounded by a constant indepedent of time. We will use $\alpha_1$ to 
+    control the variance of process $Y_t$.
+
+    \section{Estimation of the parameters}
+    \label{esti}
+        In this section we describe a methodology to estimate the 
+    parameters. According to \eqref{mod-1}, we need to estimate 
+    $\alpha_0, \alpha_1$ and for SDE model \eqref{mod-3}
+    $\sigma$ and $\lambda$. Furthermore, Hurst parameter $H$ involved in the 
+    fractional Brownian motion is also estimated. To estimante this Hurst 
+    parameter we  appeal to empirical evidence that $H$
+    in equation \eqref{mod2} is invariant, that is, the  value of the
+    Hurst parameters $H$, in the equation \eqref{mod2}, for the fBm $B_t^H$ and
+    the one for the fractional Gaussian noise $Y_t^H$ are the same. Further, to 
+    estimate $\alpha_1$, we assume that
+    $\alpha_1=T^{-H}$.
+
+    \subsection{Estimation of the parameter $\alpha_0$.}
+
+    %
+    According to equation \eqref{mod-1}, to estimate
+    $\alpha_0$ we assume $\alpha_1=1$. Moreover, $h_0$ is the initial 
+    value of the observed rates $h(t)$. Thus, from \eqref{mod-1} we obtain
+    \begin{equation}
+        \ln h(t)=\ln h_0+\alpha_0t+Y_t. \label{mod-ln}
+    \end{equation}
+    
+    To estimate parameter $\alpha_0$ we minimize the 
+    sum of the square errors.
+    Let 
+    \begin{equation*}
+        S:= 
+            \sum_{t_{initial}}^{t_{final}} \Big( \ln h(t)-\ln 
+            h_0-\widehat{\alpha_0} t
+        \Big)^2. 
+    \end{equation*}
+    Taking derivative of $S$ with respect
+    to $\widehat{\alpha_0}$  we get
+    \begin{align*}
+        \frac{\partial S}{\partial \widehat{\alpha_0}}&=
+            -2 \sum_{t_{initial}} ^ {t_{final}} 
+            \Big( 
+                \ln h(t)-\ln h_0-\widehat{\alpha_0} t
+            \Big) t =0, %\label{min2}
+    \end{align*}
+    and from this equation we deduce that  $\widehat{\alpha_0}$
+    satisfies:
+    \begin{align}
+        \widehat{\alpha_0} 
+            &= 
+            \dfrac{
+                \sum_{t} t 
+                \ln h(t) 
+                - 
+                \ln h(0)
+                \sum_{t} t
+            }{
+                \sum_{t} t^2
+            }. \label{alpha0}
+    \end{align}
+
+    Once we have estimated $\alpha_0$ we proceed to estimate the Hurst 
+    parameter, $\sigma$ and $\lambda$.
+
+\subsection{The relation between the Hurst parameter and the H-index in the FOU}
+
+    In this subsection, we outline a method to estimate the parameter $H$. We 
+    use the following empirical fact. Suppose that an fOU process is driving 
+    with an fBM with a given Hurst parameter $H_0$. 
+    \citet{ye-etal}  provide a relationship between the Hurst parameter $H$ of 
+    the fractional Brownian motion and the Hurst parameter of the fractional 
+    Gaussian noise given by an SDE. They provide statistical evidence that the 
+    fOU should have the same value H0 that the fBM. Thus, under this empirical 
+    evidence, we assume the same value of the parameter $H$ for both 
+    processes.  A formal result of this fact, up to our knowledge, still is an 
+    open question.
+
+        The following sections present several methods to estimate the Hurst 
+    parameter for the fBM.
 
 
-The fOU is an SDE driven by a fractional Brownian motion. 
-Coming back to Equation \eqref{mod3}, \cite{ch-ka-ma}
-introduced the fractional Ornstein-Uhlenbeck process (fOU) and they 
-showed that the process
-\begin{equation}
-	Y_t ^ H = \sigma \int_0 ^ t e ^ {-\lambda(t - u)} dB_u^H, \label{mod4}
-\end{equation}
-is the unique almost surely continuous-path process which solves \eqref{mod3}
-(see also Theorem 1.24 in \cite{ra}).
-The integral in Equation \eqref{mod4} is a
-pathwise Riemann–Stieltjes integral.  The fOU process is neither Markovian nor
-a semimartingale for $H \in(1/2,1)$ (see \cite{du-no}) but remains
-Gaussian and ergodic.
+    \subsection{Estimation of the self-similarity index $H$ for the fBM}
+    \label{Desc-Est-H}
 
-Moreover, when $H \in(1/2,1)$, $Y_t$ even presents the long-range dependence
-property (see Cheridito
-\cite{ch-ka-ma} or  \cite{ra}).
-
-The variance of the fOU process $Y_t$ is given by the following expression
-(see\cite{ze-ch-ya}):
-\begin{align}
-Var(Y_t)= \sigma^2 2H e^{-2\lambda t} \int_0^t s^{2H-1} e^{2\lambda s}
-ds.\label{var-fou}
-\end{align}
-Notice that when $H=1/2$ we get
-\begin{align}
-Var(Y_t)= \frac{\sigma^2}{2\lambda}  \big(1-e^{-2\lambda t}\big),
-\end{align}
-which is the variance of the standard Ornstein-Uhlenbeck process (see for
-instance \cite{mik} page 143). 
-
-If we consider the constant $\alpha_1 = T^{-H}$ and the Equation
-\eqref{var-fou},
-the expression for the variance of $\alpha_1 Y_t$ is given by
-\begin{align}
-Var(\alpha_1 Y_t)&= \alpha_1^2 Var(Y_t)= \alpha_1^2\sigma^2 2H  \int_0^t
-s^{2H-1} e^{-2\lambda (t-s)} ds\nonumber
-\\
-&\le \alpha_1^2 \sigma^2 2H  \int_0^t s^{2H-1} ds= \alpha_1^2 \sigma^2 2H
-\frac{s^{2H}}{2H}\Big|_{s=0}^t \nonumber
-\\
-&= \alpha_1^2 \sigma^2 t^{2H} = \sigma^2 (t/T)^{2H},\label{var-fou1}
-\end{align}
-then $Var(\alpha_1 Y_t)\le \sigma^2 $ since $0\le t\le T$, this implies that
-the variance of $\alpha_1 Y_t$
-is bounded by a constant that does not depend on time. We will use $\alpha_1$
-to control the variance of the process $Y_t$.
+        The last subsection allows us to estimate the parameter $H$ as follows.
+    According to equation \eqref{mod-ln}, the residuals are 
+    \begin{align*}
+        \hat Y_t= \ln h(t)&-\ln h_0 -\widehat \alpha_0t.
+    \end{align*}
+        Note taht $\hat Y_t$ is a fractional Gaussian process that we can use 
+    to estimate $H$. Afterwards we use estimation $\hat H$ to approximate
+    the Hurst parameters of the fractional Brownian motion $B_t^H$.
+    To this end, we review some methods to estimate
+    the parameter $H$, our main refernces are \cite{we}, .
 
 
+    \subsubsection{R / S Analysis}
+    Following \citet{we}, we coniser a finite time serie of lenght $L$ indexed
+    by $i$ $Z_i$. Thus, let $\{Z_{i,m}\}$, $m = 1,\ldots,d$ be a finite 
+    sequence of $d$ series of lenght $n$, such that $L = n \times d$.
+    Next, for each subseries  
+    $\{Z_{i,m}\}$, $m = 1,\ldots,d$ :
+    \begin{enumerate}
+        \item 
+            Find the mean $E_m$ and standard deviation $S_m$.
+        \item 
+            Normalize the data $Z_{i,m}$  by subtracting the sample mean 
+            $X_{i,m} = Z_{i,m}-E_m$ for $i=1,\ldots,n$.
+        \item 
+            Create a cumulative time series $Y_{i,m} = \sum_{j=1}^i X_{j,m}$.
+            for $i = 1,\ldots,n$
+        \item 
+            Find the range 
+            $   
+                R_m = \max\{Y_{1,m},\ldots, Y_{n,m}\} -
+                \min\{Y_{1,m},\ldots, Y_{n,m} \}
+            $;
+        \item 
+            Rescale the range $R_m/S_m$ .
+        \item 
+            Calculate the mean value of the rescaled range
+            for all subseries of length n
+            \[
+                (R/S)_n =\frac{1}{d}\sum_{m=1}^d  R_m /S_m.
+            \]
+    \end{enumerate}
 
-\section{Estimation of the parameters}
-\label{esti}
-
-In this section we will describe a methodology to estimate the parameters.
-We will use some R-libraries in order to estimate the parameters. 
-
-We need to estimate $\alpha_0, \alpha_1$ as well as $\sigma,\lambda$ for the
-SDE model that we described in the previous section. Furthermore,
-The Hurst parameter ($H$) involved in the driven fractional Brownian motion
-will be also estimated, however, this estimation is highly complicated.
-To solve this problem we will use the empirical evidence that the Hurst value
-in the equation \eqref{mod2}
-is preserved, this means that the  value of the  Hurst parameters $H$, in the
-equation \eqref{mod2}, for the fBm $B_t^H$ and the one for the
-fractional Gaussian noise $Y_t^H$ are the same. Observe that $\alpha_1=T^{-H}$
-will be calculated using the estimated Hurst parameter.
-
-\subsection{Estimation of the parameter $\alpha_0$.}
-
-
-The model is given by the equation \eqref{mod-1}. In order to estimate
-$\alpha_0$ we will assume that $\alpha_1=1$. Moreover, $h_0$ will be fixed to
-the initial value of the observed rates $h(t)$ Taking $\ln$ we obtain
-
-\begin{align}
-\ln h(t)&=\ln h_0+\alpha_0t+Y_t. \label{mod-ln}
-\end{align}
-
-One simple method to estimate the parameter $\alpha_0$ is by minimizing the sum
-of the square errors.
-Let $S$ be given by
-\begin{align*}
-S:= \sum_{t_{initial}}^{t_{final}} \Big( \ln h(t)-\ln h_0-\widehat{\alpha_0} t
-\Big)^2. %\label{min1}
-\end{align*}
-Taking derivative of $S$ with respect
-to $\widehat{\alpha_0}$  we get
-\begin{align*}
-\frac{\partial S}{\partial \widehat{\alpha_0}}&=
--2\sum_{t_{initial}}^{t_{final}} \Big( \ln h(t)-\ln h_0-\widehat{\alpha_0} t
-\Big) t =0, %\label{min2}
-\end{align*}
-and from this equation we obtain $\widehat{\alpha_0}$:
-\begin{align}
-\widehat{\alpha_0} &= \frac{\sum_{t} t\ln h(t) - \ln h(0)\sum_{t} t}{\sum_{t}
-t^2}. \label{alpha0}
-\end{align}
-
-Once we have estimated $\alpha_0$ we proceed to estimate the Hurst parameter,
-$\sigma$ and $\lambda$.
-
-\subsection{Relation between the Hurst parameter and the H-index in the FOU}
-
-        In this subsection we will discuss the procedure we have used to
-    estimate the parameter $H$.
-
-        We will use the following empirical fact. Suppose that a fOU process is
-    driving with a fBM with a given Hurst parameter $H_0$.  Yerlikaya-Okzurt
-    et al (\cite{ye-etal})  have shown a relationship between the Hurst
-    parameter $H$ of the fractional Brownian motion and the Hurst parameter
-    of the fractional Gaussian noise given by an SDE. In fact, they have
-    found statistical evidence that the fOU should have the same value $H_0$
-    that the fBM (see table 1 Yerlikaya-Okzurt et al). Therefore, at least
-    empirically, the value of $H$ is the same. Then, it is possible to
-    choose the same value of the parameter $H$ for both processes.  A formal
-    proof of this fact, up to our knowledge, is missed.
-
-
-        The subsequent sections are devoted to present several methods to
-    estimate the Hurst parameter for the fBM.
-
-
-\subsection{Estimation of the self-similarity index $H$ for the fBM}
-\label{Desc-Est-H}
-
-The last subsection allows us to estimate the parameter $H$ in one simple way.
-According to equation \eqref{mod-ln}, the residuals are given
-by the expression
-\begin{align*}
-\hat Y_t= \ln h(t)&-\ln h_0 -\widehat \alpha_0t.
-\end{align*}
-$\hat Y_t$ is a fractional Gaussian noise, so that we can use it to estimate $
-H$. Afterwards we will use  $\hat H$ to approximate
-the Hurst parameters of the fractional Brownian motion $B_t^H$.
-For this purpose we will review some methods to estimate
-the parameter $H$.
-
-
-\subsubsection{R over S Analysis}
-
-Following \cite{we}. The analysis begins  dividing a time series $\{Z_i\}$ of
-length $L$ into $d$
-subseries of length $n$ and denote it by $\{Z_{i,m}\}$, $m = 1,\ldots,d$. Then,
-for each subseries  $\{Z_{i,m}\}$, $m = 1,\ldots,d$ :
-\begin{enumerate}
-    \item Find the mean $E_m$ and standard deviation $S_m$.
-    \item Normalize the data $Z_{i,m}$  by subtracting the sample mean $X_{i,m}
-    =Z_{i,m}-E_m$ for $i=1,\ldots,n$.
-    \item Create a cumulative time series $Y_{i,m} = \sum_{j=1}^i X_{j,m}$.
-    for $i = 1,\ldots,n$
-    \item Find the range $R_m = \max\{Y_{1,m},\ldots, Y_{n,m}\} -
-    \min\{Y_{1,m},\ldots, Y_{n,m} \}$;
-    \item Rescale the range $R_m/S_m$ .
-
-    \item Calculate the mean value of the rescaled range
-    for all subseries of length n
+        Accoridng to \cite{Mandelbrot1974},  the $R/S$ statistic 
+    asymptotically 
+    follows the relation:
     \[
-    (R/S)_n =\frac{1}{d}\sum_{m=1}^d  R_m /S_m.
+        (R/S)_n \sim c n^H,
     \]
-\end{enumerate}
+    where $c$ is a constant. Thus, we can estimate $H$ by 
+    linear regression over a sample of increasing time horizons
+    \[
+        \log(R/S)_n = \log c + H \log n.
+    \]
+    
+        Equivalently, we can plot the $(R/S)_n$ statistics against $n$ on a
+    double-logarithmic scale. If the returns process is white noise, then the 
+    plot is roughly a straight line with slope $0.5$. If the process is 
+    persistent, then the slope $H$ is greater
+    than $ 0.5$. If the processes is anti-persistent,
+    then the slope $H$ is less than  $0.5$. The "significance" level of the
+    estimated parameter $H$ usually is chosen to be inverse proportional to the
+    square root of sample length, that is,  the standard deviation of a 
+    Gaussian white noise.
 
-It can be shown (see \cite{we}) that the $R/S$ statistic asymptotically follows
-the relation:
-\[
-(R/S)_n \sim c n^H,
-\]
-where $c$ is a constant. Thus, the value of $H$ can be obtained by running a
-simple linear regression over a
-sample of increasing time horizons
-\[
-\log(R/S)_n = \log c + H \log n.
-\]
-
-
-Equivalently, we can plot the $(R/S)_n$ statistics against $n$ on a
-double-logarithmic paper.
-If the returns process is white noise then the plot is roughly a straight line
-with slope $0.5$. If the process is persistent then the slope $H$ is greater
-than $ 0.5$; if it is anti-persistent
-then the slope $H$ is less than  $0.5$. The “significance” level of the
-estimated parameter $H$ is usually chosen to be one over the
-square root of sample length, i.e. the standard deviation of a Gaussian white
-noise.
-
-
-
-A major drawback of the $R/S$ analysis is  that no asymptotic distribution
-theory has been derived for the Hurst parameter $H$ . The only results known
-are for
-the rescaled (but not by standard deviation) range $R_m$ itself, see \cite{lo}.
-
-
-
+    A major drawback of the $R/S$ analysis is  that no asymptotic distribution
+    theory has been derived for the Hurst parameter $H$. 
+    The only results known are for  the rescaled (but not by standard 
+    deviation) range $R_m$ itself, see \cite{lo}.
 
 \subsubsection{Method of rescaled range analysis R/S}
-Following \cite{ra}, chapter 9.
-This method was suggested by Hurst (1951). The series $\{X_j , 1 \le j \le N -
-2\}$ is
-divided into $K$ nonoverlapping blocks such that each block contains $M$
-elements
-where $M$ is the integer part of $N/K$. Let $t_i = M(i - 1)$, where $t_i = M(i
-- 1)$ is the starting point of the ith
-block for $i = 1,\ldots, K$. Define
-$$
-R(t_i,r) = \max[W(t_1 , 1), \ldots, W(t_i , r)] - \min[W (t_1 , 1),  \ldots , W
-(t_i , r)],
-$$
-where $r$ takes values in natural number whenever $r$ satisfy the inequality
-$t_i + r \le N$. Moreover, $ W (t_i , k) $ is set as
-\[
-W (t_i , k) = \sum_{j=0}^{k-1} X_{t_i +j}  - k
-\Bigg(\frac{1}{r}\sum_{j=0}^{r-1} X_{t_i +j}  \Bigg),\quad k = 1,\ldots , r.
-\]
+    Here we follow  \citet[][Chap. 9]{ra}.
+    This method was suggested by Hurst (1951). The series 
+    $\{X_j , 1 \le j \le N -2\}$ is
+    divided into $K$ nonoverlapping blocks such that each block contains $M$
+    elements where $M$ is the integer part of $N/K$. Let $t_i = M(i - 1)$, 
+    where $t_i = M(i- 1)$ is the starting point of the ith
+    block for $i = 1,\ldots, K$. Define
+    $$
+        R(t_i,r) = 
+            \max[W(t_1 , 1), 
+                \ldots, W(t_i , r)] - \min[W (t_1 , 1),  \ldots , W
+                (t_i , r)],
+    $$
+    where $r$ takes values in natural number whenever $r$ satisfy the inequality
+    $t_i + r \le N$. 
+    Moreover, $ W (t_i , k) $ is set as
+    \[
+        W (t_i , k) = \sum_{j=0}^{k-1} X_{t_i +j}  - k
+        \Bigg(\frac{1}{r}\sum_{j=0}^{r-1} X_{t_i +j}  \Bigg),\quad k = 1,\ldots 
+        , r.
+    \]
 
-Note that $R(t_i, r) \ge 0$ since $W(t_i , r) = 0$ and the quantity $R(t_i ,
-r)$ can be computed only when $t_i + r \le N$. Define
-\[
-S^2 (t_i , r) = \frac{1}{r} \sum_{j=0}^{r-1} X_{t_i +j}^2  -
-\Bigg(\frac{1}{r}\sum_{j=0}^{r-1} X_{t_i +j}  \Bigg)^2.
-\]
-The ratio $R(t_i , r)/S(t_i , r)$ is called the rescaled adjusted range. It is
-computed
-for a number of values of $r$ that makes sense according to the definition.
-Observe that, for each value of $r$, we obtain a number of $R/S$ samples. The
-number of samples decrease as $r$ increases. However, the resulting samples are
-not independent. It is believed that the $R/S$-statistic is
-proportional to $r^H$ as $r \rightarrow \infty$ for the fractional Gaussian
-noise. Assuming this
-property, it is possible to regress $log(R/S)$ against $log(r)$ to obtain an
-estimator for $H$.
-
-
-
+    Note that $R(t_i, r) \ge 0$ since $W(t_i , r) = 0$ 
+    and the quantity $R(t_i, r)$ can be computed only when $t_i + r \le N$. 
+    Define
+    \[
+        S^2 (t_i , r) = \frac{1}{r} \sum_{j=0}^{r-1} X_{t_i +j}^2  -
+        \Bigg(\frac{1}{r}\sum_{j=0}^{r-1} X_{t_i +j}  \Bigg)^2.
+    \]
+    The ratio $R(t_i , r)/S(t_i , r)$ is called the rescaled adjusted range. It 
+    is computed for a number of values of $r$ that makes sense according to the 
+    definition.
+    Observe that, for each value of $r$, we obtain a number of $R/S$ samples. 
+    The number of samples decrease as $r$ increases. However, the resulting 
+    samples are not independent. It is believed that the $R/S$-statistic is
+    proportional to $r^H$ as $r \to \infty$ for the fractional Gaussian
+    noise. Assuming this property, it is possible to regress $log(R/S)$ against 
+    $log(r)$ to obtain an estimator for $H$.
 
 \subsubsection{FDWhittle Estimator}
 
-Following\cite{pa-etal}. The Local Whittle Estimator (LWE) is a semiparametric
-Hurst parameter estimator based on the periodogram.
-It assumes that the spectral density $f(\omega)$ of the process can be
-approximated by the function
-\begin{equation}\label{fdw1}
-f_{c,H}(\omega) = c\omega^{1-2H},
-\end{equation}
+    Following\cite{pa-etal}. The Local Whittle Estimator (LWE) is a 
+    semiparametric Hurst parameter estimator based on the periodogram.
+    LWE assumes that the spectral density $f(\omega)$ of the process can be
+    approximated by the function
+    \begin{equation}\label{fdw1}
+        f_{c,H}(\omega) = c\omega^{1-2H},
+    \end{equation}
+    for frequencies $\omega$ in a neighborhood of the origin, $c$ is a constant.
+    The periodogram of a time series
+    $\{X_t , 1 \ge t \ge N \}$ is defined by
+    $$
+        I_N (\omega)  = 
+            \frac{1}{2\pi N}
+            \left|
+                \sum_{t=1}^N X_te^{i\omega t}
+            \right|^2,
+    $$
+    where $i=\sqrt{-1}$. Usually, it is evaluated at the Fourier Frequencies
+    $\omega_{j,N} = \frac{2\pi j}{N}$, $0 \le j \le [N/2]$.  Note that the
+    periodogram is the norm of the Discrete Fourier transform of the time series
+    \citep[see, for example,][sect. 6.1.2]{priestley}.
 
-for frequencies $\omega$ in a neighborhood of the origin, $c$ is a constant.
-The periodogram of a time series
-$\{X_t , 1 \ge t \ge N \}$ is defined by
-$$
-I_N (\omega)  = \frac{1}{2\pi N}\left| \sum_{t=1}^N X_te^{i\omega t}\right|^2,
-$$
-
-where $i=\sqrt{-1}$. Usually, it is evaluated at the Fourier Frequencies
-$\omega_{j,N} = \frac{2\pi j}{N}$, $0 \le j \le [N/2]$.  Note that the
-periodogram is the norm of the Discrete Fourier transform of the time series
-(see Section 6.1.2 in \cite{priestley} for instance).
-
-
-The LWE of the Hurst parameter, $\hat{H}_{LWE}(m)$  is implicitly defined by
-minimizing
-$$
-\sum_{j=1}^m  log f_{c,H} (\omega j,N ) + \frac{I_N(\omega j, N)}{ f_{c,H}
-(\omega j,N )},
-$$
-with respect to $c$ and $H$, with $f_{c,H}$ defined in \eqref{fdw1}.
-
-
+    The LWE of the Hurst parameter, $\hat{H}_{LWE}(m)$  is implicitly the result
+    of minimizing
+    $$
+        \sum_{j=1}^m  
+            \log f_{c,H} 
+                (\omega j, N) 
+                + 
+                \frac{I_N(\omega j, N)}{ f_{c,H}(\omega j,N )},
+    $$
+    with respect to $c$ and $H$, with $f_{c,H}$ defined in \eqref{fdw1}.
 
 \subsection{Estimation of $\sigma$ and  $\lambda$}
 
+    There are several methods to estimate parameters $\sigma$ and  $\lambda$. 
+    For instance see \cite{ra} or the references in \cite{ne-ti} or in 
+    \cite{ku-mi}. In the following section we will do a brief review of
+    some of these methods.
 
+    \subsubsection{Estimation $\sigma$.}
+    \label{sect-est}
 
-There are several methods to estimate parameters $\sigma$ and  $\lambda$. For
-instance see \cite{ra} or the references in \cite{ne-ti} or in \cite{ku-mi}. In
-the following section we will do a brief review of
-some of these methods.
+    \citet{br-ia} proposed some consistent and asymptotically
+    Gaussian estimators for the parameters $\sigma,\lambda$ and $H$ of
+    the discretely observed fractional Ornstein-Uhlenbeck process solution
+    expressed in the stochastic differential equation.
+    There is a restriction on  the estimation of the parameter $\lambda$
+    \textemdash the results are valid only when $ 1 / 2 < H < 3 / 4$. 
 
+    The key point of this estimation method is that the Hurst exponent $H$ 
+    and the diffusion coefficient $\sigma $ can be estimated without
+    estimating $\lambda$.  We use this method to estimate parameters
+    $\sigma$ and $\lambda$.
 
-\subsubsection{Estimation $\sigma$.}
-\label{sect-est}
-
-
-
-Brouste and Iacus \cite{br-ia} proposed some consistent and asymptotically
-Gaussian estimators for the parameters $\sigma,\lambda$ and $H$ of
-the discretely observed fractional Ornstein-Uhlenbeck process solution
-expressed in the stochastic differential equation.
-There is a restriction on  the estimation of the drift $\lambda$: the
-results are valid only in the case when $1/2<H<3/4$. 
-
-The key point of this method of estimation is that the Hurst exponent $H$ and
-the diffusion coefficient $\sigma $ can be estimated without
-estimating $\lambda$.  We will use this method to estimate the parameters
-$\sigma$ and $\lambda$. Notice that $H$ was already estimated.
-
-
-
-Let $\bm{a} = (a_0,\ldots, a_K )$ be a discrete filter of order $L\ge 1$ and
-length $K+1$, $K \in\IN$ and we require  $L\le K$, i.e.
-\[
-\sum_{k=0}^K a_k k^j =0 \quad \hbox{\rm  for } 0\le j\le L-1 \quad\hbox{\rm
-and}\quad  \sum_{k=0}^K a_k k^L \ne 0.
-\]
-Let it be normalized
-\[
-\sum_{k=0}^K (-1)^{1-k} a_k =1.
-\]
-We will also consider a {\it dilated} filter $\bm{a}^{(2)}$ associated to
-$\bm{a}$. For $0\le k\le K$ we define
-\[
-a_k^{(2)} = 
-    \begin{cases} a_{k'}, & \mbox{if } k=2k' 0,
-    \\
-     & \mbox{otherwise.}
-\end{cases}
-\]
-Since $\sum_{k=0}^{2K} a_k^2 k^j=2^j \sum_{k=0}^K a_k k^j $ then the filter
-$\bm{a}^{(2)}$ has the same order than  $\bm{a}$.
-
-
-
-Let $Y^T=(Y_t: 0\le t\le T)$ be  the sample path of the solution of
-\eqref{mod4}. A discretization of $Y^T$ is
-\[
-(X_n:=Y_{n\Delta_N}, n=0,\ldots,N),\qquad
-N\in \IN,
-\]
-where $\Delta_N=T/N$ and $N$ is the number of observations of $Y_t$. We denote
-by
-\begin{equation*}
-V_{N,\bm{a}}:= \sum_{i=0}^{N-K}\left( \sum_{k=0}^K a_k X_{i+k} \right)^2,
-\end{equation*}
-the {\it generalized quadratic variation} associated to the filter $\bm{a}$
-(see for instance \cite{is-la}). Then, define the
-following estimators for $H$ and $\sigma$.
-\begin{align}
-    \hat{H}_N &:=
-    \tfrac{1}{2} \log_2 
-    \left(
-        \frac{
-        	V_{N,\bm{a}^2}
-        }{
-        	V_{N,\bm{a}}
-        }
-    \right), \label{est1}
-    \\
-    \hat{\sigma}_N
-    	&:=\left(
-    		-2
-    		\frac{V_{N,\bm{a}}}{\sum_{k,l} a_ka_l |k-l|^{2\hat{H}_N} 
-    	    \Delta_N^{2 \hat{H}_N } }\right)^{1/2}.
-    	\label{est2}
-\end{align}
-
-Brouste and Iacus (see Th. 1 in \cite{br-ia}) have shown the next result.
-\begin{theorem}
-    Let  $\bm{a}$ be a filter of order $L \ge 2$. Then, both estimators
-    $\hat{H}_N$ and $\hat{\sigma}_N$  are
-    strongly consistent, i.e.
+    Let $\bm{a} = (a_0,\ldots, a_K )$ be a discrete filter of order $L\ge 1$ and
+    length $K+1$, $K \in\IN$ and we require  $L\le K$, i.e.
     \[
-    ( \hat{H}_N,\hat{\sigma}_N) \stackrel{\hbox{\rm a.s.}}{\longrightarrow}
-    (H,\sigma) \quad \hbox{\rm as}\quad N \rightarrow+\infty.
+        \sum_{k=0}^K a_k k^j =0 
+        \quad 
+        \hbox{\rm  for } 
+        0 \le j \le  L-1 
+        \quad 
+        \hbox{\rm and} 
+        \quad  
+        \sum_{k=0}^K a_k k^L \ne 0.
     \]
-    Moreover, we have asymptotic normality property:  for all $H \in (0, 1)$,
+    Let it be normalized
+    \[
+        \sum_{k=0}^K (-1)^{1-k} a_k =1.
+    \]
+    We will also consider a {\it dilated} 
+    filter $\bm{a}^{(2)}$ associated to $\bm{a}$. 
+    For $0\le k\le K$ we define
+    \[
+        a_k^{(2)} = 
+        \begin{cases} 
+            a_{k'}, 
+            & \mbox{if } k=2k' 0,
+            \\
+            & \mbox{otherwise.}
+        \end{cases}
+    \]
+    Since $\sum_{k=0}^{2K} a_k^2 k^j=2^j \sum_{k=0}^K a_k k^j $ 
+    then the filter $\bm{a}^{(2)}$ has the same order than  $\bm{a}$.
 
+    Let $Y^T=(Y_t: 0 \let \le T)$ be  the sample path of the solution of
+    \eqref{mod4}. Consider the discretization of $Y^T$
+    \[
+        (X_n:=Y_{n\Delta_N}, n=0,\ldots,N),\qquad
+        N\in \IN,
+    \]
+    where $\Delta_N=T/N$ and $N$ is the number of observations of $Y_t$. 
+    We denote by
+    \begin{equation*}
+        V_{N,\bm{a}}:= 
+        \sum_{i=0} ^ {N - K}
+            \left( 
+                \sum_{k=0} ^ K a_k X_{i+k} 
+            \right)^2,
+    \end{equation*}
+    the \emph{generalized quadratic variation} associated to the filter $\bm{a}$
+    \citet[see, for example][]{is-la}. Then, define the
+    following estimators for $H$ and $\sigma$.
+    \begin{align}
+        \hat{H}_N &:=
+        \tfrac{1}{2} \log_2 
+        \left(
+            \frac{
+                V_{N,\bm{a}^2}
+            }{
+                V_{N,\bm{a}}
+            }
+        \right), \label{est1}
+        \\
+        \hat{\sigma}_N
+            &:=\left(
+                -2
+                \frac{V_{N,\bm{a}}}{\sum_{k,l} a_ka_l |k-l|^{2\hat{H}_N} 
+                \Delta_N^{2 \hat{H}_N } }\right)^{1/2}.
+            \label{est2}
+    \end{align}
+    \citet[][]{br-ia} proved the following result.
+    \begin{theorem}
+        Let  $\bm{a}$ be a filter of order $L \ge 2$. Then, both estimators
+        $\hat{H}_N$ and $\hat{\sigma}_N$  are
+        strongly consistent, that is,
+        \[
+            (\hat{H}_N,\hat{\sigma}_N) 
+            \to
+            (H,\sigma) \quad a.s, \text{ as } \quad N \to \infty.
+        \]
+        Moreover, for all $H \in (0, 1)$, if $N \to  \infty$, then
+    %
     \begin{align*}
-    \sqrt{N} (\hat{H}_N  - H ) &\stackrel{\mathcal{L}}{\longrightarrow} N (0,
-    \Gamma_1 ( \bm{a},\sigma,H)) \quad  \hbox{\rm as} \quad N
-    \rightarrow +\infty,
-    \frac{\sqrt{N}}{\log N} ( \hat{\sigma}_N  - \sigma )
-    &\stackrel{\mathcal{L}}{\longrightarrow} N (0, \Gamma_2 (\bm{a},\sigma,H))
-    \quad
-    \hbox{\rm as} \quad N \rightarrow +\infty,
+        \sqrt{N} (\hat{H}_N  - H ) 
+            &
+            \stackrel{\mathcal{L}}{\to} 
+            N (0,\Gamma_1 ( \bm{a},\sigma,H)),
+            \\
+            \frac{\sqrt{N}}{\log N} ( \hat{\sigma}_N  - \sigma )
+            &
+            \stackrel{\mathcal{L}}{\to} N (0, \Gamma_2 (\bm{a},\sigma,H))
     \end{align*}
-
+%
     where $\Gamma_1$ and $\Gamma_2$ are symmetric positive definite matrices
     depending on $\sigma, H$ and the filter $\bm{a}$.
     \hfill$\Box$
 \end{theorem}
 
-With this result is possible to obtain an estimator for the parameters
-$\sigma$.
+    With this result we obtain an estimator for parameter$\sigma$.
+    Consier the following filters.
 
-We will use the following two filters:
-\begin{itemize}
-    \item Classical filter. Let $K>0$ and define
-    \begin{equation*}
-    a_k:= \frac{(-1)^{1-k}}{2^k} {K\choose k} =\frac{(-1)^{1-k}}{2^k}
-    \frac{K!}{k!(K-k)!}\qquad \mbox{for }  0\le k\le K.
-    \end{equation*}
+    \begin{itemize}
+        \item Classical filter. 
+        Let $K>0$ and define
+        \begin{equation*}
+            a_k:= 
+            \frac{(-1)^{1-k}}{2^k} 
+            {K\choose k} =
+            \frac{(-1)^{1-k}}{2^k}
+            \frac{K!}{k!(K-k)!}\qquad \mbox{for }  0\le k\le K.
+        \end{equation*}
 
+        \item Daubechies filters 
+             \citep[see][for original definition]{de}. 
+                 Let $K=4$ and define the Daubechies filter by
+        \begin{equation*}
+            \frac{1}{\sqrt{2}} 
+                \big(
+                    \num{0.48296291314453}, 
+                    \num{-0.8365163037378},
+                    \num{0.22414386804201},
+                    \num{0.12940952255126}
+                \big).
+        \end{equation*}
+    \end{itemize}
 
-    \item Daubechies filters (see \cite{de} for the original definition). We
-    set $K=4$ and define the Daubechies filter by
-    \begin{equation*}
-    \frac{1}{\sqrt{2}} \big(0.48296291314453, -0.8365163037378,
-    0.22414386804201, 0.12940952255126\big).
-    \end{equation*}
-
-\end{itemize}
-
-\subsubsection{Estimation of the drift parameter $\lambda$ when both $H$ and
-$\sigma$ are known}
-
-Hu and Nualart, \cite{hu-nu} have shown that
-\[
-\lim_{t\rightarrow \infty} Var (Y_t)= \lim_{t\rightarrow \infty}
-\frac{1}{t}\int_0^t Y_t^2 dt = \frac{\sigma^2 \Gamma(2H+1) }
-{2\lambda^{2H}}:=\mu_2.
-\]
-This equation gives a $\lambda$ estimator, namely
-\begin{equation}
-\hat{\lambda}_N = \left(\frac{2\hat{\mu}_{2,N}}{\hat{\sigma}_N^2
-\Gamma(2\hat{H}_N+1) }  \right)^{-\tfrac{1}{2\hat{H}_N}},\label{est3}
-\end{equation}
-where $\hat{\mu}_{2,N}$ is the empirical moment of order $2$, i.e
-\[
-\hat{\mu}_{2,N} =\tfrac{1}{N}\sum_{n=1}^N X_N^2.
-\]
-Set $T_N=N\Delta_N$. We have the next result.
-\begin{theorem}
-    Let $H \in \big(\tfrac{1}{2} , \tfrac{3}{4}\big)$ and a mesh satisfying the
-    condition $N \Delta_N^p\rightarrow 0$, $p>1$,
-    and $ \Delta_N (log N )^2 \rightarrow 0$ as $N \rightarrow +\infty$. Then,
-    as $N \rightarrow +\infty$,
+\subsubsection{Estimation of the drift parameter $\lambda$  $H$ and
+                $\sigma$ are known}
+    \citet{hu-nu} proved that
     \[
-    \hat{\lambda}_N \stackrel{\hbox{\rm a.s.}}{\longrightarrow}  \lambda,
+        \lim_{t\rightarrow \infty} Var (Y_t)= \lim_{t\rightarrow \infty}
+        \frac{1}{t}\int_0^t Y_t^2 dt = \frac{\sigma^2 \Gamma(2H+1) }
+        {2\lambda^{2H}}:=\mu_2.
+    \]
+    This equation gives a $\lambda$ estimator, namely
+    \begin{equation} \label{est3}
+        \hat{\lambda}_N = 
+            \left(
+                \dfrac{ 2\hat{\mu}_{2,N} }{ 
+                    \hat{\sigma}_N^2 
+                    \Gamma(2\hat{H}_N+1)
+                }
+            \right) ^ {-\tfrac{1}{2\hat{H}_N}}
+    \end{equation}
+    where $\hat{\mu}_{2,N}$ is the empirical moment of order $2$, i.e
+    \[
+        \hat{\mu}_{2,N} =
+            \dfrac{1}{N}
+            \sum_{n=1}^N X_N^2.
+    \]
+    Set $T_N=N\Delta_N$. We have the next result.
+    \begin{theorem}
+        Let $H \in \big(\tfrac{1}{2} , \tfrac{3}{4}\big)$ and a mesh satisfying 
+        the condition $N \Delta_N^p\rightarrow 0$, $p>1$,
+        and $ \Delta_N (log N )^2 \rightarrow 0$ as $N \rightarrow +\infty$. 
+        Then,
+        as $N \rightarrow +\infty$,
+        \[
+            \hat{\lambda}_N {\to}  \lambda, \text{ a.s.}
     \]
     and
     \[
-    \sqrt{T_N} ( \hat{\lambda}_N -\lambda)
-    \stackrel{\mathcal{L}}{\longrightarrow} N (0, \Gamma_3 (\sigma,H)),
+        \sqrt{T_N} ( \hat{\lambda}_N -\lambda)
+        \stackrel{\mathcal{L}}{\longrightarrow} N (0, \Gamma_3 (\sigma,H)),
     \]
-    where $\Gamma_3 (\sigma,H)=\lambda \big(\tfrac{\sigma_H}{2H} \big)^2$ and
+    where 
+    $\Gamma_3 (\sigma,H)=\lambda \big(\tfrac{\sigma_H}{2H} \big)^2$ and
     \[
     \sigma_H^2= (4H+1)\left(1+\frac{\Gamma(1-4H)\Gamma(4H-1)
     }{\Gamma(2-2H)\Gamma(2H)} \right).
     \]
-    \hfill$\Box$
 \end{theorem}
 For the proof see Theorem 2 in \cite{br-ia}.
 
@@ -834,20 +893,12 @@ Finally, figures \ref{graph-Hurst_Est_Wo} and \ref{graph-Hurst_Est_Me} show
 the estimated Hurst parameter for women and men separately.
 
 \begin{figure}[H]
-    %\includegraphics[width = 4.5in,  height=4in]{Hurst-Women.png}
-<<<<<<< HEAD
-    \includegraphics{Hurst-Men.png}
-=======
+    \centering
     \includegraphics{Hurst-Women.eps}
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \caption{Estimated Hurst parameter using R-routines.}
     \label{graph-Hurst_Est_Wo}
 \end{figure}
 \change{change to eps format}
-<<<<<<< HEAD
-
-=======
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
 
 With the rescaled range R/S and R/S  methods we obtain a consistent estimator
 for the Hurst parameter in the sense that they do not present 
@@ -873,21 +924,10 @@ coefficients obtained with the method of $R/S$ to perform the mortality
 rates simulations.
 
 \begin{figure}[H]
-<<<<<<< HEAD
-    \includegraphics{Hurst-Men.png}
-=======
     \includegraphics{Hurst-Men.eps}
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \caption{\bf Estimated Hurst parameter using R-routines.}
     \label{graph-Hurst_Est_Me}
 \end{figure}\vspace*{0.1cm}
-\change{change to eps format}
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
 
 \subsection{Results for women}\label{re-wom}
 
@@ -904,8 +944,6 @@ rate for women age 0 during the period of 50s to 80s and for women age 50, 60,
 80 and 90 during
 60s to 80s approximately. Moreover, it also overestimates the mortality rate for
 women age 25 during the period of 50s to 80s.
-
-<<<<<<< HEAD
 
 \begin{figure}[H]
     \includegraphics{PlotWomen0.eps}
@@ -925,8 +963,6 @@ women age 25 during the period of 50s to 80s.
 %the confidence intervals. We believed that in order  to compensate this
 %variation, the model overestimates mortality rates
 % for the period between late 50's and first 70's. \\
-
-=======
 \begin{figure}[htb]
     \includegraphics[width = 2.85in]{PlotWomen0.eps}
     \includegraphics[width = 2.85in]{PlotWomen5.eps}
@@ -960,7 +996,6 @@ women age 25 during the period of 50s to 80s.
     }
     Data mortality rates.
 \end{figure}
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
 
 For older ages (see figure \ref{graph-simu_FOU2}) we observe that for ages 60
 and 70 the estimation is well fitted trough the years. We notice that
@@ -974,19 +1009,11 @@ All these suggest that a better model could include a short and a long-term
 memory process, so that the model could help us to control the short-term
 variations in a better way.
 
-<<<<<<< HEAD
-\begin{figure}[H]
-    \includegraphics[width = 2.85in]{PlotWomen60.png}
-    \includegraphics{PlotWomen70.png}
-    \includegraphics{PlotWomen80.png}
-    \includegraphics{PlotWomen90.png}
-=======
 \begin{figure}[htb]
     \includegraphics[width = 2.85in]{PlotWomen60.eps}
     \includegraphics[width = 2.85in]{PlotWomen70.eps}
     \includegraphics[width = 2.85in]{PlotWomen80.eps}
     \includegraphics[width = 2.85in]{PlotWomen90.eps}
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $60,70,80,90$ and $N=10000$.}
     \label{graph-simu_FOU2}
@@ -1025,14 +1052,6 @@ We graph the historical rate mortality, the mean of all simulations and the
 \ref{graph-simu_FOU4}.
 
 \begin{figure}[H]
-<<<<<<< HEAD
-    \includegraphics[width = 2.85in]{PlotMen0.png}
-    \includegraphics{PlotMen5.png}
-    \includegraphics{PlotMen25.png}
-    \includegraphics{PlotMen50.png}
-    \caption{\bf Simulations for the rate mortality with the fOU model: ages
-    $0,5$ and $N=10000$.}
-=======
     \includegraphics[width = 2.85in]{PlotMen0.eps}
     \includegraphics[width = 2.85in]{PlotMen5.eps}
     \includegraphics[width = 2.85in]{PlotMen25.eps}
@@ -1065,7 +1084,6 @@ We graph the historical rate mortality, the mean of all simulations and the
         }
         Data mortality rates
 }
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \label{graph-simu_FOU3}
 \end{figure}
 \pagebreak
@@ -1082,11 +1100,6 @@ example  of a short-term process to try is a AR$(p)$ with $p\le 2$ or $3$.
 \pgfplotsset{every axis/.append style={line width=5pt}}
 
 \begin{figure}[H]
-<<<<<<< HEAD
-    \includegraphics[width = 2.85in]{PlotMen60.png}
-    \includegraphics{PlotMen70.png}
-    \includegraphics{PlotMen80.png}
-    \includegraphics{PlotMen90.png}
     \caption{\bf Simulations for the rate mortality with the fOU model: ages
     $60,70,80,90$ and $N=10000$.}
 =======
@@ -1122,7 +1135,6 @@ example  of a short-term process to try is a AR$(p)$ with $p\le 2$ or $3$.
             }
             Data mortality rates
     } 
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \label{graph-simu_FOU4}
 \end{figure}
 
@@ -1149,14 +1161,8 @@ results are bad as the ages increases. see figures
 $0,25,50,90$.
 
 \begin{figure}[H]
-<<<<<<< HEAD
-    \includegraphics[width = 2.85in]{PlotWomenForecast0.png}
-    \includegraphics{PlotWomenForecast25.png}
-    \includegraphics{PlotWomenForecast50.png}
-    \includegraphics{PlotWomenForecast90.png}
     \caption{Forecast for the rate mortality with the fOU model. Women at ages
     $0,25,50,90$.}
-=======
     \includegraphics[width = 2.85in]{PlotWomenForecast0.eps}
     \includegraphics[width = 2.85in]{PlotWomenForecast25.eps}
     \includegraphics[width = 2.85in]{PlotWomenForecast50.eps}
@@ -1189,7 +1195,6 @@ $0,25,50,90$.
         }
         Data mortality rates.
     }
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \label{graph-graph-forecast_women_FOU1}
 \end{figure}\vspace*{0.1cm}
 
@@ -1197,19 +1202,10 @@ $0,25,50,90$.
 
 
 \begin{figure}[H]
-<<<<<<< HEAD
-    \includegraphics[width = 2.85in]{PlotMenForecast0.png}
-    \includegraphics{PlotMenForecast10.png}
-    \includegraphics{PlotMenForecast25.png}
-    \includegraphics{PlotMenForecast40.png}
-    \caption{Forecast for the rate mortality with the fOU model. Men at ages
-    $0,10,25,40$.}
-=======
     \includegraphics[width = 2.85in]{PlotMenForecast0.eps}
     \includegraphics[width = 2.85in]{PlotMenForecast10.eps}
     \includegraphics[width = 2.85in]{PlotMenForecast25.eps}
     \includegraphics[width = 2.85in]{PlotMenForecast40.eps}
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \label{graph-forecast_men_FOU1}
     \caption{
         Forecast for the rate mortality with the fOU model. Men 
@@ -1243,11 +1239,7 @@ $0,25,50,90$.
 \end{figure}
 
 \begin{figure}[H]
-<<<<<<< HEAD
-    \includegraphics[width = 2.85in]{PlotMenForecast50.png}
-    \includegraphics{PlotMenForecast60.png}
-    \includegraphics{PlotMenForecast70.png}
-    \includegraphics{PlotMenForecast90.png}
+
     \caption{Forecast for the rate mortality with the fOU model. Men at ages
     $50,60,70,90$.}
 =======
@@ -1283,7 +1275,6 @@ $0,25,50,90$.
         }
         Data mortality rates.
 }
->>>>>>> 125467f8c56768ddf5205701fb4400ce7b1e3f90
     \label{graph-forecast_men_FOU2}
 \end{figure}\vspace*{0.1cm}
 
@@ -1291,14 +1282,14 @@ $0,25,50,90$.
 \section{Conclusions}\label{sec:Conclutions}
 
 	We have applied our proposed model to the Italian mortality rates with a
-geometric-type fractional Ornstein-Uhlenbeck process. Our
-main hypothesis was that, for a fixed age, the mortality rates changes through
-the time slowly, so that a stochastic differential equations
-that captures the long-range dependence could be a good model. We have used a
-stochastic differential equation with a fractional Brownian motion as a driven
-noise with $H\in (0.5,1)$ in order to satisfy the long-range dependence
-property. With the data we have fixed the Hurst coefficient and we have
-confirmed our hypothesis since
+geometric-type fractional Ornstein-Uhlenbeck process. Our main hypothesis was 
+that,
+for a fixed age, the mortality rates changes through the time slowly, so that
+a stochastic differential equations that captures the long-range dependence 
+could be a good model. We have used a stochastic differential equation with a
+fractional Brownian motion as a driven noise with $H\in (0.5,1)$ in order
+to satisfy the long-range dependence property. With the data we have fixed
+the Hurst coefficient and we have confirmed our hypothesis since
 we have found that the estimated Hurst, for all ages, is in $(0.58,0.8)$.  
 
 	Notice that we have consider a more general model that the one used in
@@ -1337,10 +1328,8 @@ variations then it will generate a more accurate model. We are starting to work
 on this extension of the model. Moreover, a multiplicative noise model will be
 the subject of a future research.
 
-
-
 \bibliography{references.bib}{}
-\bibliographystyle{rss}
+%\bibliographystyle{chicago}
 % \begin{thebibliography}{99}
 
 %     \bibitem{be-ye-fe-gh} J. Beran, Y. Feng, S. Ghosh, R. Kulik: Long-Memory

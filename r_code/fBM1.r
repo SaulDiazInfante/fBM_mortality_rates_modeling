@@ -13,7 +13,7 @@ library("fractal")
 library("pracma")
 #library("yuima")
 library("somebm")
-library("plotrix")
+#library("plotrix")
 
 
 ##### * * * * * Reading the data  * * *  *  * * 
@@ -36,12 +36,12 @@ rownames(mrates)<-rownames(wrates)<-rownames(arates)<-0:109
 colnames(mrates)<-colnames(wrates)<-colnames(arates)<-1872:2014
 
 for(y in 1:138){
-   for(x in 1:110){
-      wrates[x,y]<- drates[(y-1)*110+x,3]
-      mrates[x,y]<- drates[(y-1)*110+x,4]
-      arates[x,y]<- drates[(y-1)*110+x,5]      
-     }
-   }
+  for(x in 1:110){
+    wrates[x,y]<- drates[(y-1)*110+x,3]
+    mrates[x,y]<- drates[(y-1)*110+x,4]
+    arates[x,y]<- drates[(y-1)*110+x,5]      
+  }
+}
 
 lwrates<-log(wrates)
 lmrates<-log(mrates)
@@ -54,10 +54,8 @@ years<-years1[1:133]
 fa<-ages[1]; ca<-length(ages); la<-ages[ca]
 fy<-years[1];cy<-length(years); ly<-years[cy]
 
-
-
-##### * * * * * Graph of the raw data  * * *  *  * * 
-##### * * * * * * * *  *  *  *  *  *   *  *   *   *
+##### * * * * * Graph of the raw data ******#### 
+##### * * * * * * * *  *  *  *  *  *  **   *   *
 color<-rainbow(cy)
 # 
 # x11(); par(las=1)
@@ -235,7 +233,6 @@ HH1
 ##### * * * * * Here we estimated H's by using equation (5.1) * * *  *  *  *   *   *   * 
 
 M<-1
-
 BH2Fem<-data.frame(0,0,0)
 BH2Mal<-data.frame(0,0,0)
 names(BH2Fem)<-c("Age","Year","FemalePost")
@@ -264,10 +261,7 @@ for (h in ages) {
     M<-M+1
   }## end for i
 } ## end for h
-
-##### estimarion of H using some R packages applied to BH2Fem and BH2Mal
-
-
+#### Estimation of H using some R packages applied to BH2Fem and BH2Mal####
 ######## we use the libreries; hurstexp(x), FDDwhite, Rovers
 HM1B<-data.frame(0,0,0,0,0,0,0)
 HH1B<-data.frame(0,0,0,0,0,0,0)
@@ -276,15 +270,12 @@ colnames(HM1B)<-  colnames(HH1B)<-c("Edad","Hs_hurstexp", "Hal_hurstexp", "FDDwh
 HM2B<-data.frame(0,0,0)
 #HH2<-data.frame(0,0)
 colnames(HM2B)<-c("Edad","HMuj","HHom")
-
 #HM3<-data.frame(0,0,0)
 H3<-data.frame(0,0,0,0,0)
 colnames(H3)<- c("Edad", "Higuchi_Mu","Higuchi_Ho")
 
-
 H4<--data.frame(0,0,0)
 colnames(H4)<- c("Edad", "Rovers_Mu","Rovers_Ho")
-
 
 for(i in ages) {
   HM1B[i+1,1]<- HH1B[i+1,1]<-ages[i+1]
@@ -309,20 +300,20 @@ for(i in ages) {
   
   
   ## asignamos a mujeres
-    HM1B[i+1,2]<-XX[1] 
-    HM1B[i+1,3]<-XX[4]
-    HM1B[i+1,4]<-HM2B[i+1,2]
-    HM1B[i+1,5]<-H3[i+1,2]
-    HM1B[i+1,6]<-H3[i+1,4]
-    HM1B[i+1,7]<-H4[i+1,2]
+  HM1B[i+1,2]<-XX[1] 
+  HM1B[i+1,3]<-XX[4]
+  HM1B[i+1,4]<-HM2B[i+1,2]
+  HM1B[i+1,5]<-H3[i+1,2]
+  HM1B[i+1,6]<-H3[i+1,4]
+  HM1B[i+1,7]<-H4[i+1,2]
     
 ## asignamos a hombres    
-    HH1B[i+1,2]<-XY[1]  
-    HH1B[i+1,3]<-XY[4]  
-    HH1B[i+1,4]<- HM2B[i+1,3]
-    HH1B[i+1,5]<-H3[i+1,3] 
-    HH1B[i+1,6]<-H3[i+1,5]  
-    HH1B[i+1,7]<-H4[i+1,3]  
+  HH1B[i+1,2]<-XY[1]  
+  HH1B[i+1,3]<-XY[4]  
+  HH1B[i+1,4]<- HM2B[i+1,3]
+  HH1B[i+1,5]<-H3[i+1,3] 
+  HH1B[i+1,6]<-H3[i+1,5]  
+  HH1B[i+1,7]<-H4[i+1,3]  
      
 }
 
@@ -345,13 +336,12 @@ HH1B
 
 
 ## filtros para estimar sigma
-
 K<-6
-
 ak<-mat.or.vec(1,K+1)
 
-for(i in 0:K){
-    ak[i+1]<- ( ( (-1)^(1-i) )* factorial(K))/ ((2^K)*factorial(i)*factorial(K-i)) 
+for(i in 0:K) {
+    ak[i+1] <- (((-1)^(1-i) ) * factorial(K)) /
+      ((2^K)*factorial(i)*factorial(K-i)) 
 }
 
 
@@ -363,40 +353,30 @@ K1<-2*(K+1)
 
 ak2<-mat.or.vec(1,K1+1)
 
-for(i in 0:K+1){
-   ak2[2*i+1]<-0
-   ak2[2*i]<-ak[i]
-   
- }
+for(i in 0:K+1) {
+  ak2[2*i+1]<-0
+  ak2[2*i]<-ak[i]
+}
 
 bk2<-mat.or.vec(1,8+1)
 
-for(i in 1:4){
+for(i in 1:4) {
   bk2[2*i+1]<-0
   bk2[2*i]<-bk[i]
-  
 }
 
-
-
 c<-c(1,-2,1)
-
-
 ck<-c/4
 ck2<-mat.or.vec(1,5)
 
 for(i in 1:3){
   #ck2[2*i+1]<-0
   ck2[2*i-1]<-ck[i]
-  
 }
 
 ####
-
-
 EneN<-length(years)
 
-  
 #### calculo de V_N,a
 K<-length(bk)   ## descomentar este cuando se use bk
 K1<-length(bk2)-1
@@ -414,67 +394,47 @@ VnaMuj_a2<-VnaMuj
 VnaHom_a2<-VnaHom
 
 for(h in ages) {
-
   datos<-datos2[datos2$Year%in%c(1950:2004) & datos2$Age==ages[h+1], ]
-  
-sumMuj<-0
-sumHom<-0
-
-for(i in 0:N) ## N=EneN-K=75-4
-   {
+  sumMuj<-0
+  sumHom<-0
+  for(i in 0:N) ## N=EneN-K=75-4
+  {
     sum5<-0
     sum6<-0
     for(j in 1:K)
-      {
-       ik<-i+1950+j-1
-       sum5<-sum5 + (bk[j]*datos$FemalePost[datos$Year==ik])
-       sum6<-sum6 + (bk[j]*datos$MalePost[datos$Year==ik])    
+    {
+      ik<-i+1950+j-1
+      sum5<-sum5 + (bk[j]*datos$FemalePost[datos$Year==ik])
+      sum6<-sum6 + (bk[j]*datos$MalePost[datos$Year==ik])    
        
-       } # fin for j
- sumMuj<-sumMuj+sum5^2 
- sumHom<-sumHom+sum6^2 
- } #fin for i
-VnaMuj[h+1]<-sumMuj/N
-VnaHom[h+1]<-sumHom/N
-
-
-#### calculo de V_N,a^2, aqui continua el for de h
-
-
-sumMuj_a2<-0
-sumHom_a2<-0
-
-
-for(i in 1:N1)
-{
-  sum2<-0
-  sum3<-0
-  for(j in 1:K1)
+    } # fin for j
+    sumMuj<-sumMuj+sum5^2 
+    sumHom<-sumHom+sum6^2 
+  } #fin for i
+  VnaMuj[h+1]<-sumMuj/N
+  VnaHom[h+1]<-sumHom/N
+#### calculo de V_N,a^2, aqui continua el for de h ####
+  sumMuj_a2<-0
+  sumHom_a2<-0
+  for(i in 1:N1)
   {
-    ik<-i+1950+j-1
-    sum2<-sum2 + (bk2[j]*datos$FemalePost[datos$Year==ik])
-    sum3<-sum3 + (bk2[j]*datos$MalePost[datos$Year==ik])    
-    
-  } ## fin for j
-  sumMuj_a2<-sumMuj_a2+sum2^2 
-  sumHom_a2<-sumHom_a2+sum3^2 
-  
-  
-}  ## fin for i
-
-VnaMuj_a2[h+1]<-sumMuj_a2/N
-VnaHom_a2[h+1]<-sumHom_a2/N
-
-
+    sum2<-0
+    sum3<-0
+    for(j in 1:K1)
+    {
+      ik<-i+1950+j-1
+      sum2<-sum2 + (bk2[j]*datos$FemalePost[datos$Year==ik])
+      sum3<-sum3 + (bk2[j]*datos$MalePost[datos$Year==ik])    
+    } ## fin for j
+    sumMuj_a2<-sumMuj_a2+sum2^2 
+    sumHom_a2<-sumHom_a2+sum3^2 
+  }  ## fin for i
+  VnaMuj_a2[h+1]<-sumMuj_a2/N
+  VnaHom_a2[h+1]<-sumHom_a2/N
 } ## fin for h
 
-
-
-
 HMuj<-0.5*log(VnaMuj_a2[1:91]/VnaMuj[1:91],2)
-
 HHom<-0.5*log(VnaHom_a2[1:91]/VnaHom[1:91],2)
-
 
 HMuj
 
@@ -487,12 +447,10 @@ HM1
 
 HH1
 
-
 ## Aqui guardamos los coeficientes de hurst estimados con 3 librerias diferentes para el fBM. 
 ### Debe ir en la seccion 4  
 HMujeres<-cbind(HH1$Edad,HM1$Hal,HM2$HMuj,H4$Rovers_Mu)
 HHombres<-cbind(HH1$Edad,HH1$Hal,HM2$HHom,H4$Rovers_Ho)
-
 colnames(HMujeres)<-colnames(HHombres)<-c("Edad","hurstexp_lib","FDWhittle_lib","Rovers_Lib")
 
 HMujeres
@@ -581,9 +539,6 @@ for(h in ages) {
 sigmaMuj
 sigmaHom
 
-
-
-
 ######**** begin estimating \alpha_1 #####
 
 alpha1Muj<-0:91
@@ -594,10 +549,7 @@ for(A in ages) {
   sum2<-0
   sum3<-0
   sum4<-0
-  
   datos<-drates[drates$Year%in%c(1950:2004) & drates$Age==ages[A+1], ]
-  
-  
   for(B in years) {
     sum1<-sum1 +  log(datos$Female[datos$Year==B])        
     sum2<-sum2 + (datos$Year[datos$Year==B])
@@ -608,10 +560,7 @@ for(A in ages) {
   alpha1Hom[A+1]<- (sum4-log(datos$Male[datos$Year==1950])*cy )/ sum2
   
 } ### fin for A
-
-
-
-#####  *  *   *  *  *   *   *  * End estimating \alpha_1
+#####  *  *   *  *  *   *   *  * End estimating \alpha_1####
 ###### Calculo de lambda_N
 
 mu2N<-mat.or.vec(length(ages),1)
@@ -641,12 +590,9 @@ for (h in ages[1:91]) {
 
 #### Estimation of lambda_N * * * * * #####
 
-
 lambdaNMuj
-
 lambdaNHom
-
-#####Path sampler of mortalities rates####
+####Path sampler of mortalities rates####
 
 NS<-10000
 SDW<-mat.or.vec(NS,65)
@@ -735,6 +681,7 @@ for( A in ages1)
   #hacer el cat para hacer el nombre
   #tiff(paste("PlotWomen",age,".tif",sep=""), width = 4, height = 4, units = 'in', res = 300)
   #png(paste("PlotWomen",age,".png",sep=""), width = 4.5, height = 4, units = 'in', res = 300)
+  #### deb key
   setEPS()
   postscript(paste("PlotWomen",age,".eps",sep=""))
 
