@@ -7,12 +7,10 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
   #
   data_mortality_rate <- read.csv('data_mortality_rate.csv', header = TRUE)
   data_mortality_rate2 <- read.csv('data_mortality_rate2.csv', header = TRUE)
-  
-  print(head(data_mortality_rate))
-  # print(head(data_mortality_rate2))
+  #
   SDW <- mat.or.vec(n_paths, 65)
   SDM <- mat.or.vec(n_paths, 65)
-
+  #
   ages <- 0:91
   ages1 <- c(0, seq(5, 90, by = 5))
   years1 <- 1872:2014
@@ -22,7 +20,6 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
     HW_est <- H_est_woman[age + 1, 2]
     HM_est <- H_est_man[age + 1, 2]
     for (i in 1:n_paths) {
-      #d<-ts(fbm(hurst=0.7, n=75),start=c(1930, 1),end=c(2004,1),frequency=1)
       SDW[i,] <- ts(fbm(hurst = HW_est, n = 65),
                     start = c(1950, 1),
                     end = c(2014, 1),
