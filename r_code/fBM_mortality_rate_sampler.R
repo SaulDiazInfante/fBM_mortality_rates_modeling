@@ -9,7 +9,7 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
   data_mortality_rate2 <- read.csv('data_mortality_rate2.csv', header = TRUE)
   
   print(head(data_mortality_rate))
-  print(head(data_mortality_rate2))
+  # print(head(data_mortality_rate2))
   SDW <- mat.or.vec(n_paths, 65)
   SDM <- mat.or.vec(n_paths, 65)
 
@@ -40,11 +40,11 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
     L <- 2014 - 1950
     Desv_stan <- sqrt(Var_Point / L)
     #
-    data_mortality_rate <- data_mortality_rate[data_mortality_rate$Year %in% 1950:2014 &
-                                  data_mortality_rate$Age == age, ]
+    querry <- filter(data_mortality_rate, Year >= 1950 & Year <= 2014 &
+                       Age == age)
     # initial condition Women and men
-    hw0 <- data_mortality_rate$Female[data_mortality_rate$Age == age][1]
-    hm0 <- data_mortality_rate2$Male[data_mortality_rate$Age == age][1]
+    hw0 <- querry$Female[1]
+    hm0 <- querry$Male[1]
     htWomen <- mat.or.vec(L + 1, 2)
     htMen <- mat.or.vec(L + 1, 2)
     htWomen[1, 2] <- hw0
@@ -83,21 +83,21 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
       Yt_hat[i + 1] <- sum1 * sigma_woman[age + 1] / (cy1 ^ H1)
       Yt_hatM[i + 1] <- sum1 * sigma_man[age + 1] / (cy1 ^ H2)
     }
-    ht_hat_woman[H, 1] <- data_mortality_rate$Female[1]
-    ht_hat_man[H, 1] <- data_mortality_rate$Male[1]
+    ht_hat_woman[H, 1] <- querry$Female[1]
+    ht_hat_man[H, 1] <- querry$Male[1]
     
     for (j in 2:cy1 - 1) {
-      ht_hat_woman[H, j] <- data_mortality_rate$Female[1] * 
+      ht_hat_woman[H, j] <- querry$Female[1] * 
         exp(alpha_woman[age + 1] * j + Yt_hat[j])
-      ht_hat_man[H, j] <- data_mortality_rate$Male[1] * 
+      ht_hat_man[H, j] <- querry$Male[1] * 
         exp(alpha_man[age + 1] * j + Yt_hatM[j])
     }
   } 
-  
+  #
   sampler_time <- htWomen[, 1]
   # samples <- cbind(sampler_time, htWomen[, 2], htMen[, 2])
   ht_hat_samples <- data.frame("ht_hat_woman" = ht_hat_woman,
                                "ht_hat_man" = ht_hat_man)
-  write.csv(ht_hat_samples, file_name, col.names = FALSE)
+  write.csv(ht_hat_samples, file_name, row.names = FALSE)
   return(ht_hat_samples)
 }
