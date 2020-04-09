@@ -848,115 +848,119 @@ consider the case with additive noise.  We refer the reader to \cite{mi} for fur
         \right).
     \]
 \end{theorem}
-For the proof see Theorem 2 in \cite{br-ia}.
+For the proof see \citep[][Thm. 2]{br-ia}.
 
-\section{Results with the fractional Ornstein-Uhlenbeck model}
-\label{re-fou}
+\section{Results} \label{re-fou}
+        In this section we present our estimated mortality rates according to  
+    obtain from Italy\textemdash the website of Human Mortality Database for 
+    the Italian population between \num{1950} to \num{2004}.
 
-In this section we present the estimated mortality rates with the use of the
-model
-described in section \ref{intro}. We obtain the data from the website of Human
-Mortality Database for the Italian population between 1950 to 2004.
+        We present the estimation of the $H$ parameter. 
+    In second place, we present the results on simulated mortality rates using  
+    equations \eqref{est2}-\eqref{est3} to estimate the parameters 
+    $\sigma,\lambda$. The parameter $\alpha_0$ has been fixed with the use of 
+    equation \eqref{alpha0}.
 
-In first place, we present the estimation of the $H$ parameter. In second
-place, we present the results on simulated mortality rates using  equations
-\eqref{est2}-\eqref{est3} to estimate the parameters $\sigma,\lambda$. The
-parameter $\alpha_0$ has been fixed with the use of equation \eqref{alpha0}.
+        We sample \num{10000} paths of the solution process to SDE 
+    \eqref{mod3} to estimate mortality rates of woman and man between \num{0} 
+    and \num{90} year old. To this end, we simulate paths of fractional 
+    Brownian motion $B_t^{\hat H}$  and using equation \eqref{mod-1} we have 
+    estimated the mortality rate. To run the fBm simulations we have used the 
+    function {\bf fbm} which is includes in the R library {\bf somebm}.  
+    We also include a  95.5\% confidence interval.
 
-We run 10000 simulations of the mortality rates from ages $0$ to age $90$. To
-do that, we have simulate a fractional Brownian motion $B_t^{\hat H}$ and using
-equation \eqref{mod-1} we have estimated the mortality rate. To run the fBm
-simulations we have used the function {\bf fbm} which is includes in the R
-library {\bf somebm}.  We also include a  95.5\% confidence interval.
+        We present the results for women and men in sections \ref{re-wom} and
+    \ref{re-men}, respectively.
 
+        Estimations and predictions were performed using R Ver. 3.2.3 (R Core 
+    Team, 2015), and specialized packages Fractal (Time Series Modeling and 
+    Analysis Version 2.0-1, 2016), 
+    Pracma (Practical Numerical Math Functions 2.0.7, 2017)
+    and somebm (some Brownian motions simulation function Version 0.1, 2016).
 
-We present the results for women and men in sections \ref{re-wom} and
-\ref{re-men}, respectively.
+    \subsection{Hurst parameter estimation}
+        \label{hu-est}
 
-Estimations and predictions were performed using R Ver. 3.2.3 (R Core Team,
-2015), and specialized packages
-Fractal (Time Series Modeling and Analysis
-Version 2.0-1, 2016), Pracma (Practical Numerical Math Functions 2.0.7, 2017)
-and somebm (some Brownian motions simulation function Version 0.1, 2016).
+        For the Hurst parameter estimate we have used three R routines: 
+    FDWhittle, RoverS and hurstexp. The two first routines are from the 
+    fractal library, while the latter is fromthe pracma library.
 
+        The former routine estimate the Hurst parameter by Whittle's method as 
+    was described in the subsection \ref{Desc-Est-H}. RoverS routine
+    estimate $\hat H $ by rescaled range (R/S) method. The hurstexp routine
+    estimate $\hat H $  using $R/S$ analysis. 
 
-\subsection{Hurst estimation}\label{hu-est}
+        Finally, figures \ref{graph-Hurst_Est_Wo} and \ref{graph-Hurst_Est_Me} 
+    show the estimated Hurst parameter for women and men separately.
 
-	For the Hurst parameter estimate we have used three R routines: FDWhittle,
-RoverS and hurstexp. The two first routines are from the fractal library, 
-while the latter is fromthe pracma library.
-
-	The former routine estimate the Hurst parameter by Whittle's method as was
-described in the subsection \ref{Desc-Est-H}. RoverS routine
-estimate $\hat H $ by rescaled range (R/S) method. The hurstexp routine
-estimate $\hat H $  using
-R/S analysis. 
-
-Finally, figures \ref{graph-Hurst_Est_Wo} and \ref{graph-Hurst_Est_Me} show
-the estimated Hurst parameter for women and men separately.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics{Hurst-Women.eps}
-    \caption{Estimated Hurst parameter using R-routines.}
-    \label{graph-Hurst_Est_Wo}
-\end{figure}
-\change{change to eps format}
-
-With the rescaled range R/S and R/S  methods we obtain a consistent estimator
-for the Hurst parameter in the sense that they do not present 
-dramatic changes through the time. Moreover, the $H$ estimated with 
-these two methods take values in the interval (0.57,0.80) approximately.
-This tells us that the data has the long memory property as
-was mentioned in section \ref{fgn}. Same results are obtained 
-for the men and women.
+    \begin{figure}[H]
+        \centering
+        \includegraphics{Hurst-Women.eps}
+        \caption{Estimated Hurst parameter using R-routines.}
+        \label{graph-Hurst_Est_Wo}
+    \end{figure}
+%
+        With the rescaled range \verb|R/S| and \verb|hurst_exp| methods we 
+    obtain a consistent estimator for the Hurst parameter in the sense that 
+    they do not present dramatic changes through the time. Moreover, the $H$ 
+    estimated with these two methods take values in the interval (0.57,0.80) 
+    approximately. This tells us that the data has the long memory property as
+    was mentioned in section \ref{fgn}. Same results are obtained 
+    for the men and women.
 %
 
-Notice that the estimated parameters for $H$ using Whittle method have high
-variation through the time, in opposition to those
-obtained with the other two methods so that the estimated
-Hurst parameters using this method do not perform well in the simulations.
+        Notice that the estimated parameters for $H$ using Whittle method have 
+    high variation through the time, in opposition to those obtained with the 
+    other two methods so that the estimated Hurst parameters using this method 
+    do not perform well in the simulations.
 
-The high variation on the Hurst estimated values could be explained because
-Whittle method uses
-the periodogram to estimate $H$ while the other two methods uses the raw data.
-The two approaches using Whittle likelihood and raw data are very different and
-hence they give very different estimates of $H$. Since rescaled range $R/S$ and
-$R/S$  methods have estimated very similar $H$, we decide to use the Hurst
-coefficients obtained with the method of $R/S$ to perform the mortality 
-rates simulations.
+        The high variation on the Hurst estimated values could be explained 
+    because Whittle method uses the periodogram to estimate $H$ while the other 
+    two methods uses the raw data.
+    The two approaches using Whittle likelihood and raw data are very different 
+    and hence they give very different estimates of $H$. Since rescaled range 
+    $R/S$ and $R/S$  methods have estimated very similar $H$, we decide to use 
+    the Hurst coefficients obtained with the method of $R/S$ to perform the 
+    mortality  rates simulations.
+%
+    \begin{figure}[H]
+        \label{graph-Hurst_Est_Me}
+        \includegraphics{Hurst-Men.eps}
+        \caption{Estimated Hurst parameter using R - routines.}
+    \end{figure}
+    \subsection{Results for women}
+    \label{re-wom}
 
-\begin{figure}[H]
-    \includegraphics{Hurst-Men.eps}
-    \caption{\bf Estimated Hurst parameter using R-routines.}
-    \label{graph-Hurst_Est_Me}
-\end{figure}\vspace*{0.1cm}
+        We present the results for \num{10000} path simulations of the 
+    mortality rates for ages: 
+    $
+        \num{0}, \num{5}, \num{25}, 
+        \num{50},\num{60}, \num{70}, 
+        \num{80},\num{90}
+    $.
+        We graph the historical mortality rate, the mean of all simulations and 
+    the \num{95}\% confidence interval. See figures \ref{graph-simu_FOU1} and
+    \ref{graph-simu_FOU2}.
 
-\subsection{Results for women}\label{re-wom}
+        In general, for all ages, the model is well fitted, in particular,
+    after the \num{80}'s. Nevertheless, there are some time periods where the 
+    model is not so good as we want to. For instance, the model underestimates 
+    the mortality rate for women age \num{0} during the period of 
+    \num{50}s to \num{80}s and for women age \num{50}, \num{60},
+    \num{80} and \num{90} during \num{60}s to \num{80}s approximately. 
+    Moreover, it also overestimates the mortality rate for
+    women age \num{25} during the period of \num{50}s to \num{80}s.
 
-We present the results for 10000 path simulations of the mortality 
-rates for ages: $0,5,25,50,60,70,80,90$.
-We graph the historical mortality rate, the mean of all simulations and the
-95\% confidence interval. See figures \ref{graph-simu_FOU1} and
-\ref{graph-simu_FOU2}.
-
-In general, for all ages, the model is well fitted, in particular, after the
-80's. Nevertheless, there are some time periods where the model is not
-so good as we want to. For instance, the model underestimates the mortality
-rate for women age 0 during the period of 50s to 80s and for women age 50, 60,
-80 and 90 during
-60s to 80s approximately. Moreover, it also overestimates the mortality rate for
-women age 25 during the period of 50s to 80s.
-
-\begin{figure}[H]
-    \includegraphics{PlotWomen0.eps}
-    \includegraphics{PlotWomen5.eps}
-    \includegraphics{PlotWomen25.eps}
-    \includegraphics{PlotWomen50.eps}
-    \caption{Simulations for the rate mortality with the fOU model: ages
-    $0,5,25,50$ and $N=10000$.}
-    \label{graph-simu_FOU1}
-\end{figure}
+    \begin{figure}[H]
+        \includegraphics[width = 2.85in]{PlotWomen0.eps}
+        \includegraphics[width = 2.85in]{PlotWomen5.eps}
+        \includegraphics[width = 2.85in]{PlotWomen25.eps}
+        \includegraphics[width = 2.85in]{PlotWomen50.eps}
+        \caption{%
+            Simulations for the rate mortality with the fOU model: ages
+            \num{0}, num{5}, \num{25}, \num{50} and $N=\num{10000}$.}
+        \label{graph-simu_FOU1}
+    \end{figure}
 
 %From the data we have noticed that, for ages between 20 to 35 approximately
 %(in the beginning of the 90's) the phenomena of AIDS has made a little
