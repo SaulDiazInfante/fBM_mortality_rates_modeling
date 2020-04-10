@@ -5,6 +5,7 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
                                        file_name='ht_hat_samples.csv')
 { 
   require(rlist)
+  require("progress")
   #
   data_mortality_rate <- read.csv('data_mortality_rate.csv', header = TRUE)
   data_mortality_rate2 <- read.csv('data_mortality_rate2.csv', header = TRUE)
@@ -13,6 +14,7 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
   SDM <- mat.or.vec(n_paths, 65)
   #
   ages <- 0:91
+  #ages <- c(0, 5, 25, 30, 35, 40, 45, 50, 55, 60, 70, 80)
   ages1 <- seq(0, 90, by = 5)
   years1 <- 1872:2014
   cy1 <- length(years1[79:142])
@@ -33,6 +35,8 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
   names(data_sample_)[64] <- 'Age'
   names(data_sample_)[65] <- 'Sex'
   index <- nrow(data_sample_) # Actual data index
+  total_iteration <- n_paths * length(ages1)
+  pb <- progress_bar$new(total = total_iteration)
   for (A in ages1) {
     age <- ages[[A + 1]]
     HW_est <- H_est_woman[age + 1, 2]
@@ -108,6 +112,7 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
         data_sample_[index, "Age"] <- age
       }
       index <- nrow(data_sample_) + 1
+      pb$tick()
     }
   }
   write.csv(data_sample_, "ht_hat_samples.csv",  row.names = FALSE)
