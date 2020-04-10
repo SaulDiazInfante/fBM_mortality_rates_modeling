@@ -1,4 +1,5 @@
-confidence_intervals_plots <- function(file_name='ht_hat_samples.cvs'){
+confidence_intervals_plots <- function(file_name = 'ht_hat_samples.csv'){
+  require(ggplot2)
   ht_hat <- read.csv(file_name, header = TRUE)
   ht_hat_woman <- ht_hat[, 1 : 64]
   ht_hat_man <- ht_hat[, 64:128]
@@ -14,5 +15,9 @@ confidence_intervals_plots <- function(file_name='ht_hat_samples.cvs'){
   ht_hat_man_puntual_variance <- colMeans(ht_hat_man_residuals)
   ht_hat_man_sd <- colMeans(ht_hat_man_residuals)
   
-  ages <- c()
-} 
+  
+  ages <- c(0, 5, 25, 50, 60, 70, 80, 90)
+  years <- 1950:2014
+  p <- ggplot(ht_hat_woman, (aes = ''))
+  tail(ht_hat_man)
+}
