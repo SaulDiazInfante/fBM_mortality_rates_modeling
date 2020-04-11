@@ -102,15 +102,15 @@ fBM_mortality_rate_sampler <- function( H_est_woman,
       #### Recording data
       for (j in 2:cy1 - 1) {
         data_sample_[index, j] <- querry$Female[1] * exp(alpha_woman[age + 1] * j + Yt_hat[j])
-        data_sample_[index, "Sex"] <- 'F'
-        data_sample_[index, "Age"] <- age
       }
+      data_sample_[index, "Sex"] <- 'F'
+      data_sample_[index, "Age"] <- age
       index <- nrow(data_sample_) + 1
       for (j in 2:cy1 - 1) {
         data_sample_[index, j] <- querry$Male[1] * exp(alpha_man[age + 1] * j + Yt_hatM[j])
-        data_sample_[index, "Sex"] <- 'M'
-        data_sample_[index, "Age"] <- age
       }
+      data_sample_[index, "Sex"] <- 'M'
+      data_sample_[index, "Age"] <- age
       index <- nrow(data_sample_) + 1
       pb$tick()
     }
