@@ -108,8 +108,10 @@ confidence_intervals_plots <- function(data_file_name = 'ht_hat_samples.csv'){
 
   #### Man confidence band plot ####
   for (k in ages){
-    man_mr_by_age_k_summary <- filter(mr_confidence_band_by_age, Age==k, Sex=='M')
-    man_mr_by_age_k_summary$Year <- as.numeric(as.character(man_mr_by_age_k_summary$Year))
+    man_mr_by_age_k_summary <- filter(mr_confidence_band_by_age, 
+                                      Age==k, Sex=='M')
+    man_mr_by_age_k_summary$Year <- 
+      as.numeric(as.character(man_mr_by_age_k_summary$Year))
     mr_italy_by_age_k <- filter(italy_mr_df, Age==k)
     man_mr_italy_by_age_k <- select(mr_italy_by_age_k, Year, Male )
     str_title <- paste("Age:", toString(k))
@@ -120,9 +122,12 @@ confidence_intervals_plots <- function(data_file_name = 'ht_hat_samples.csv'){
         geom_line(aes(y = HiCI)) +
         geom_ribbon( aes(ymin=LoCI, ymax=HiCI, fill="Confidence at 95%")) +
         geom_line(aes(y = mean, colour = "Simulation-mean"), size=1.5) +
-        geom_point(data = man_mr_italy_by_age_k, aes(x = Year, y=Female, colour="Italy Data")) +
+        geom_point(data = man_mr_italy_by_age_k,
+                   aes(x = Year, y=Female, colour="Italy Data")) +
         ggtitle(str_title) +
-        scale_color_manual(values = colors,  name = "", guide = guide_legend(override.aes=aes(fill=NA))) +
+        scale_color_manual(values = colors,
+                           name = "",
+                           guide = guide_legend(override.aes=aes(fill=NA))) +
         scale_fill_manual(values = "grey80", name="") +
         labs(x = "Year", y = "Mortality Rate",  color = "Legend") +
         # theme_classic() +
@@ -133,14 +138,18 @@ confidence_intervals_plots <- function(data_file_name = 'ht_hat_samples.csv'){
       p_age_k <- ggplot(man_mr_by_age_k_summary, aes(Year, mean)) +
         geom_line(aes(y = LoCI)) +
         geom_line(aes(y = HiCI)) +
-        geom_ribbon( aes(ymin=LoCI, ymax=HiCI, fill="Confidence at 95%")) +
+        geom_ribbon( aes(ymin=LoCI, 
+                         ymax=HiCI, fill="Confidence at 95%")) +
         geom_line(aes(y = mean, color="Simulation-mean"), size=1.5) +
-        geom_point(data = man_mr_italy_by_age_k, aes(x = Year, y=Female, color="Italy Data")) +
+        geom_point(data = man_mr_italy_by_age_k,
+                   aes(x = Year, y=Female, color="Italy Data")) +
         #
         ggtitle(str_title) +
         scale_fill_manual(values = "grey80", name="Band") +
         labs(x = "Year", y = "Mortality Rate",  color = "Legend") +
-        scale_color_manual(values = colors, name = "",guide = guide_legend(override.aes=aes(fill=NA))) +
+        scale_color_manual(values = colors,
+                           name = "",
+                           guide = guide_legend(override.aes=aes(fill=NA))) +
         # theme_classic() +
         theme(plot.title = element_text(hjust = 0.5)) +
         theme(axis.text.x = element_text(size=10, angle=90))
