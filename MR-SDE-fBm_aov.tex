@@ -172,16 +172,16 @@
     \cite{je-lu-vi} formulate a cohort-based model with imperfect correlation
     across generations and use data from UK to estimate parameters.
 
-        The present paper aims to show statistical evidence that mortality rates
+        This paper aims to show statistical evidence that mortality rates
     follow a stochastic process with long-range dependence (LRD), that is,
     a stochastic process with memory. According to \cite{ra}, a stochastic
     process or time series is LRD, if it has persistence behavior\textemdash
     below we give a formal definition.
 
         We base our stochastic formulation in the fractional Brownian Motion 
-    (fBM) \cite{ma-va}. Since fBM is a generalization of the standard Brownian 
-    Motion (BM) that still satisfies self-similarity and is LRD, fBM results to 
-    be a natural noise model to describe LRD behavior.
+    (fBM) \citep[see ]{ma-va}. Since fBM is a generalization of the standard 
+    Brownian Motion (BM) that still satisfies self-similarity and is LRD, fBM 
+    results to be a natural noise model to describe LRD behavior.
 
         The main idea is to extend the stochastic model reported by 
     Milevesky and Promislow to a model with LRD and verify its performance 
@@ -200,7 +200,7 @@
     infectious  disease spread or population growth.
     
 
-        After this brief introduction, we aformulate our fractional model in 
+        After this brief introduction, we formulate our fractional model in 
     \Cref{model-form}. \Cref{fgn} reviews the fBM and presents
     the fractional Ornstein-Uhlenbeck (fOU) process. \Cref{esti} outlines the
     applied method for parameter estimation. In  \Cref{re-fou}, we implement our
@@ -267,22 +267,26 @@
                   \ H \in [1 / 2, 1) .
         \end{aligned}
     \end{equation}
-    Is well know that this fOU process is Long time depndent when 
-    $H \in [1/2,1)$, for details see 
-    \citet{Cheredito2003,Anh2002,Hu2005,Kleptsyna2002}. Thus results natural
-    explore long time memory effects with this nosie model.
+    In fact we implement the integral form of the above fractional SDE
     \begin{align}
-        Y_t^H&=-\lambda\int_0^t Y_s^Hds+\sigma B_t^H.\label{mod3}
+        \label{mod3}
+        Y_t ^ H & =
+            - \lambda
+            \int_0 ^ t 
+                Y_s ^ H ds 
+                + 
+                \sigma B_t ^ H.
     \end{align}
-    The equation above lacks of a stochastic integral because we
-    consider the case with additive noise.  We refer the reader to \cite{mi} 
-    for further reading on fractional stochastic calculus.
+    fOU process is long time-dependent when $H \in [1/2,1)$ 
+    \citep[for details see][]{ch-ka-ma,Anh2002,Hu2005,Kleptsyna2002}. Then, we 
+    use the fOU to explore the long time dependence of mortality hazard-rates.
+
 
 \section{Fractional Gaussian processes} \label{fgn}
     \subsection{Fractional Brownian motion} \label{fBm}
-
+        \todo{Introductory paragraph}
         We consider the Gaussian process$\{B_t^H,t\ge 0\}$, with $H\in (0,1)$,
-    and with zero-mean and covariance function given by
+    zero-mean and covariance function given by
     \begin{align}
         R_H(t,s):=
             \E(
@@ -295,20 +299,22 @@
                 - |t - s| ^ {2 H}
             \big).\label{s1.1}
     \end{align}
+%
 
-        This stochastic process is called a \emph{fractional Brownian motion}
-    (fBm) and was introduced by Kolmogoroff \cite{ko} and studied by Mandelbrot
-    and Van Ness in \cite{ma-va}. The parameter $H$ is called Hurst index
-    because of the statistical analysis developed by the climatologist Hurst
-    \cite{hu}. The fBm is a generalization of Brownian motion without
-    independent increments, in fact it is a continuous-time Gaussian process.
-
-        fBm process has the properties of self-similarity and stationary 
-    increments. Its sample-paths are almost nowhere differentiable but 
-    almost-all H\"{o}lder continuous 
-    for any order strictly less than H. That is, for each
-    trajectory, there exists a finite constant $C$ such that for every
-    $\epsilon > 0$
+        This stochastic process is the so called 
+    \emph{fractional Brownian motion} (fBM). 
+    \citeauthor{ko} introduced this fractional process 
+    in 1940 and \citeauthor{ma-va} gives an in-depth study in 1968.
+    The parameter $H$ is called Hurst index in honor to the statistical 
+    analysis developed by the climatologist Harold Edwin Hurst. 
+    
+        The fBm is a generalization of Brownian motion without independent 
+    increments, in fact,  it is a continuous-time Gaussian process wich
+    has the properties of self-similarity and stationary increments. Its 
+    sample-paths are almost nowhere differentiable and
+    almost-all H\"{o}lder continuous for any order strictly less than $H$. That 
+    is, for each trajectory, there exists a finite constant $C$ such that for 
+    every$\epsilon > 0$
     \[
         \E \big(
             | B_t ^ H - B_s ^ H|
@@ -317,17 +323,17 @@
         C |t - s| ^ {H - \epsilon} .
     \]
 %
-        For $H = \tfrac{1}{2} $ the covariance of fBM can be written as
+    For $H = \tfrac{1}{2} $, the covariance of fBM follows
     $
         R_{1 / 2} (t, s)
             = \min(s, t)
     $, thus process $B_t ^ {1 / 2}$, is equivalent to
     the standard Brownian motion. However, if $H \ne \tfrac{1}{2}$, 
-    then this increments are \emph{not} independent.
+    then this increments are dependent.
 %
         Let  $X_n = B_n ^ H - B_{n - 1} ^ H$, $n \ge 1$.
     Then $\{X_n, n \ge 1\}$ is a Gaussian stationary sequence with unit
-    variance and covariance function if
+    variance and covariance function 
     \begin{align*}
         \rho_H (n) &=
             \frac{1}{2}
@@ -337,8 +343,7 @@
             \Big)
             \\
             &\approx
-            H (2H - 1)n^{2H-2} \to 0, \quad \text{when }
-        n \to \infty.
+            H (2H - 1)n^{2H-2} \to 0, \quad n \to \infty.
     \end{align*}
     Therefore,
     \begin{itemize}
@@ -346,15 +351,15 @@
             if $H > \tfrac{1}{2}$, then $\rho_H(n) > 0$ for $n$ large enough and
             $\sum_{n=1}^\infty \rho_H(n)=\infty$. In this case, we say that
             process $X_n$ is persistent with positive correlation and that
-            $X_n$ has the \emph{ long-range dependence} property
+            $X_n$ has the \emph{long-range dependence} property
         \item
             if $H < \tfrac{1}{2}$, then $\rho_H(n) < 0$ for $n$ large enough and
-            $\sum_{n=1}^\infty \rho_H(n)<\infty$.
-        This is an anti-persistent process with negative correlation.
+            $\sum_{n=1}^\infty \rho_H(n)<\infty$. Thus we say that $X_n$ is an 
+            anti-persistent process with negative correlation.
     \end{itemize}
     For further information on fBM see \cite{ra,nu,mi}.
-    \subsection{Fractional Ornstein-Uhlenbeck process (fOU)}\label{sect-OU}
-
+    
+    \subsection{The Fractional Ornstein-Uhlenbeck process}\label{sect-OU}
         The fOU is an SDE driven by a fractional Brownian motion. 
     Coming back to Equation \eqref{mod3}, \cite{ch-ka-ma}
     introduced the fractional Ornstein-Uhlenbeck process (fOU) and they 
@@ -369,10 +374,8 @@
     The integral in Equation \eqref{mod4} is a
     pathwise Riemann–Stieltjes integral.  The fOU process is neither Markovian 
     nor a semimartingale for $H \in(1/2,1)$  \citep[see][]{du-no} but remains
-    Gaussian and ergodic.
-
-        Moreover, when $H \in(1/2,1)$, $Y_t$ even presents the long-range 
-    dependence property \cite{ch-ka-ma,ra}.
+    Gaussian and ergodic. Moreover, when $H \in(1/2,1)$, $Y_t$ has the 
+    long-range dependence property \cite{ch-ka-ma,ra}.
 
     According to \cite{ze-ch-ya}, the variance of the fOU process $Y_t$ is 
     given by the following expression:
