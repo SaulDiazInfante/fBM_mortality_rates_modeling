@@ -101,7 +101,7 @@
         \\
         \email{delgado@im.unam.mx}
         \\
-        ORCID:
+        ORCID: 0000-0002-0880-720X
         \and
         %
         Arelly Ornelas
@@ -360,24 +360,23 @@
     For further information on fBM see \cite{ra,nu,mi}.
     
     \subsection{The Fractional Ornstein-Uhlenbeck process}\label{sect-OU}
-        The fOU is an SDE driven by a fractional Brownian motion. 
-    Coming back to Equation \eqref{mod3}, \cite{ch-ka-ma}
-    introduced the fractional Ornstein-Uhlenbeck process (fOU) and they 
-    showed that the process
-    \begin{equation}
+        fOU can be defined as the unique solution of a Langevin SDE driven by
+    an fBm.\citeauthor{ch-ka-ma} introduces this fractional process and shows 
+    that 
+     \begin{equation}
         Y_t ^ H = 
             \sigma \int_0 ^ t e ^ {-\lambda(t - u)} dB_u^H, 
         \label{mod4}
     \end{equation}
-    is the unique almost surely continuous-path process which solves 
-    \eqref{mod3} (see also Theorem 1.24 in \cite{ra}).
-    The integral in Equation \eqref{mod4} is a
-    pathwise Riemann–Stieltjes integral.  The fOU process is neither Markovian 
-    nor a semimartingale for $H \in(1/2,1)$  \citep[see][]{du-no} but remains
-    Gaussian and ergodic. Moreover, when $H \in(1/2,1)$, $Y_t$ has the 
-    long-range dependence property \cite{ch-ka-ma,ra}.
+    is the unique continuous solution of the fractional Langevin SDE 
+    \eqref{mod3}.
+    For $H \in (1/2,1)$, the fOU process is neither Markovian 
+    nor a semimartingale but 
+    Gaussian and ergodic. Moreover, when $H \in(1/2,1)$, $Y_t$ longe-range 
+    dependent. For a more in-depth discussion of this fractional process, we 
+    refer the reader to \citet{ch-ka-ma,ra, du-no}.
 
-    According to \cite{ze-ch-ya}, the variance of the fOU process $Y_t$ is 
+        According to \cite{ze-ch-ya}, the variance of the fOU process $Y_t$ is 
     given by the following expression:
     \begin{align}
         \Var(Y_t)= 
@@ -391,9 +390,7 @@
     which is the variance of the standard Ornstein-Uhlenbeck process 
    \citep[see][p. 143]{mik}. 
 
-    If we consider the constant $\alpha_1 = T^{-H}$ and  Equation
-    \eqref{var-fou}, then the variance of $\alpha_1 Y_t$ is 
-    given by
+    Let $\alpha_1 = T^{-H}$, thus from \cref{var-fou}, we deduce
     \begin{equation} \label{var-fou1}
         \begin{aligned}
             \Var(\alpha_1 Y_t)
@@ -417,48 +414,51 @@
                 & = 
                     \alpha_1 ^ 2 
                     \sigma ^ 2 t ^ {2H} 
-                    = \sigma ^ 2 (t / T) ^ {2H},
+                    = \sigma ^ 2 (t / T) ^ {2H}
+                \\
+                & \leq
+                \sigma^2 .
         \end{aligned}
     \end{equation}
-    then $\Var(\alpha_1 Y_t)\le \sigma^2 $. Thus the variance of $\alpha_1 Y_t$ 
-    is bounded by a constant indepedent of time. We will use $\alpha_1$ to 
-    control the variance of process $Y_t$.
+    That is, a constant independent of time bounds the variance of
+    $\alpha_1 Y_t$. Thus we can use $\alpha_1 = T^ {-H}$ and $\sigma$ to 
+    modulate the variance of fOU.
 %
 \section{Estimation of the parameters}
     \label{esti}
-        In this section we describe a methodology to estimate the 
-    parameters. According to \eqref{mod-1}, we need to estimate 
-    $\alpha_0, \alpha_1$ and for SDE model \eqref{mod-3}
-    $\sigma$ and $\lambda$. Furthermore, Hurst parameter $H$ involved in the 
-    fractional Brownian motion is also estimated. To estimante this Hurst 
-    parameter we  appeal to empirical evidence that $H$
-    in equation \eqref{mod2} is invariant, that is, the  value of the
-    Hurst parameters $H$, in the equation \eqref{mod2}, for the fBm $B_t^H$ and
-    the one for the fractional Gaussian noise $Y_t^H$ are the same. Further, to 
-    estimate $\alpha_1$, we assume that
-    $\alpha_1=T^{-H}$.
+        In this section, we describe the applied methodology to estimate 
+        parameters. According to \eqref{eqn:mortality_hazard_rate}, we need to 
+    estimate $\alpha_0, \alpha_1$ and for fractional SDE model \eqref{mod-3}
+    $\sigma$, $\lambda$, and Hurst index $H$ involved in the fBm. 
+    To estimate this index, we appeal to empirical evidence that $H$ in 
+    equation \eqref{mod2} is invariant, that is, the  value of the
+    Hurst index in the equation \eqref{mod2}, for the fBm $B_t^H$ and
+    the Hurst parameter for fOU $Y_t^H$ are equivalent. 
+    We also assume that $\alpha_1=T^{-H}$.
 
     \subsection{Estimation of the parameter $\alpha_0$.}
 %
 %
-    According to equation \eqref{mod-1}, to estimate
+    To estimate
     $\alpha_0$ we assume $\alpha_1=1$. Moreover, $h_0$ is the initial 
-    value of the observed rates $h(t)$. Thus, from \eqref{mod-1} we obtain
+    value of the observed rates $h(t)$. Thus, from 
+    \eqref{eqn:mortality_hazard_rate} we obtain
     \begin{equation}
-        \ln h(t)=\ln h_0+\alpha_0t+Y_t. \label{mod-ln}
+        \ln h(t)=
+            \ln h_0 + \alpha_0 t + Y_t. \label{mod-ln}
     \end{equation}
-    
-    To estimate parameter $\alpha_0$ we minimize the 
-    sum of the square errors.
+    We minimize the sum of the square errors to estimate parameter $\alpha_0$.
     Let 
     \begin{equation*}
         S:= 
-            \sum_{t_{initial}}^{t_{final}} \Big( \ln h(t)-\ln 
-            h_0-\widehat{\alpha_0} t
-        \Big)^2. 
+            \sum_{t_{initial}} ^ {t_{final}} 
+                \Big( 
+                    \ln h(t) 
+                    - \ln h_0 
+                    - \widehat{\alpha_0} t
+                \Big)^2. 
     \end{equation*}
-    Taking derivative of $S$ with respect
-    to $\widehat{\alpha_0}$  we get
+    Taking derivative of $S$ with respect to $\widehat{\alpha_0}$  we get
     \begin{align*}
         \frac{\partial S}{\partial \widehat{\alpha_0}}&=
             -2 \sum_{t_{initial}} ^ {t_{final}} 
@@ -466,8 +466,7 @@
                 \ln h(t)-\ln h_0-\widehat{\alpha_0} t
             \Big) t =0, %\label{min2}
     \end{align*}
-    and from this equation we deduce that  $\widehat{\alpha_0}$
-    satisfies:
+    and from this equation we deduce that  $\widehat{\alpha_0}$ satisfies:
     \begin{align}
         \widehat{\alpha_0} 
             &= 
