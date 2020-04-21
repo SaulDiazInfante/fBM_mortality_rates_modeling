@@ -616,64 +616,30 @@
     noise. Assuming this property, it is possible to regress $log(R/S)$ against 
     $log(r)$ to obtain an estimator for $H$.
 
-    \subsubsection{FDWhittle Estimator}
-
-        Following \cite{pa-etal}. The Local Whittle Estimator (LWE) is a 
-    semiparametric Hurst parameter estimator based on the periodogram.
-    LWE assumes that the spectral density $f(\omega)$ of the process can be
-    approximated by the function
-    \begin{equation}\label{fdw1}
-        f_{c,H}(\omega) = c\omega^{1-2H},
-    \end{equation}
-    for frequencies $\omega$ in a neighborhood of the origin, $c$ is a constant.
-    The periodogram of a time series
-    $\{X_t , 1 \ge t \ge N \}$ is defined by
-    $$
-        I_N (\omega)  = 
-            \frac{1}{2\pi N}
-            \left|
-                \sum_{t=1}^N X_te^{i\omega t}
-            \right|^2,
-    $$
-    where $i=\sqrt{-1}$. Usually, it is evaluated at the Fourier Frequencies
-    $\omega_{j,N} = \frac{2\pi j}{N}$, $0 \le j \le [N/2]$.  Note that the
-    periodogram is the norm of the Discrete Fourier transform of the time series
-    \citep[see, for example,][sect. 6.1.2]{priestley}.
-
-    The LWE of the Hurst parameter, $\hat{H}_{LWE}(m)$  is implicitly the result
-    of minimizing
-    $$
-        \sum_{j=1}^m  
-            \log f_{c,H} 
-                (\omega j, N) 
-                + 
-                \frac{I_N(\omega j, N)}{ f_{c,H}(\omega j,N )},
-    $$
-    with respect to $c$ and $H$, with $f_{c,H}$ defined in \eqref{fdw1}.
-
 \subsection{Estimation of $\sigma$ and  $\lambda$}
 
-    There are several methods to estimate parameters $\sigma$ and  $\lambda$. 
-    For instance see \cite{ra} or the references in \cite{ne-ti} or in 
-    \cite{ku-mi}. In the following section we will do a brief review of
+        There are several methods to estimate parameters $\sigma$ and  
+    $\lambda$. For instance see \cite{ra} or the references in \cite{ne-ti} or 
+    in \cite{ku-mi}. In the following section we will do a brief review of
     some of these methods.
 
     \subsubsection{Estimation $\sigma$.}
     \label{sect-est}
-
-    \citet{br-ia} proposed some consistent and asymptotically
+    %
+        \citet{br-ia} proposed some consistent and asymptotically
     Gaussian estimators for the parameters $\sigma,\lambda$ and $H$ of
     the discretely observed fractional Ornstein-Uhlenbeck process solution
     expressed in the stochastic differential equation.
     There is a restriction on  the estimation of the parameter $\lambda$
     \textemdash the results are valid only when $ 1 / 2 < H < 3 / 4$. 
 
-    The key point of this estimation method is that the Hurst exponent $H$ 
+        The key point of this estimation method is that the Hurst exponent $H$ 
     and the diffusion coefficient $\sigma $ can be estimated without
     estimating $\lambda$.  We use this method to estimate parameters
     $\sigma$ and $\lambda$.
 
-    Let $\bm{a} = (a_0,\ldots, a_K )$ be a discrete filter of order $L\ge 1$ and
+        Let $\bm{a} = (a_0,\ldots, a_K )$ be a discrete filter of 
+    order $L\ge 1$ and
     length $K+1$, $K \in\IN$ and we require  $L\le K$, i.e.
     \[
         \sum_{k=0}^K a_k k^j =0 
