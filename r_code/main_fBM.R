@@ -9,6 +9,7 @@ source("hurst_plots.R")
 source("sigma_lambda_estimation.R")
 source("fBM_mortality_rate_sampler.R")
 source("mortality_rate_estimation.R")
+source("confidence_bands.R")
 
 data <- load_data_mortality_rate()
 golden_width <- 4.7244
@@ -32,7 +33,9 @@ lambda_woman <- matrix(unlist(sigma_lambda[3]), ncol = 1)
 lambda_man <- matrix(unlist(sigma_lambda[2]), ncol = 1)
 
 write.csv(data2, 'data_mortality_rate2.csv', row.names = FALSE)
-fBM_mortality_samples <- fBM_mortality_rate_sampler(H_est_woman, H_est_man,
-                                                    10000, alpha_woman,
-                                                    alpha_man, lambda_woman,
-                                                    lambda_man)
+# fBM_mortality_samples <- fBM_mortality_rate_sampler(H_est_woman, H_est_man,
+#                                                    10000, alpha_woman,
+#                                                    alpha_man, lambda_woman,
+#                                                    lambda_man)
+
+confidence_intervals_plots()

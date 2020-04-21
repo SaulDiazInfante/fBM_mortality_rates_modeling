@@ -10,10 +10,10 @@ plot_hurts_estimation <- function(file_name="Hurst-Women.eps", H, golden_width) 
   rovers <- H[, 4]
   len <- length(age)
   #
-  df_hurst <- data.frame(age=rep(age, 3), 
-                         method=rep(c("Hurst_exp", "FDWhittle", "Rovers"), 
+  df_hurst <- data.frame(age=rep(age, 2), 
+                         method=rep(c("Hurst_exp", "Rovers"), 
                                     each=len),
-                        hurts_estimation=c(hurst_exp, fd_whittle, rovers))
+                        hurts_estimation=c(hurst_exp, rovers))
     hurst_plot <- ggplot(data=df_hurst, aes(x=age, y=hurts_estimation, 
                                                       group=method)) + 
     geom_line(aes(color=method, linetype=method)) +

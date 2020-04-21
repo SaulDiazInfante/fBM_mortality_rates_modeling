@@ -57,6 +57,6 @@ load_data_mortality_rate <- function(data_file="Deaths_Rates_Italy.txt") {
   data_mortality_rates <- filter(drates, 
                                   Age <= 90 &
                                   Year >= 1950 & 
-                                  Year <= 2004)
+                                  Year <= 2014)
   write.csv(data_mortality_rates, 'data_mortality_rate.csv', row.names = FALSE)
 }
