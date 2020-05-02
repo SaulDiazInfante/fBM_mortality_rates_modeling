@@ -31,7 +31,19 @@ grid_arrange_shared_legend <- function(...,
                                            widths = unit.c(unit(1, "npc") - lwidth, lwidth)))
   grid.newpage()
   g <- grid.draw(combined)
-  ggsave(file_name, width=golden_width, height=golden_height,
-         device="ps", units="mm", combined)
+  figure <- ggarrange(plots[[1]],
+                      plots[[2]],
+                      plots[[3]],
+                      plots[[4]],
+                      labels = c("A", "B", "C"),
+                      ncol = 2, nrow = 2,
+                      common.legend = TRUE, legend = "bottom"
+                      )
+  ggsave(file_name, 
+         width=golden_width,
+         height=golden_height,
+         device="ps",
+         units="mm",
+         figure)
   return(g)
 }

@@ -2,7 +2,8 @@
 # Objective : TODO
 # Created by: saul
 # Created on: 4/14/20
-confidence_intervals_plots <- function(data_file_name = 'ht_hat_samples.csv'){
+confidence_intervals_plots <- 
+  function(data_file_name = 'ht_hat_samples.csv'){
   require("ggplot2")
   require("ggthemes")
   require("dplyr")
@@ -11,6 +12,8 @@ confidence_intervals_plots <- function(data_file_name = 'ht_hat_samples.csv'){
   require("data.table")
   require("RColorBrewer")
   require("grid")
+  require("ggpubr")
+  require("cowplot")  
   source("shared_legend.R")
     ####
     ####
@@ -57,6 +60,10 @@ confidence_intervals_plots <- function(data_file_name = 'ht_hat_samples.csv'){
          height=golden_height,
          device="ps", units="mm")
   #### Woman confidence band plot ####
+  theme_set(
+    theme_bw() +
+      theme(legend.position = "top")
+  )
   ages <- c(0, 20, 40, 60)
   colors <- c("Mean" = "red", 
               "Confidence" = "grey80", 
@@ -96,7 +103,7 @@ confidence_intervals_plots <- function(data_file_name = 'ht_hat_samples.csv'){
                            guide = guide_legend(override.aes=aes(fill=NA))) +
         scale_fill_manual(values = "grey80", name="") +
         labs(x = "Year", y = "Mortality Rate",  color = "Legend") +
-        # theme_classic() +
+        theme_classic() +
         theme(plot.title = element_text(hjust = 0.5)) +
         theme(axis.text.x = element_text(size=10, angle=90))
     }
@@ -117,13 +124,26 @@ confidence_intervals_plots <- function(data_file_name = 'ht_hat_samples.csv'){
         scale_color_manual(values = colors, 
                            name = "",
                            guide = guide_legend(override.aes=aes(fill=NA))) +
-        # theme_classic() +
+        theme_classic() +
         theme(plot.title = element_text(hjust = 0.5)) +
         theme(axis.text.x = element_text(size=10, angle=90))
     }
      plotlist[[length(plotlist) + 1]] <- p_age_k
      cont <- cont + 1
   }
+  # figure <- ggarrange(plotlist[[1]],
+  #                     plotlist[[2]],
+  #                     plotlist[[3]],
+  #                     plotlist[[4]],
+  #                     labels = c("A", "B", "C"),
+  #                     ncol = 2, nrow = 2)
+  # file_name <-"woman_confidence_bands.eps"
+  # ggsave(file_name, 
+  #        width=golden_width,
+  #        height=golden_height,
+  #        device="ps",
+  #        units="mm",
+  #        figure)
   grid_arrange_shared_legend(plotlist[[1]],
                              plotlist[[2]],
                              plotlist[[3]],
@@ -157,7 +177,7 @@ confidence_intervals_plots <- function(data_file_name = 'ht_hat_samples.csv'){
                            guide = guide_legend(override.aes=aes(fill=NA))) +
         scale_fill_manual(values = "grey80", name="") +
         labs(x = "Year", y = "Mortality Rate",  color = "Legend") +
-        # theme_classic() +
+         theme_classic() +
         theme(plot.title = element_text(hjust = 0.5)) +
         theme(axis.text.x = element_text(size=10, angle=90))
     }
@@ -177,14 +197,14 @@ confidence_intervals_plots <- function(data_file_name = 'ht_hat_samples.csv'){
         scale_color_manual(values = colors,
                            name = "",
                            guide = guide_legend(override.aes=aes(fill=NA))) +
-        # theme_classic() +
+        theme_classic() +
         theme(plot.title = element_text(hjust = 0.5)) +
         theme(axis.text.x = element_text(size=10, angle=90))
     }
      plotlist[[length(plotlist) + 1]] <- p_age_k
      cont <- cont + 1
   }
-  grid_arrange_shared_legend(plotlist[[1]],
+   grid_arrange_shared_legend(plotlist[[1]],
                              plotlist[[2]],
                              plotlist[[3]],
                              plotlist[[4]],
