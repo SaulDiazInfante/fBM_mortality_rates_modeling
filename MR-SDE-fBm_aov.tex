@@ -439,15 +439,14 @@
     \subsection{Estimation of the parameter $\alpha_0$.}
 %
 %
-    To estimate
-    $\alpha_0$ we assume $\alpha_1=1$. Moreover, $h_0$ is the initial 
-    value of the observed rates $h(t)$. Thus, from 
+   Denote by $h_0$ the initial 
+    value of the observed rates $h(t)$. Then, from 
     \eqref{eqn:mortality_hazard_rate} we obtain
     \begin{equation}
         \ln h(t)=
-            \ln h_0 + \alpha_0 t + Y_t. \label{mod-ln}
+            \ln h_0 + \alpha_0 t + \alpha_1 Y_t. \label{mod-ln}
     \end{equation}
-    We minimize the sum of the square errors to estimate parameter $\alpha_0$.
+      Recall that $\alpha_1 Y_t$,  for each $t$, is a zero-mean Gaussian variable with bounded variation. Thus, to estimate $\alpha_0$ we minimize the sum of the square errors.
     Let 
     \begin{equation*}
         S:= 
@@ -482,7 +481,7 @@
     \end{align}
 
     Once we have estimated $\alpha_0$ we proceed to estimate the Hurst 
-    parameter, $\sigma$ and $\lambda$.
+    parameter $H$, $\sigma$ and $\lambda$.
 
     \subsection{The relation between the Hurst 
         parameter and the H-index in the FOU}
