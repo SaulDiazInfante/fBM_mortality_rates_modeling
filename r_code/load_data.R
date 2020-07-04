@@ -1,16 +1,19 @@
-load_data_mortality_rate <- function(data_file="Deaths_Rates_Italy.txt") {
-  drates <- read.table(data_file, 
-                       dec = ".", 
-                       header = TRUE,
-                       na.strings = ".",
-                       stringsAsFactors=F)
+library("fractal")
+library("pracma")
+library("yuima")
+library("somebm")
+library("plotrix")
+library("ggplot2")
+
+load_data <- function(data_file="Deaths_Rates_Italy.txt") {
+  drates <- read.table(data_file, dec = ".", header = TRUE, na.strings = ".")
   head(drates)
   table(drates$Year)
   table(drates$Age)
   dim(drates)
 
-  drates <- filter(drates, Age != 110)
-  #*Rates matrix       x=age y=years
+  drates <- drates[drates$Age != "110+", ]
+#*Rates matrix       x=age y=years
   mrates <- wrates <- arates <- mat.or.vec(110, 143)
   rownames(mrates) <- rownames(wrates) <- rownames(arates) <- 0:109
   colnames(mrates) <- colnames(wrates) <- colnames(arates) <- 1872:2014
@@ -36,11 +39,10 @@ load_data_mortality_rate <- function(data_file="Deaths_Rates_Italy.txt") {
   fy <- years[1];
   cy <- length(years); 
   ly <- years[cy]
-## * * * * * Graph of the raw data  * * *  *  * * 
   color <- rainbow(cy)
 # * * * *  Giacometti data: ages (x = 0,...,91) and N years (t = 1930,...,2004)
   drates$Female <- drates$Female * 100
-  drates$Male <- drates$Male*100
+  drates$Male <- drates$Male * 100
 
   ages <- 0:91
   years <- 1950:2004
@@ -52,11 +54,10 @@ load_data_mortality_rate <- function(data_file="Deaths_Rates_Italy.txt") {
   fy <- years[1]
   cy <- length(years)
   cy1 <- length(years1[79:142])
+
   ly <- years[cy]
 
-  data_mortality_rates <- filter(drates, 
-                                  Age <= 90 &
-                                  Year >= 1950 & 
-                                  Year <= 2014)
-  write.csv(data_mortality_rates, 'data_mortality_rate.csv', row.names = FALSE)
+  data_mortality_rates <- drates[drates$Age %in% c(0:90) & 
+                                  drates$Year %in% c(1950:2004), ]
+  return(data_mortality_rates)
 }

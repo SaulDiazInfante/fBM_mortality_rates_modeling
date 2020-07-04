@@ -681,16 +681,6 @@
     \citet[see, for example][]{is-la}. Then, define the
     following estimators for $H$ and $\sigma$.
     \begin{align}
-        \hat{H}_N &:=
-        \tfrac{1}{2} \log_2 
-        \left(
-            \frac{
-                V_{N,\bm{a}^2}
-            }{
-                V_{N,\bm{a}}
-            }
-        \right), \label{est1}
-        \\
         \hat{\sigma}_N
             &:=\left(
                 -2
@@ -699,29 +689,26 @@
             \label{est2}
     \end{align}
     \citet[][]{br-ia} proved the following result.
-    \begin{theorem}
-        Let  $\bm{a}$ be a filter of order $L \ge 2$. Then, both estimators
-        $\hat{H}_N$ and $\hat{\sigma}_N$  are
-        strongly consistent, that is,
+    \begin{definition}
+        We say that an estimator $\widehat sigma_N$ is consistence if
         \[
-            (\hat{H}_N,\hat{\sigma}_N) 
+            \widehat{\sigma}_N 
             \to
-            (H,\sigma) \quad a.s, \text{ as } \quad N \to \infty.
+            \sigma \quad a.s, \text{ as } \quad N \to \infty.
         \]
-        Moreover, for all $H \in (0, 1)$, if $N \to  \infty$, then
+    \end{definition}
+    \todo{Write Definition of consistency}
+    \begin{theorem}
+        Let  $\bm{a}$ be a filter of order $L \ge 2$ and $H \in (0, 1)$. Then, the  estimator
+        $\hat{\sigma}_N$  is strongly consistent and
     %
         \begin{align*}
-            \sqrt{N} (\hat{H}_N  - H ) 
-                &
-                \stackrel{\mathcal{L}}{\to} 
-                N (0,\Gamma_1 ( \bm{a},\sigma,H)),
-                \\
-                \frac{\sqrt{N}}{\log N} ( \hat{\sigma}_N  - \sigma )
-                &
-                \stackrel{\mathcal{L}}{\to} N (0, \Gamma_2 (\bm{a},\sigma,H))
+            \frac{\sqrt{N}}{\log N} ( \widehat{\sigma}_N  - \sigma )
+            &
+            \stackrel{\mathcal{L}}{\to} N (0, \Gamma(\bm{a},\sigma, \widehat H))
         \end{align*}
 %
-        where $\Gamma_1$ and $\Gamma_2$ are symmetric positive definite matrices
+        where $\Gamma$ is a symmetric positive definite matrice
         depending on $\sigma, H$ and the filter $\bm{a}$.
     \end{theorem}
 
@@ -929,6 +916,9 @@
         }
         \label{graph-simu_FOU1_}
     \end{figure}
+
+        \todo{Note that both plots are equal}
+        \todo{add a table with the estimation parameters for each age}
 
         For older ages (see figure \ref{graph-simu_FOU2}) we observe that for 
     ages \num{60} and \num{70} the estimation is well fitted trough the years. 
