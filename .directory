@@ -1,0 +1,6 @@
+[Dolphin]
+HeaderColumnWidths=450,68,111,144
+SortRole=type
+Timestamp=2020,7,9,19,10,6
+Version=4
+VisibleRoles=Details_text,Details_size,Details_modificationtime,Details_type,CustomizedDetails
