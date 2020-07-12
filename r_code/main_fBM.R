@@ -18,8 +18,13 @@ golden_height <- golden_width / golden_ratio
 H_est <- hurst_estimation()
 H_est_woman <- matrix(unlist(H_est[1]), ncol = 4)
 H_est_man <- matrix(unlist(H_est[2]), ncol = 4)
-plot_hurts_estimation("Hurst-Women.eps", H_est_woman, golden_width)
-plot_hurts_estimation("Hurst-Man.eps", H_est_man, golden_width)
+plot_hurts_estimation("Hurst-Women.eps",
+                      title_label =  "Women",
+                      H_est_woman, golden_width)
+plot_hurts_estimation("Hurst-Men.eps",
+                      title_label =  "Men",
+                      H_est_man, 
+                      golden_width)
 alpha_woman <- matrix(unlist(H_est[3]), ncol = 1)
 alpha_man <- matrix(unlist(H_est[4]), ncol = 1)
 data2 <- matrix(unlist(H_est[5]), ncol = 4)
